@@ -23,18 +23,14 @@ export default function Header() {
     <Navbar className='bg-headers'>
       <NavbarMenuToggle
         aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-        className='sm:hidden text-white '
+        className='md:hidden text-white '
       />
       <NavbarBrand>
         <MainLogo />
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          className='hidden md:block lg:hidden text-white mx-8'
-        />
       </NavbarBrand>
 
       <NavbarContent
-        className='hidden lg:flex gap-4'
+        className='hidden md:flex lg:flex gap-4'
         justify='start'
       >
         {headerItems.map((item) => (
