@@ -12,6 +12,8 @@ export default {
     extend: {
       colors: {
         primary: '#48d0ff',
+        headers: '#121214',
+        blue: '#48d0ff',
         foreground: 'var(--foreground)',
       },
     },
