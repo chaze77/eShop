@@ -16,6 +16,11 @@ export default {
         blue: '#48d0ff',
         foreground: 'var(--foreground)',
       },
+
+      screens: {
+        xs: '400px',
+        sm: '640px',
+      },
     },
   },
   darkMode: 'class',

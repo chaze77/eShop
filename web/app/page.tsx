@@ -1,7 +1,6 @@
 'use client';
-import Image from 'next/image';
+
 import { Button } from '@nextui-org/react';
-import CustomDropdown from './components/ui/CustomDropdown';
 
 export default function Home() {
   return (
