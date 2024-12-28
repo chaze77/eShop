@@ -26,4 +26,14 @@ export const headerItems = [
       { key: 'glasses', label: 'Очки' },
     ],
   },
+  {
+    key: 'information',
+    label: 'Информация',
+    subcategories: [
+      { key: 'blog', label: 'Блог' },
+      { key: 'contacts', label: 'Контакты' },
+      { key: 'delivery', label: 'Доставка' },
+      { key: 'payment', label: 'Оплата' },
+    ],
+  },
 ];
