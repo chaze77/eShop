@@ -1,36 +1,85 @@
-@import '../../../assets//style/variables.less';
+@import '../../../assets/style/variables.less';
 
-.button-create {
+.button-create.ant-btn,
+.button-create.ant-btn:hover {
   background-color: @green-color;
-  color: @button-text-color;
+  color: white;
+  border: none;
+
+  &:hover {
+    background-color: @green-hover-color;
+    color: white;
+  }
 }
 
-.button-edit {
+.button-edit.ant-btn,
+.button-edit.ant-btn:hover {
   background-color: @yellow-color;
   color: black;
+  border: none;
+
+  &:hover {
+    background-color: darken(@yellow-color, 10%);
+    color: black;
+  }
 }
 
-.button-add {
+.button-add.ant-btn,
+.button-add.ant-btn:hover {
   background-color: @primary-color;
   color: @button-text-color;
+  border: none;
+
+  &:hover {
+    background-color: lighten(@primary-color, 10%);
+    color: @button-text-color;
+  }
 }
 
-.button-update {
+.button-update.ant-btn,
+.button-update.ant-btn:hover {
   background-color: @green-color;
   color: @button-text-color;
+  border: none;
+
+  &:hover {
+    background-color: @green-hover-color;
+    color: @button-text-color;
+  }
 }
 
-.button-delete {
+.button-delete.ant-btn,
+.button-delete.ant-btn:hover {
   background-color: @red-color;
   color: @button-text-color;
+  border: none;
+
+  &:hover {
+    background-color: darken(@red-color, 10%);
+    color: @button-text-color;
+  }
 }
 
-.button-filter {
+.button-filter.ant-btn,
+.button-filter.ant-btn:hover {
   background-color: @gray-color;
   color: @button-text-color-dark;
+  border: none;
+
+  &:hover {
+    background-color: lighten(@gray-color, 10%);
+    color: @button-text-color-dark;
+  }
 }
 
-.button-close {
+.button-close.ant-btn,
+.button-close.ant-btn:hover {
   background-color: @gray-color;
   color: @button-text-color-dark;
+  border: none;
+
+  &:hover {
+    background-color: darken(@gray-color, 10%);
+    color: @button-text-color-dark;
+  }
 }
