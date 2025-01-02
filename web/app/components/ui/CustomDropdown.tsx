@@ -10,10 +10,10 @@ import Chevron from '../icons/Chevron';
 
 export default function CustomDropdown({ category }) {
   return (
-    <Dropdown className='p-0'>
+    <Dropdown className='p-0 min-w-20 mx-4'>
       <DropdownTrigger>
         <div className='header-items'>
-          <span className='flex items-center gap-2'>
+          <span className='flex items-center gap-2 font-medium'>
             {category.label}
             <Chevron />
           </span>
@@ -21,6 +21,7 @@ export default function CustomDropdown({ category }) {
       </DropdownTrigger>
       <DropdownMenu
         aria-label={category.label}
+        variant='faded'
         className='bg-headers'
       >
         {category.subcategories?.map((subcategory: any) => (

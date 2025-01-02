@@ -1,0 +1,34 @@
+/* Позиционирование точек пагинации */
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper-pagination-bullet {
+  width: 10px; /* Размер точки */
+  height: 10px; /* Размер точки */
+  background: gray; /* Цвет точки */
+  opacity: 0.7; /* Прозрачность точки */
+  margin: 0 5px; /* Расстояние между точками */
+  border-radius: 50%; /* Делаем точки круглыми */
+}
+
+.swiper-pagination-bullet-active {
+  background: #48d0ff; /* Цвет активной точки */
+  opacity: 1; /* Полная непрозрачность */
+}
