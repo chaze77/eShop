@@ -1,0 +1,56 @@
+/* Контейнер для Swiper */
+.swiper {
+  width: 100%;
+  height: auto; /* Либо фиксированное значение, если нужно */
+}
+
+/* Контейнер точек пагинации */
+.swiper-pagination {
+  display: flex; /* Flexbox для выравнивания стрелок и точек */
+  justify-content: center; /* Центрирование точек по горизонтали */
+  align-items: center; /* Центрирование стрелок по вертикали */
+  height: 40px; /* Высота контейнера */
+}
+
+/* Точки пагинации */
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: black;
+  opacity: 0.7;
+  margin: 0 5px;
+  border-radius: 50%;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.swiper-slide {
+  /* max-width: 100%; */
+  overflow: hidden;
+}
+
+.swiper-pagination-bullet-active {
+  background: #48d0ff;
+  opacity: 1;
+}
+
+/* Стрелки навигации */
+.swiper-button-prev,
+.swiper-button-next {
+  position: relative; /* Позиционируем стрелки внутри flex-контейнера */
+  transform: none; /* Убираем смещение */
+  width: 20px;
+  height: 20px;
+  color: black;
+  margin: 0 10px; /* Расстояние между стрелками и точками */
+}
+
+/* Анимация наведения на стрелки */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: #48d0ff;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}

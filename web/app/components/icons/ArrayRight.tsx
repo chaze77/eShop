@@ -1,7 +1,7 @@
 import React from 'react';
 
 type IconProps = {
-  color: string;
+  color?: string;
 };
 
 const ArrayRight: React.FC<IconProps> = ({ color }) => {

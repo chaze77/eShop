@@ -1,15 +1,5 @@
 import { FC } from 'react';
-import ArrayLeftBtn from '../icons/ArrayLeftBtn';
-import ArrayRightBtn from '../icons/ArrayRightBtn';
-import Container from '../ui/Container';
-
-// import { Box, Typography } from "@mui/material";
-// import { StyledContainer } from "../Container/StyledContainer";
-// import styles from "./BannerSlide.module.scss";
-// import Button from "../Button/Button";
-import { Image } from '@nextui-org/react';
-import NextImage from 'next/image';
-import CustomButton from '../ui/CustomButton';
+import CustomButton from '../../ui/CustomButton';
 
 interface IBannerSlideProps {
   image: string;
@@ -29,7 +19,7 @@ const BannerSlide: FC<IBannerSlideProps> = ({
   return (
     <div className='h-[600px]'>
       <div
-        className='w-full h-full bg-cover bg-no-repeat bg-center rounded-[7px] flex items-center'
+        className='h-full w-full bg-cover bg-no-repeat bg-center rounded-[7px] flex items-center'
         style={{
           backgroundImage: "url('/assets/banner.png')",
         }}

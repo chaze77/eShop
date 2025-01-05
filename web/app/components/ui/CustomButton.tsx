@@ -12,17 +12,17 @@ type ButtonVariant =
   | 'shadow';
 
 interface CustomButtonProps {
-  action?: 'first' | 'second'; // Сделаем action необязательным
+  action?: 'first' | 'second';
   onClick?: () => void;
   htmlType?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  text: string; // Текст кнопки
+  text: string;
 }
 
 const CustomButton: React.FC<
   CustomButtonProps & React.ComponentProps<typeof Button>
 > = ({
-  action = 'first', // Значение по умолчанию
+  action = 'first',
   onClick,
   htmlType = 'button',
   disabled = false,
@@ -60,8 +60,8 @@ const CustomButton: React.FC<
       variant={variant}
       radius='sm'
       disabled={disabled}
-      endContent={<ArrayRight color={iconColor} />} // Иконка с динамическим цветом
-      {...props} // Передаём дополнительные свойства
+      endContent={<ArrayRight color={iconColor} />}
+      {...props}
     >
       {text}
     </Button>
