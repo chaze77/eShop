@@ -1,9 +1,7 @@
 'use client';
 
-import { headerItems } from '@/app/constants/HeaderItems';
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
@@ -17,6 +15,7 @@ import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
 import { useState } from 'react';
 import CustomAccordion from '../ui/CustomAccordion';
+import { headerItems } from '@/app/constants/headerItems';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

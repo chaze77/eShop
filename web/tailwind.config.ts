@@ -16,6 +16,9 @@ export default {
         blue: '#48d0ff',
         foreground: 'var(--foreground)',
       },
+      fontFamily: {
+        rfdewi: ['RFDewi', 'Arial', 'sans-serif'], // Добавляем кастомный шрифт
+      },
 
       screens: {
         xs: '400px',

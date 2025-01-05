@@ -1,11 +1,18 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import MainBanner from './components/main/banner/MainBanner';
+import About from './components/main/about/About';
+import Blog from './components/main/blog/Blog';
+import Container from './components/ui/Container';
 
 export default function Home() {
   return (
-    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
-      <Button>Clickme</Button>
-    </div>
+    <main className='flex flex-col  items-center'>
+      <Container className='max-w-[1500px] w-full'>
+        <MainBanner />
+        <About />
+        <Blog />
+      </Container>
+    </main>
   );
 }
