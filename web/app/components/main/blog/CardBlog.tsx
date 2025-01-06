@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardBody, Image } from '@nextui-org/react';
+import CustomButton from '../../ui/CustomButton';
 
 interface CardBlogProps {
   img: string;
@@ -21,6 +22,12 @@ export default function CardBlog({ img, title, text }: CardBlogProps) {
         <p className='text-tiny uppercase font-bold'>{title}</p>
         <small className='text-default-500'>{text}</small>
       </CardBody>
+      <div className='p-2'>
+        <CustomButton
+          action='second'
+          text='Узнать подробнее'
+        />
+      </div>
     </Card>
   );
 }

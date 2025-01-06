@@ -1,19 +1,9 @@
-/* Контейнер для Swiper */
-.swiper {
+.smain-banner {
   width: 100%;
-  height: auto; /* Либо фиксированное значение, если нужно */
+  height: auto;
 }
 
-/* Контейнер точек пагинации */
-.swiper-pagination {
-  display: flex; /* Flexbox для выравнивания стрелок и точек */
-  justify-content: center; /* Центрирование точек по горизонтали */
-  align-items: center; /* Центрирование стрелок по вертикали */
-  height: 40px; /* Высота контейнера */
-}
-
-/* Точки пагинации */
-.swiper-pagination-bullet {
+.main-banner .swiper-pagination-bullet {
   width: 10px;
   height: 10px;
   background: black;
@@ -23,34 +13,33 @@
   transition: background 0.3s, opacity 0.3s;
 }
 
-.swiper-slide {
-  /* max-width: 100%; */
-  overflow: hidden;
-}
-
-.swiper-pagination-bullet-active {
+.main-banner .swiper-pagination-bullet-active {
   background: #48d0ff;
   opacity: 1;
 }
 
-/* Стрелки навигации */
-.swiper-button-prev,
-.swiper-button-next {
-  position: relative; /* Позиционируем стрелки внутри flex-контейнера */
-  transform: none; /* Убираем смещение */
-  width: 20px;
-  height: 20px;
-  color: black;
-  margin: 0 10px; /* Расстояние между стрелками и точками */
+.main-banner .swiper-button-prev,
+.main-banner .swiper-button-next {
+  top: auto; /* Убираем значение top */
+  bottom: 0px; /* Расположение снизу */
+  transform: translateY(0);
+  color: black; /* Убираем вертикальное смещение */
 }
 
-/* Анимация наведения на стрелки */
+.main-banner .swiper-button-prev {
+  left: 40%; /* Левее от центра */
+}
+
+.main-banner .swiper-button-next {
+  right: 40%; /* Правее от центра */
+}
+
+.main-banner .swiper-button-prev::after,
+.main-banner .swiper-button-next::after {
+  font-size: 30px;
+}
+
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
-  color: #48d0ff;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  display: none;
+  color: black;
 }

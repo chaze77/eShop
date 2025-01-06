@@ -22,46 +22,47 @@ export default function Blog() {
         />
       </div>
 
-      {/* Swiper */}
-      <Swiper
-        direction='horizontal'
-        pagination={{
-          clickable: true,
-        }}
-        spaceBetween={10}
-        navigation={true}
-        modules={[Navigation, Pagination, Autoplay, Keyboard]}
-        keyboard={{
-          enabled: true,
-        }}
-        breakpoints={{
-          // На экранах меньше 640px (sm)
-          640: {
-            slidesPerView: 1,
-            slideToClickedSlide: true,
-          },
-          // На экранах от 768px (md)
-          768: {
-            slidesPerView: 2,
-            slideToClickedSlide: true,
-          },
-          // На экранах от 1024px (lg)
-          1024: {
-            slidesPerView: 3,
-            slideToClickedSlide: true,
-          },
-        }}
-      >
-        {blogItems.map((item) => (
-          <SwiperSlide key={item.id}>
-            <CardBlog
-              img={item.img}
-              title={item.title}
-              text={item.text}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div className='blog-swiper'>
+        <Swiper
+          direction='horizontal'
+          pagination={{
+            clickable: true,
+          }}
+          spaceBetween={10}
+          navigation={true}
+          modules={[Navigation, Pagination, Autoplay, Keyboard]}
+          keyboard={{
+            enabled: true,
+          }}
+          breakpoints={{
+            // На экранах меньше 640px (sm)
+            640: {
+              slidesPerView: 1,
+              slideToClickedSlide: true,
+            },
+            // На экранах от 768px (md)
+            768: {
+              slidesPerView: 2,
+              slideToClickedSlide: true,
+            },
+            // На экранах от 1024px (lg)
+            1024: {
+              slidesPerView: 3,
+              slideToClickedSlide: true,
+            },
+          }}
+        >
+          {blogItems.map((item) => (
+            <SwiperSlide key={item.id}>
+              <CardBlog
+                img={item.img}
+                title={item.title}
+                text={item.text}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 }
