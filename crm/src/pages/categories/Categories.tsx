@@ -14,6 +14,8 @@ const Categories: React.FC = () => {
     fetchCategories();
   }, [fetchCategories]);
 
+  console.log(categories, 'categories');
+
   const dataSource = categories.map((category) => ({
     key: category.$id,
     name: category.name,
