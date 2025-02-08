@@ -15,10 +15,11 @@ import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
 import { useState } from 'react';
 import CustomAccordion from '../ui/CustomAccordion';
-import { headerItems } from '@/app/constants/headerItems';
+import { ICategory } from '@/types';
 
-export default function Header() {
+export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <Navbar className='bg-headers'>
       <NavbarContent>
@@ -35,8 +36,8 @@ export default function Header() {
         className='hidden md:flex lg:flex gap-4'
         justify='start'
       >
-        {headerItems.map((item) => (
-          <NavbarItem key={item.key}>
+        {categories.map((item) => (
+          <NavbarItem key={item.$id}>
             <CustomDropdown category={item} />
           </NavbarItem>
         ))}
@@ -66,9 +67,9 @@ export default function Header() {
           </Button>
         </NavbarItem> */}
         <NavbarMenu className='bg-black'>
-          {headerItems.map((item, index) => (
-            <NavbarMenuItem key={`${item.key}-${index}`}>
-              <CustomAccordion category={item} />
+          {categories.map((item, index) => (
+            <NavbarMenuItem key={item.$id}>
+              <CustomAccordion category={item.name} />
             </NavbarMenuItem>
           ))}
         </NavbarMenu>
