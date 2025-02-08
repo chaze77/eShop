@@ -2,31 +2,37 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay, Keyboard } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import BannerSlide from './BannerSlide';
+import 'swiper/css/navigation'; // Добавьте этот импорт для стрелок
 import './style.css';
+import BannerSlide from './BannerSlide';
 
-export default () => {
+const Slider = () => {
   return (
-    <Swiper
-      direction={'horizontal'}
-      pagination={{
-        clickable: true,
-      }}
-      navigation={false} // Включаем стрелки
-      modules={[Navigation, Pagination, Autoplay, Keyboard]} // Подключаем модули
-      slidesPerView={1}
-      // autoplay={{
-      //   delay: 5000,
-      //   disableOnInteraction: false,
-      // }}
-      keyboard={{
-        enabled: true,
-      }}
-    >
-      <SwiperSlide className='relative'>
-        <BannerSlide />
-      </SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-    </Swiper>
+    <div className='main-banner'>
+      <Swiper
+        direction='horizontal'
+        pagination={{
+          clickable: true, // Точки пагинации кликабельные
+        }}
+        navigation={false} // Включены стрелки
+        modules={[Navigation, Pagination, Autoplay, Keyboard]}
+        slidesPerView={1} // Один слайд за раз
+        // autoplay={{
+        //   delay: 5000, // Автопрокрутка каждые 5 секунд
+        //   disableOnInteraction: false,
+        // }}
+        keyboard={{
+          enabled: true, // Навигация с клавиатуры
+        }}
+      >
+        <SwiperSlide>
+          <BannerSlide />
+        </SwiperSlide>
+        <SwiperSlide>Slide 2</SwiperSlide>
+        <SwiperSlide>Slide 3</SwiperSlide>
+      </Swiper>
+    </div>
   );
 };
+
+export default Slider;
