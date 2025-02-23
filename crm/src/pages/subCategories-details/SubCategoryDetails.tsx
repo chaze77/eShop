@@ -6,10 +6,20 @@ import { Flex, Form, Input, Select, Space } from 'antd';
 import CustomButton from '@components/ui/CustomButton/CustomButton';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+interface ICategory {
+  $id: string;
+  name: string;
+}
+
 const SubCategoryDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const categories = useCategoryStore((state) => state.categories);
-  const fetchCategories = useCategoryStore((state) => state.fetchCategories);
+  const categories: ICategory[] = useCategoryStore((state) => state.items);
+  const fetchCategories = useCategoryStore((state) => state.fetchItems);
 
   const subCategory = useSubCategoryStore((state) => state.subCategory);
   const getById = useSubCategoryStore((state) => state.getById);
@@ -137,7 +147,7 @@ const SubCategoryDetails: React.FC = () => {
         >
           <Select
             placeholder='Select a category'
-            options={categories.map((category) => ({
+            options={categories.map<SelectOption>((category: ICategory) => ({
               label: category.name,
               value: category.$id,
             }))}

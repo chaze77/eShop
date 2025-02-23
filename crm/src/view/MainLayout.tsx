@@ -3,6 +3,11 @@ import {
   ProductOutlined,
   ShareAltOutlined,
   OneToOneOutlined,
+  AppstoreOutlined,
+  BgColorsOutlined,
+  TagsOutlined,
+  FormatPainterOutlined,
+  ColumnWidthOutlined,
 } from '@ant-design/icons';
 import { Button, Flex, Layout, Menu, Space, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -34,12 +39,22 @@ const MainLayout: React.FC = () => {
     });
   };
 
+  // Функция для установки активного ключа в меню
   const getActiveKey = () => {
     if (location.pathname.startsWith('/categories')) return 'categories';
     if (location.pathname.startsWith('/sub-categories')) return 'subcategories';
+    if (location.pathname.startsWith('/products')) return 'products';
+
+    // Проверяем вложенные маршруты для справочников (References)
+    if (location.pathname.startsWith('/reference/brands')) return 'brands';
+    if (location.pathname.startsWith('/reference/sizes')) return 'sizes';
+    if (location.pathname.startsWith('/reference/colors')) return 'colors';
+    if (location.pathname.startsWith('/reference/tags')) return 'tags';
+
     return 'defaultKey';
   };
 
+  // Конфигурация меню
   const items = [
     {
       key: 'categories',
@@ -59,6 +74,37 @@ const MainLayout: React.FC = () => {
       label: 'Products',
       onClick: () => navigate('/products'),
     },
+    {
+      key: 'references',
+      icon: <AppstoreOutlined />,
+      label: 'References',
+      children: [
+        {
+          key: 'brands',
+          icon: <FormatPainterOutlined />,
+          label: 'Brands',
+          onClick: () => navigate('/reference/brands'),
+        },
+        {
+          key: 'sizes',
+          icon: <ColumnWidthOutlined />,
+          label: 'Sizes',
+          onClick: () => navigate('/reference/sizes'),
+        },
+        {
+          key: 'colors',
+          icon: <BgColorsOutlined />,
+          label: 'Colors',
+          onClick: () => navigate('/reference/colors'),
+        },
+        {
+          key: 'tags',
+          icon: <TagsOutlined />,
+          label: 'Tags',
+          onClick: () => navigate('/reference/tags'),
+        },
+      ],
+    },
   ];
 
   return (
@@ -69,7 +115,7 @@ const MainLayout: React.FC = () => {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div style={{ padding: '20px' }}>
-          <h1 style={{ color: 'white' }}>CRM</h1>
+          <h1 style={{ color: 'white', textAlign: 'center' }}>CRM</h1>
         </div>
 
         <Menu
@@ -84,7 +130,7 @@ const MainLayout: React.FC = () => {
           <Flex justify='end'>
             <Space>
               <span style={{ fontSize: 16 }}>{user?.name}</span>
-              {user && <Button onClick={openConfirmationModal}>logout</Button>}
+              {user && <Button onClick={openConfirmationModal}>Logout</Button>}
             </Space>
           </Flex>
         </Header>

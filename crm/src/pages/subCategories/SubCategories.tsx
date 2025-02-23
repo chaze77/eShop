@@ -14,8 +14,8 @@ const SubCategories: React.FC = () => {
     (state) => state.fetchSubCategories
   );
 
-  const categories = useCategoryStore((state) => state.categories);
-  const fetchCategories = useCategoryStore((state) => state.fetchCategories);
+  const categories = useCategoryStore((state) => state.items);
+  const fetchCategories = useCategoryStore((state) => state.fetchItems);
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState(false);
 

@@ -1,19 +1,22 @@
-export interface IBaseDocument {
+import { Models } from 'appwrite';
+
+export interface IDirectory extends Models.Document {
+  name: string;
   $id: string;
-  $createdAt: string;
-  $updatedAt: string;
-  $permissions: string[];
-  subCategories: [];
-  $databaseId: string;
-  $collectionId: string;
 }
 
-export interface ICategory extends IBaseDocument {
+export interface ISubCategory extends Models.Document {
   name: string;
-  parent_id: string;
+  relatedCategory: IDirectory;
 }
 
-export interface ISubCategory extends IBaseDocument {
-  name: string;
-  relatedCategory: ICategory;
+export interface Store<T> {
+  items: T[];
+  item: T | null;
+  fetchItems: () => Promise<void>;
+  getById: (id: string) => Promise<void>;
+  resetItem: () => void;
+  create: (formState: Partial<T>) => Promise<void>;
+  update: (id: string, formState: Partial<T>) => Promise<void>;
+  deleteItem: (id: string) => Promise<void>;
 }
