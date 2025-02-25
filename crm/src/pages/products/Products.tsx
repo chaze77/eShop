@@ -67,39 +67,45 @@ const Products: React.FC = () => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={products.map((product) => ({ ...product, key: product.$id }))}
-      bordered
-      title={() => 'Список товаров'}
-      expandable={{
-        expandedRowRender: (product) => (
-          <Table
-            columns={[
-              { title: 'Количество', dataIndex: 'quantity', key: 'quantity' },
-              {
-                title: 'Цвета',
-                dataIndex: 'colors',
-                key: 'colors',
-                render: (colors) => colors.map((c) => c.name).join(', '),
-              },
-              {
-                title: 'Размеры',
-                dataIndex: 'size',
-                key: 'size',
-                render: (sizes) => sizes.map((s) => s.name).join(', '),
-              },
-            ]}
-            dataSource={product.attributes.map((attr) => ({
-              ...attr,
-              key: attr.$id,
-            }))}
-            pagination={false}
-          />
-        ),
-        rowExpandable: (product) => product.attributes.length > 0,
-      }}
-    />
+    <div>
+      <Button onClick={() => navigate('/product-details')}>Add</Button>
+      <Table
+        columns={columns}
+        dataSource={products.map((product) => ({
+          ...product,
+          key: product.$id,
+        }))}
+        bordered
+        title={() => 'Список товаров'}
+        expandable={{
+          expandedRowRender: (product) => (
+            <Table
+              columns={[
+                { title: 'Количество', dataIndex: 'quantity', key: 'quantity' },
+                {
+                  title: 'Цвета',
+                  dataIndex: 'colors',
+                  key: 'colors',
+                  render: (colors) => colors.map((c) => c.name).join(', '),
+                },
+                {
+                  title: 'Размеры',
+                  dataIndex: 'size',
+                  key: 'size',
+                  render: (sizes) => sizes.map((s) => s.name).join(', '),
+                },
+              ]}
+              dataSource={product.attributes.map((attr) => ({
+                ...attr,
+                key: attr.$id,
+              }))}
+              pagination={false}
+            />
+          ),
+          rowExpandable: (product) => product.attributes.length > 0,
+        }}
+      />
+    </div>
   );
 };
 

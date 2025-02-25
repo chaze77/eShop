@@ -11,6 +11,12 @@ import useColorStore from '@/store/useColorStore';
 import useSizeStore from '@/store/useSizeStore';
 import useBrandStore from '@store/useBrandStore';
 import useSubCategoryStore from '@/store/useSubCategoryStore';
+import { create } from 'zustand';
+import { createDocument, updateDocument } from '@/utils/apiClient/apiClient';
+
+const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
+const COLLECTION_ID_ATTR = import.meta.env.VITE_ATTRIBUTES_COLLECTION_ID;
+const COLLECTION_ID_PRODUCT = import.meta.env.VITE_PRODUCTS_COLLECTION_ID;
 
 interface SelectOption {
   label: string;
@@ -24,6 +30,7 @@ const ProductDetails: React.FC = () => {
     control,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(SCHEMA),
@@ -43,7 +50,9 @@ const ProductDetails: React.FC = () => {
   const fetchBrands = useBrandStore((state) => state.fetchItems);
   const fetchColors = useColorStore((state) => state.fetchItems);
   const fetchSizes = useSizeStore((state) => state.fetchItems);
+
   const getById = useProductStore((state) => state.fetchProductById);
+  const createProduct = useProductStore((state) => state.create);
 
   useEffect(() => {
     if (id) {
@@ -64,22 +73,27 @@ const ProductDetails: React.FC = () => {
     if (product && product.name) {
       setValue('name', product.name);
       setValue('price', product.price);
-      setValue(
-        'subCategories',
-        product.subCategories?.map(
-          (subCategory: IDirectory) => subCategory.$id
-        ) || ''
-      );
-      setValue('brands', product.brands?.$id || '');
-      setValue(
-        'attributes',
-        product.attributes.map((attr) => ({
-          $id: attr.$id,
-          quantity: attr.quantity,
-          colors: attr.colors.map((color: IDirectory) => color.$id),
-          size: attr.size.map((s: IDirectory) => s.$id),
-        }))
-      );
+
+      // Извлекаем единственный ID subCategory
+      const subCategoryId = product.subCategories?.[0]?.$id || '';
+      console.log('Extracted subCategory ID:', subCategoryId);
+      setValue('subCategories', subCategoryId);
+
+      // Извлекаем единственный ID бренда
+      const brandId = product.brands?.$id || '';
+      console.log('Extracted brand ID:', brandId);
+      setValue('brands', brandId);
+
+      // Извлекаем атрибуты, приводя colors и size к **одному ID**
+      const formattedAttributes = product.attributes.map((attr) => ({
+        $id: attr.$id, // ID самого атрибута
+        quantity: attr.quantity,
+        colors: attr.colors?.[0]?.$id || '', // Одиночный ID
+        size: attr.size?.[0]?.$id || '', // Одиночный ID
+        products: product.$id, // ❗ Добавляем связь с продуктом
+      }));
+
+      setValue('attributes', formattedAttributes);
     }
   }, [product, setValue]);
 
@@ -93,8 +107,74 @@ const ProductDetails: React.FC = () => {
     value: brand.$id,
   }));
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log('Отправленные данные:', data);
+  // ✅ Функция для добавления нового атрибута
+  const addAttribute = () => {
+    const currentAttributes = getValues('attributes') || [];
+    const newAttribute = {
+      quantity: 1, // Значение по умолчанию
+      colors: [],
+      size: [],
+    };
+    setValue('attributes', [...currentAttributes, newAttribute].slice(0, 5));
+  };
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(
+      '📤 Before sending to Appwrite:',
+      JSON.stringify(data, null, 2)
+    );
+
+    const dataForProduct = {
+      name: data.name,
+      price: data.price,
+      subCategories: data.subCategories,
+      brands: data.brands,
+      attributes: [],
+    };
+
+    try {
+      console.log('111111');
+
+      const newProduct = await createProduct(dataForProduct);
+      console.log('✅ New Product Response:', newProduct); // 🔥 Теперь тут будет объект с $id
+
+      if (!newProduct || !newProduct.$id) {
+        throw new Error('❌ Product creation failed: No ID received!');
+      }
+
+      const productId = newProduct.$id;
+      console.log('✅ Created Product ID:', productId);
+
+      console.log('✅ Created Product ID:', productId);
+
+      // 🟢 2. Создаём атрибуты, передаём `productId`
+      const attributeIds = await Promise.all(
+        data.attributes.map(async (attr) => {
+          const createdAttribute = await createDocument(
+            DATABASE_ID,
+            COLLECTION_ID_ATTR,
+            {
+              quantity: attr.quantity,
+              colors: [attr.colors],
+              size: [attr.size],
+              products: productId,
+            }
+          );
+          return createdAttribute.$id;
+        })
+      );
+
+      console.log('✅ Created attribute IDs:', attributeIds);
+
+      // 🟢 3. Обновляем продукт, добавляя `attributes`
+      await updateDocument(DATABASE_ID, COLLECTION_ID_PRODUCT, productId, {
+        attributes: attributeIds,
+      });
+
+      console.log('🎉 Product and attributes created successfully!');
+    } catch (error) {
+      console.error('❌ Error creating product:', error);
+    }
   };
 
   return (
@@ -103,7 +183,9 @@ const ProductDetails: React.FC = () => {
 
       <Form
         layout='vertical'
-        onFinish={handleSubmit(onSubmit)}
+        onFinish={handleSubmit(onSubmit, (errors) => {
+          console.error('Ошибка валидации:', errors);
+        })}
       >
         <Space>
           <Form.Item
@@ -177,6 +259,13 @@ const ProductDetails: React.FC = () => {
           </Form.Item>
         </Space>
 
+        <Button
+          onClick={addAttribute}
+          variant='outlined'
+        >
+          Add attribute
+        </Button>
+
         <h2>Attributes</h2>
 
         <Controller
@@ -196,54 +285,51 @@ const ProductDetails: React.FC = () => {
                   >
                     <h4>Attribute {index + 1}</h4>
 
-                    {/* Количество */}
-                    <Form.Item label='Quantity'>
-                      <Input
-                        type='number'
-                        value={attribute.quantity}
-                        onChange={(e) => {
-                          const newValue = [...field.value];
-                          newValue[index].quantity = Number(e.target.value);
-                          field.onChange(newValue);
-                        }}
-                      />
-                    </Form.Item>
+                    <Space>
+                      <Form.Item label='Quantity'>
+                        <Input
+                          type='number'
+                          value={attribute.quantity}
+                          onChange={(e) => {
+                            const newValue = [...field.value];
+                            newValue[index].quantity = Number(e.target.value);
+                            field.onChange(newValue);
+                          }}
+                        />
+                      </Form.Item>
 
-                    {/* Цвета */}
-                    <Form.Item label='Colors'>
-                      <Select
-                        mode='multiple'
-                        value={attribute.colors}
-                        placeholder='Select colors'
-                        options={colors.map((c) => ({
-                          label: c.name,
-                          value: c.$id,
-                        }))}
-                        onChange={(selectedColors) => {
-                          const newValue = [...field.value];
-                          newValue[index].colors = selectedColors;
-                          field.onChange(newValue);
-                        }}
-                      />
-                    </Form.Item>
+                      <Form.Item label='Colors'>
+                        <Select
+                          value={attribute.colors}
+                          placeholder='Select colors'
+                          options={colors.map((c) => ({
+                            label: c.name,
+                            value: c.$id,
+                          }))}
+                          onChange={(selectedColors) => {
+                            const newValue = [...field.value];
+                            newValue[index].colors = selectedColors;
+                            field.onChange(newValue);
+                          }}
+                        />
+                      </Form.Item>
 
-                    {/* Размеры */}
-                    <Form.Item label='Size'>
-                      <Select
-                        mode='multiple'
-                        value={attribute.size}
-                        placeholder='Select sizes'
-                        options={sizes.map((s) => ({
-                          label: s.name,
-                          value: s.$id,
-                        }))}
-                        onChange={(selectedSizes) => {
-                          const newValue = [...field.value];
-                          newValue[index].size = selectedSizes;
-                          field.onChange(newValue);
-                        }}
-                      />
-                    </Form.Item>
+                      <Form.Item label='Size'>
+                        <Select
+                          value={attribute.size}
+                          placeholder='Select sizes'
+                          options={sizes.map((s) => ({
+                            label: s.name,
+                            value: s.$id,
+                          }))}
+                          onChange={(selectedSizes) => {
+                            const newValue = [...field.value];
+                            newValue[index].size = selectedSizes;
+                            field.onChange(newValue);
+                          }}
+                        />
+                      </Form.Item>
+                    </Space>
                   </div>
                 ))}
             </>

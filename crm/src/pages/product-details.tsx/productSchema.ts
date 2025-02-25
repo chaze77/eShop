@@ -5,14 +5,14 @@ export const SCHEMA = z.object({
   name: z.string().min(1, REQUIRED_FIELD),
   description: z.string().min(1, REQUIRED_FIELD).optional(),
   price: z.string().min(1, REQUIRED_FIELD),
-  subCategories: z.array(z.string()).nonempty(REQUIRED_FIELD),
+  subCategories: z.string().optional(),
 
   attributes: z.array(
     z.object({
-      $id: z.string(),
+      $id: z.string().optional(),
       quantity: z.number(),
-      colors: z.array(z.string()).min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
-      size: z.array(z.string()).min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
+      colors: z.string().min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
+      size: z.string().min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
     })
   ),
 

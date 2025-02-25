@@ -23,13 +23,25 @@ export const getDocumentById = async <T>(
   const response = await databases.getDocument(databaseId, collectionId, id);
   return response as T;
 };
-
 export const createDocument = async (
   databaseId: string,
   collectionId: string,
   data: Record<string, any>
-): Promise<void> => {
-  await databases.createDocument(databaseId, collectionId, ID.unique(), data);
+): Promise<any> => {
+  try {
+    console.log('📤 Sending data to Appwrite:', JSON.stringify(data, null, 2));
+    const response = await databases.createDocument(
+      databaseId,
+      collectionId,
+      ID.unique(),
+      data
+    );
+    console.log('✅ Appwrite response:', response); // 🔥 Логируем ответ
+    return response;
+  } catch (error) {
+    console.error('❌ Error creating document in Appwrite:', error);
+    throw error;
+  }
 };
 
 export const updateDocument = async (

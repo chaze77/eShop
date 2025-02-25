@@ -1,5 +1,5 @@
 import { IDirectory } from '@/types';
-import { fetchDocuments } from '@/utils/apiClient/apiClient';
+import { createDocument, fetchDocuments } from '@/utils/apiClient/apiClient';
 import { Query } from 'appwrite';
 import { create } from 'zustand';
 
@@ -33,6 +33,7 @@ interface ProductStore {
     size?: string;
   }) => Promise<void>;
   fetchProductById: (productId: string) => Promise<void>;
+  create: (FormState: Product) => Promise<Product>;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -85,6 +86,26 @@ export const useProductStore = create<ProductStore>((set) => ({
       }
     } catch (error) {
       console.error('Ошибка при загрузке товара:', error);
+    }
+  },
+  create: async (formState: Product): Promise<Product> => {
+    try {
+      const createdProduct = await createDocument(DATABASE_ID, COLLECTION_ID, {
+        ...formState,
+      });
+
+      console.log('✅ Created Product:', createdProduct); // Проверяем, что Appwrite вернул объект
+
+      const documents = await fetchDocuments<Product>(
+        DATABASE_ID,
+        COLLECTION_ID
+      );
+      set({ products: documents });
+
+      return createdProduct; // 🔥 **ВЕРНУТЬ объект продукта!**
+    } catch (error) {
+      console.error(`❌ Ошибка при создании в ${COLLECTION_ID}:`, error);
+      throw error;
     }
   },
 }));
