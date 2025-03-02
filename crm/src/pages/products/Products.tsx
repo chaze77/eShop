@@ -3,16 +3,26 @@ import { useEffect } from 'react';
 import { Table, Tag, Button, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { IDirectory, IProduct } from '@/types';
+import showDeleteModal from '@/components/ui/Modal/ShowModal';
 
 const Products: React.FC = () => {
   const products = useProductStore((state) => state.products);
   const getProductList = useProductStore((state) => state.fetchProducts);
+  const deleteProduct = useProductStore((state) => state.delete);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (products.length === 0) getProductList();
-  }, [products, getProductList]);
+  }, [products]);
+
+  const openDeleteModal = (id: string) => {
+    showDeleteModal({
+      type: 'deleteModal',
+      onConfirm: async () => await deleteProduct(id),
+    });
+  };
 
   const columns = [
     { title: 'Наименование', dataIndex: 'name', key: 'name' },
@@ -20,19 +30,19 @@ const Products: React.FC = () => {
       title: 'Цена',
       dataIndex: 'price',
       key: 'price',
-      render: (price) => `${price} ₽`,
+      render: (price: string) => `${price} kgs`,
     },
     {
       title: 'Бренд',
       dataIndex: 'brands',
       key: 'brands',
-      render: (brands) => brands.name || '-',
+      render: (brands: IDirectory) => brands.name || '-',
     },
     {
       title: 'Теги',
       dataIndex: 'tags',
       key: 'tags',
-      render: (tags) => (
+      render: (tags: IDirectory[]) => (
         <>
           {tags.map((tag) => (
             <Tag
@@ -48,7 +58,7 @@ const Products: React.FC = () => {
     {
       title: 'Действия',
       key: 'actions',
-      render: (_, product) => (
+      render: (_: string, product: IProduct) => (
         <Space>
           <Button
             type='primary'
@@ -59,7 +69,7 @@ const Products: React.FC = () => {
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => deleteProduct(product.$id)}
+            onClick={() => openDeleteModal(product.$id)}
           />
         </Space>
       ),
@@ -86,13 +96,15 @@ const Products: React.FC = () => {
                   title: 'Цвета',
                   dataIndex: 'colors',
                   key: 'colors',
-                  render: (colors) => colors.map((c) => c.name).join(', '),
+                  render: (colors) =>
+                    colors.map((c: IDirectory) => c.name).join(', '),
                 },
                 {
                   title: 'Размеры',
                   dataIndex: 'size',
                   key: 'size',
-                  render: (sizes) => sizes.map((s) => s.name).join(', '),
+                  render: (sizes) =>
+                    sizes.map((s: IDirectory) => s.name).join(', '),
                 },
               ]}
               dataSource={product.attributes.map((attr) => ({

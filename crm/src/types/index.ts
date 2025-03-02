@@ -9,6 +9,24 @@ export interface ISubCategory extends Models.Document {
   name: string;
   relatedCategory: IDirectory;
 }
+export interface IAttributes {
+  $id?: string;
+  quantity: number;
+  colors: string[] | IDirectory[];
+  size: string[] | IDirectory[];
+  products?: IProduct[] | string;
+}
+
+// Интерфейс продукта
+export interface IProduct {
+  $id: string;
+  name: string;
+  desc?: string;
+  brands: IDirectory | string;
+  price: string;
+  subCategories: ISubCategory | string;
+  attributes?: IAttributes[] | string[];
+}
 
 export interface Store<T> {
   items: T[];

@@ -2,8 +2,9 @@ import { REQUIRED_FIELD } from '@/constants';
 import { z } from 'zod';
 
 export const SCHEMA = z.object({
+  $id: z.string().optional(),
   name: z.string().min(1, REQUIRED_FIELD),
-  description: z.string().min(1, REQUIRED_FIELD).optional(),
+  desc: z.string().min(1, REQUIRED_FIELD).optional(),
   price: z.string().min(1, REQUIRED_FIELD),
   subCategories: z.string().optional(),
 
@@ -11,8 +12,8 @@ export const SCHEMA = z.object({
     z.object({
       $id: z.string().optional(),
       quantity: z.number(),
-      colors: z.string().min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
-      size: z.string().min(1, REQUIRED_FIELD), // ✅ Теперь это массив строк
+      colors: z.string().min(1, REQUIRED_FIELD),
+      size: z.string().min(1, REQUIRED_FIELD),
     })
   ),
 

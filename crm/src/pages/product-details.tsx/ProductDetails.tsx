@@ -6,17 +6,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SCHEMA } from './productSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { IDirectory } from '@/types';
 import useColorStore from '@/store/useColorStore';
 import useSizeStore from '@/store/useSizeStore';
 import useBrandStore from '@store/useBrandStore';
 import useSubCategoryStore from '@/store/useSubCategoryStore';
-import { create } from 'zustand';
-import { createDocument, updateDocument } from '@/utils/apiClient/apiClient';
-
-const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
-const COLLECTION_ID_ATTR = import.meta.env.VITE_ATTRIBUTES_COLLECTION_ID;
-const COLLECTION_ID_PRODUCT = import.meta.env.VITE_PRODUCTS_COLLECTION_ID;
+import { useAttributeStore } from '@/store/useAttributeStore';
+import { IAttributes } from '@/types';
 
 interface SelectOption {
   label: string;
@@ -50,9 +45,11 @@ const ProductDetails: React.FC = () => {
   const fetchBrands = useBrandStore((state) => state.fetchItems);
   const fetchColors = useColorStore((state) => state.fetchItems);
   const fetchSizes = useSizeStore((state) => state.fetchItems);
-
   const getById = useProductStore((state) => state.fetchProductById);
   const createProduct = useProductStore((state) => state.create);
+  const updateProduct = useProductStore((state) => state.update);
+  const createAttribute = useAttributeStore((state) => state.create);
+  const updateAttribute = useAttributeStore((state) => state.updateAttribute);
 
   useEffect(() => {
     if (id) {
@@ -67,31 +64,44 @@ const ProductDetails: React.FC = () => {
     if (sizes.length === 0) fetchSizes();
   }, []);
 
-  console.log('product:', product);
-
   useEffect(() => {
     if (product && product.name) {
       setValue('name', product.name);
       setValue('price', product.price);
-
-      // Извлекаем единственный ID subCategory
-      const subCategoryId = product.subCategories?.[0]?.$id || '';
-      console.log('Extracted subCategory ID:', subCategoryId);
+      const subCategoryId =
+        typeof product.subCategories === 'object'
+          ? product.subCategories?.$id
+          : '';
       setValue('subCategories', subCategoryId);
 
-      // Извлекаем единственный ID бренда
-      const brandId = product.brands?.$id || '';
-      console.log('Extracted brand ID:', brandId);
+      const brandId =
+        typeof product.brands === 'object' ? product.brands?.$id : '';
       setValue('brands', brandId);
 
       // Извлекаем атрибуты, приводя colors и size к **одному ID**
-      const formattedAttributes = product.attributes.map((attr) => ({
-        $id: attr.$id, // ID самого атрибута
-        quantity: attr.quantity,
-        colors: attr.colors?.[0]?.$id || '', // Одиночный ID
-        size: attr.size?.[0]?.$id || '', // Одиночный ID
-        products: product.$id, // ❗ Добавляем связь с продуктом
-      }));
+      const formattedAttributes = product?.attributes
+        ?.map((attr) =>
+          typeof attr === 'object' && attr !== null
+            ? {
+                $id: attr.$id ?? '',
+                quantity: attr.quantity ?? '',
+                colors:
+                  Array.isArray(attr.colors) && attr.colors.length > 0
+                    ? typeof attr.colors[0] === 'object'
+                      ? attr.colors[0].$id
+                      : attr.colors[0]
+                    : '',
+                size:
+                  Array.isArray(attr.size) && attr.size.length > 0
+                    ? typeof attr.size[0] === 'object'
+                      ? attr.size[0].$id
+                      : attr.size[0]
+                    : '',
+                products: product.$id,
+              }
+            : null
+        )
+        .filter(Boolean); // ❗ Убираем `null` из массива
 
       setValue('attributes', formattedAttributes);
     }
@@ -110,70 +120,118 @@ const ProductDetails: React.FC = () => {
   // ✅ Функция для добавления нового атрибута
   const addAttribute = () => {
     const currentAttributes = getValues('attributes') || [];
+
     const newAttribute = {
-      quantity: 1, // Значение по умолчанию
-      colors: [],
-      size: [],
+      quantity: 1,
+      colors: '',
+      size: '',
     };
+
     setValue('attributes', [...currentAttributes, newAttribute].slice(0, 5));
   };
-
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(
-      '📤 Before sending to Appwrite:',
-      JSON.stringify(data, null, 2)
-    );
-
+  const handleProductCreationOrUpdate = async (data: FormData) => {
+    const formattedAttributes: IAttributes[] =
+      data.attributes?.map((attr) => ({
+        $id: attr.$id ?? '', // 🟢 Гарантируем, что `$id` всегда строка
+        quantity: attr.quantity,
+        colors: Array.isArray(attr.colors) ? attr.colors : [attr.colors], // 🟢 Приводим к массиву
+        size: Array.isArray(attr.size) ? attr.size : [attr.size], // 🟢 Приводим к массиву
+      })) || [];
     const dataForProduct = {
       name: data.name,
       price: data.price,
-      subCategories: data.subCategories,
+      subCategories: data.subCategories ?? '',
       brands: data.brands,
-      attributes: [],
+      desc: data.desc || '',
+      attributes: formattedAttributes,
     };
 
-    try {
-      console.log('111111');
+    let productId = id;
 
+    if (productId) {
+      console.log('🔄 Updating existing product:', productId);
+      console.log('🔄 Updating existing product:', dataForProduct);
+      await updateProduct(productId, dataForProduct);
+    } else {
+      console.log('🆕 Creating new product...');
       const newProduct = await createProduct(dataForProduct);
-      console.log('✅ New Product Response:', newProduct); // 🔥 Теперь тут будет объект с $id
-
       if (!newProduct || !newProduct.$id) {
-        throw new Error('❌ Product creation failed: No ID received!');
+        throw new Error('Product creation failed: No ID received!');
       }
-
-      const productId = newProduct.$id;
+      productId = newProduct.$id;
       console.log('✅ Created Product ID:', productId);
+    }
 
-      console.log('✅ Created Product ID:', productId);
+    return productId;
+  };
 
-      // 🟢 2. Создаём атрибуты, передаём `productId`
-      const attributeIds = await Promise.all(
-        data.attributes.map(async (attr) => {
-          const createdAttribute = await createDocument(
-            DATABASE_ID,
-            COLLECTION_ID_ATTR,
-            {
-              quantity: attr.quantity,
-              colors: [attr.colors],
-              size: [attr.size],
-              products: productId,
-            }
-          );
+  const handleAttributes = async (
+    attributes: IAttributes[],
+    productId: string
+  ) => {
+    return Promise.all(
+      attributes.map(async (attr) => {
+        if (attr.$id) {
+          // 🟢 Обновление атрибута
+          await updateAttribute(attr.$id, {
+            quantity: attr.quantity,
+            colors: attr.colors.map((color) =>
+              typeof color === 'object' ? color.$id : color
+            ), // ✅ Преобразуем `IDirectory[]` в `string[]`
+            size: attr.size.map((s) => (typeof s === 'object' ? s.$id : s)), // ✅ Преобразуем `IDirectory[]` в `string[]`
+            products: productId,
+          });
+          return attr.$id;
+        } else {
+          // 🟢 Создание нового атрибута
+          const createdAttribute = await createAttribute({
+            quantity: attr.quantity,
+            colors: attr.colors.map((color) =>
+              typeof color === 'object' ? color.$id : color
+            ), // ✅ Убираем `[attr.colors]`, теперь передаётся массив строк
+            size: attr.size.map((s) => (typeof s === 'object' ? s.$id : s)), // ✅ Убираем `[attr.size]`, теперь передаётся массив строк
+            products: productId,
+          });
           return createdAttribute.$id;
+        }
+      })
+    );
+  };
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const productId = await handleProductCreationOrUpdate(data); // id уже внутри
+
+      const formattedAttributes: IAttributes[] = data.attributes.map(
+        (attr) => ({
+          quantity: attr.quantity,
+          colors: Array.isArray(attr.colors) ? attr.colors : [attr.colors], // ✅ Преобразуем в массив
+          size: Array.isArray(attr.size) ? attr.size : [attr.size], // ✅ Преобразуем в массив
+          products: productId,
         })
       );
 
-      console.log('✅ Created attribute IDs:', attributeIds);
+      const attributeIds = await handleAttributes(
+        formattedAttributes,
+        productId
+      );
 
-      // 🟢 3. Обновляем продукт, добавляя `attributes`
-      await updateDocument(DATABASE_ID, COLLECTION_ID_PRODUCT, productId, {
-        attributes: attributeIds,
-      });
+      // const attributeIds = await handleAttributes(data.attributes, productId);
 
-      console.log('🎉 Product and attributes created successfully!');
+      // Убираем ненужные данные перед обновлением продукта
+      const updatedProductData = {
+        name: data.name,
+        price: data.price,
+        subCategories: data.subCategories ?? '',
+        brands: data.brands,
+        attributes: attributeIds.filter((id): id is string => Boolean(id)),
+      };
+
+      await updateProduct(productId, updatedProductData);
+
+      console.log('🎉 Product and attributes processed successfully!');
     } catch (error) {
-      console.error('❌ Error creating product:', error);
+      console.error('❌ Error processing product:', error);
     }
   };
 

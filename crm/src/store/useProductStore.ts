@@ -1,29 +1,19 @@
-import { IDirectory } from '@/types';
-import { createDocument, fetchDocuments } from '@/utils/apiClient/apiClient';
+import { IProduct } from '@/types';
+import {
+  createDocument,
+  fetchDocuments,
+  updateDocument,
+  deleteDocument, // ✅ Добавляем deleteDocument
+} from '@/utils/apiClient/apiClient';
 import { Query } from 'appwrite';
 import { create } from 'zustand';
 
 const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_PRODUCTS_COLLECTION_ID;
 
-interface Product {
-  $id: string;
-  name: string;
-  description: string;
-  brands: IDirectory;
-  price: string;
-  subCategories: IDirectory;
-  attributes: {
-    $id: string;
-    colors: IDirectory;
-    size: IDirectory;
-    quantity: number;
-  }[];
-}
-
 interface ProductStore {
-  products: Product[];
-  product: Product | null;
+  products: IProduct[];
+  product: IProduct | null;
   fetchProducts: (filters?: {
     description: string;
     brands?: string;
@@ -33,14 +23,15 @@ interface ProductStore {
     size?: string;
   }) => Promise<void>;
   fetchProductById: (productId: string) => Promise<void>;
-  create: (FormState: Product) => Promise<Product>;
+  create: (formState: IProduct) => Promise<IProduct>;
+  update: (id: string, formState: Partial<IProduct>) => Promise<void>;
+  delete: (id: string) => Promise<void>;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
   products: [],
   product: null,
 
-  /** 🔹 Получаем список товаров с фильтрацией */
   fetchProducts: async (filters) => {
     try {
       const queryFilters: string[] = [];
@@ -53,7 +44,6 @@ export const useProductStore = create<ProductStore>((set) => ({
       if (filters?.brands) {
         queryFilters.push(Query.equal('brand', filters.brands));
       }
-
       if (filters?.color) {
         queryFilters.push(Query.equal('attributes.color', filters.color));
       }
@@ -61,7 +51,7 @@ export const useProductStore = create<ProductStore>((set) => ({
         queryFilters.push(Query.contains('attributes.size', filters.size));
       }
 
-      const documents = await fetchDocuments<Product>(
+      const documents = await fetchDocuments<IProduct>(
         DATABASE_ID,
         COLLECTION_ID,
         queryFilters
@@ -75,7 +65,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
   fetchProductById: async (productId) => {
     try {
-      const document = await fetchDocuments<Product>(
+      const document = await fetchDocuments<IProduct>(
         DATABASE_ID,
         COLLECTION_ID,
         [Query.equal('$id', productId)]
@@ -88,15 +78,13 @@ export const useProductStore = create<ProductStore>((set) => ({
       console.error('Ошибка при загрузке товара:', error);
     }
   },
-  create: async (formState: Product): Promise<Product> => {
+
+  create: async (formState: Partial<IProduct>): Promise<IProduct> => {
     try {
       const createdProduct = await createDocument(DATABASE_ID, COLLECTION_ID, {
         ...formState,
       });
-
-      console.log('✅ Created Product:', createdProduct); // Проверяем, что Appwrite вернул объект
-
-      const documents = await fetchDocuments<Product>(
+      const documents = await fetchDocuments<IProduct>(
         DATABASE_ID,
         COLLECTION_ID
       );
@@ -105,6 +93,38 @@ export const useProductStore = create<ProductStore>((set) => ({
       return createdProduct; // 🔥 **ВЕРНУТЬ объект продукта!**
     } catch (error) {
       console.error(`❌ Ошибка при создании в ${COLLECTION_ID}:`, error);
+      throw error;
+    }
+  },
+
+  update: async (id: string, formState: Partial<IProduct>): Promise<void> => {
+    try {
+      await updateDocument(DATABASE_ID, COLLECTION_ID, id, {
+        ...formState,
+      });
+      const documents = await fetchDocuments<IProduct>(
+        DATABASE_ID,
+        COLLECTION_ID
+      );
+      set({ products: documents });
+    } catch (error) {
+      console.error(`❌ Ошибка при обновлении в ${COLLECTION_ID}:`, error);
+      throw error;
+    }
+  },
+
+  delete: async (id: string): Promise<void> => {
+    try {
+      await deleteDocument(DATABASE_ID, COLLECTION_ID, id);
+      console.log(`🗑️ Продукт с ID ${id} удален!`);
+
+      const updatedProducts = await fetchDocuments<IProduct>(
+        DATABASE_ID,
+        COLLECTION_ID
+      );
+      set({ products: updatedProducts });
+    } catch (error) {
+      console.error(`❌ Ошибка при удалении продукта ${id}:`, error);
       throw error;
     }
   },

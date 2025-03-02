@@ -28,20 +28,15 @@ export const createDocument = async (
   collectionId: string,
   data: Record<string, any>
 ): Promise<any> => {
-  try {
-    console.log('📤 Sending data to Appwrite:', JSON.stringify(data, null, 2));
-    const response = await databases.createDocument(
-      databaseId,
-      collectionId,
-      ID.unique(),
-      data
-    );
-    console.log('✅ Appwrite response:', response); // 🔥 Логируем ответ
-    return response;
-  } catch (error) {
-    console.error('❌ Error creating document in Appwrite:', error);
-    throw error;
-  }
+  console.log('📤 Sending data to Appwrite:', JSON.stringify(data, null, 2));
+  const response = await databases.createDocument(
+    databaseId,
+    collectionId,
+    ID.unique(),
+    data
+  );
+  console.log('✅ Appwrite response:', response); // 🔥 Логируем ответ
+  return response;
 };
 
 export const updateDocument = async (
