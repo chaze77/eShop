@@ -1,9 +1,9 @@
 import { useProductStore } from '@/store/useProductStore';
 import { useEffect } from 'react';
-import { Table, Tag, Button, Space } from 'antd';
+import { Table, Button, Space, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { IDirectory, IProduct } from '@/types';
+import { IAttributes, IDirectory, IProduct } from '@/types';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 
 const Products: React.FC = () => {
@@ -15,7 +15,7 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     if (products.length === 0) getProductList();
-  }, [products]);
+  }, []);
 
   const openDeleteModal = (id: string) => {
     showDeleteModal({
@@ -36,7 +36,7 @@ const Products: React.FC = () => {
       title: 'Бренд',
       dataIndex: 'brands',
       key: 'brands',
-      render: (brands: IDirectory) => brands.name || '-',
+      render: (brands: IDirectory) => brands?.name || '-',
     },
     {
       title: 'Теги',
@@ -44,7 +44,7 @@ const Products: React.FC = () => {
       key: 'tags',
       render: (tags: IDirectory[]) => (
         <>
-          {tags.map((tag) => (
+          {tags?.map((tag) => (
             <Tag
               key={tag.$id}
               color='cyan'
@@ -69,7 +69,7 @@ const Products: React.FC = () => {
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => openDeleteModal(product.$id)}
+            onClick={() => openDeleteModal(product?.$id ? product?.$id : '')}
           />
         </Space>
       ),
@@ -96,25 +96,33 @@ const Products: React.FC = () => {
                   title: 'Цвета',
                   dataIndex: 'colors',
                   key: 'colors',
-                  render: (colors) =>
-                    colors.map((c: IDirectory) => c.name).join(', '),
+                  render: (colors) => (colors ? colors.name : ''),
                 },
                 {
                   title: 'Размеры',
                   dataIndex: 'size',
                   key: 'size',
-                  render: (sizes) =>
-                    sizes.map((s: IDirectory) => s.name).join(', '),
+                  render: (sizes) => (sizes ? sizes.name : ''),
                 },
               ]}
-              dataSource={product.attributes.map((attr) => ({
-                ...attr,
-                key: attr.$id,
-              }))}
+              dataSource={
+                product?.attributes &&
+                product.attributes
+                  .filter(
+                    (attr): attr is IAttributes => typeof attr === 'object'
+                  )
+                  .map((attr) => ({ ...attr }))
+              }
               pagination={false}
             />
           ),
-          rowExpandable: (product) => product.attributes.length > 0,
+          rowExpandable: (product) => {
+            // Проверяем, что attributes - массив, и в нем есть хотя бы один элемент
+            return (
+              Array.isArray(product?.attributes) &&
+              product.attributes.length > 0
+            );
+          },
         }}
       />
     </div>

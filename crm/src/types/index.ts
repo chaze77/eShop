@@ -1,31 +1,36 @@
 import { Models } from 'appwrite';
 
-export interface IDirectory extends Models.Document {
-  name: string;
+// Базовая структура каталога (бренды, цвета, размеры и т. д.)
+export interface IDirectory {
   $id: string;
+  name: string;
 }
 
+// Подкатегории продуктов
 export interface ISubCategory extends Models.Document {
   name: string;
   relatedCategory: IDirectory;
 }
+
+// Атрибуты продуктов (цвет, размер, количество)
 export interface IAttributes {
   $id?: string;
   quantity: number;
-  colors: string[] | IDirectory[];
-  size: string[] | IDirectory[];
-  products?: IProduct[] | string;
+  colors?: IDirectory | string;
+  size?: IDirectory | string; // Размеры тоже используют IDirectory
+  products?: string; // ID связанного продукта
 }
 
-// Интерфейс продукта
+// Основной интерфейс продукта
 export interface IProduct {
-  $id: string;
+  $id?: string;
   name: string;
   desc?: string;
-  brands: IDirectory | string;
   price: string;
-  subCategories: ISubCategory | string;
+  brands?: IDirectory | null | string;
+  subCategories?: ISubCategory | null | string;
   attributes?: IAttributes[] | string[];
+  tags?: IDirectory[] | string[];
 }
 
 export interface Store<T> {

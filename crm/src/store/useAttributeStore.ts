@@ -13,10 +13,10 @@ const COLLECTION_ID = import.meta.env.VITE_ATTRIBUTES_COLLECTION_ID;
 interface AttributeStore {
   attributes: IAttributes[];
   attribute: IAttributes | null;
-  create: (formState: IAttributes) => Promise<IAttributes>;
+  create: (formState: Omit<IAttributes, '$id'>) => Promise<IAttributes>;
   updateAttribute: (
     id: string,
-    updatedData: Partial<IAttributes>
+    updatedData: Partial<Omit<IAttributes, '$id'>>
   ) => Promise<void>;
   fetchAttributes: () => Promise<void>;
 }
@@ -26,7 +26,7 @@ export const useAttributeStore = create<AttributeStore>((set) => ({
   attribute: null,
 
   // ✅ Функция создания атрибута
-  create: async (formState: Partial<IAttributes>): Promise<IAttributes> => {
+  create: async (formState: Omit<IAttributes, '$id'>): Promise<IAttributes> => {
     try {
       const createdAttribute = await createDocument(
         DATABASE_ID,
@@ -34,6 +34,7 @@ export const useAttributeStore = create<AttributeStore>((set) => ({
         formState
       );
 
+      set((state) => ({ attributes: [...state.attributes, createdAttribute] }));
       return createdAttribute;
     } catch (error) {
       console.error(
@@ -47,10 +48,16 @@ export const useAttributeStore = create<AttributeStore>((set) => ({
   // ✅ Функция обновления атрибута
   updateAttribute: async (
     id: string,
-    updatedData: Partial<IAttributes>
+    updatedData: Partial<Omit<IAttributes, '$id'>>
   ): Promise<void> => {
     try {
       await updateDocument(DATABASE_ID, COLLECTION_ID, id, updatedData);
+
+      set((state) => ({
+        attributes: state.attributes.map((attr) =>
+          attr.$id === id ? { ...attr, ...updatedData } : attr
+        ),
+      }));
     } catch (error) {
       console.error(`❌ Ошибка при обновлении атрибута ${id}:`, error);
       throw error;

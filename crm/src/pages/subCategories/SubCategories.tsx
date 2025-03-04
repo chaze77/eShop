@@ -20,9 +20,9 @@ const SubCategories: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState(false);
 
   useEffect(() => {
-    fetchSubCategories();
-    fetchCategories();
-  }, [fetchSubCategories]);
+    if (subCategories.length === 0) fetchSubCategories();
+    if (categories.length === 0) fetchCategories();
+  }, []);
 
   const toggleFilter = () => {
     setActiveFilter((prev) => !prev);

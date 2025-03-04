@@ -11,9 +11,9 @@ export const SCHEMA = z.object({
   attributes: z.array(
     z.object({
       $id: z.string().optional(),
-      quantity: z.number(),
-      colors: z.string().min(1, REQUIRED_FIELD),
-      size: z.string().min(1, REQUIRED_FIELD),
+      quantity: z.number().optional(),
+      colors: z.string().optional(),
+      size: z.string().optional(),
     })
   ),
 
