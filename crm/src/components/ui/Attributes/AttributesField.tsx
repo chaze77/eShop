@@ -1,7 +1,8 @@
 // AttributeField.tsx
 import { IAttributes } from '@/types';
-import { Form, Input, Select, Space } from 'antd';
+import { Button, Form, Input, Select, Space } from 'antd';
 import React from 'react';
+import { DeleteOutlined } from '@ant-design/icons';
 
 interface AttributeFieldProps {
   attribute: IAttributes;
@@ -9,6 +10,7 @@ interface AttributeFieldProps {
   colors: { name: string; $id: string }[];
   sizes: { name: string; $id: string }[];
   onChange: (newAttribute: IAttributes, index: number) => void;
+  onDelete: (index: number, attribute: IAttributes) => void;
 }
 
 const AttributeField: React.FC<AttributeFieldProps> = ({
@@ -17,6 +19,7 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
   colors,
   sizes,
   onChange,
+  onDelete,
 }) => {
   return (
     <div
@@ -70,6 +73,12 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
             }
           />
         </Form.Item>
+        <Button
+          type='primary'
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => onDelete(index, attribute)}
+        />
       </Space>
     </div>
   );

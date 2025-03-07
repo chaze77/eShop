@@ -56,6 +56,29 @@ const Products: React.FC = () => {
       ),
     },
     {
+      title: 'Фото',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image: string) => {
+        if (image) {
+          return (
+            <img
+              src={image}
+              alt='Product'
+              style={{
+                width: '60px',
+                height: 'auto',
+                objectFit: 'contain',
+                borderRadius: '4px',
+              }}
+            />
+          );
+        }
+        return '-';
+      },
+    },
+
+    {
       title: 'Действия',
       key: 'actions',
       render: (_: string, product: IProduct) => (
@@ -111,7 +134,10 @@ const Products: React.FC = () => {
                   .filter(
                     (attr): attr is IAttributes => typeof attr === 'object'
                   )
-                  .map((attr) => ({ ...attr }))
+                  .map((attr, index) => ({
+                    ...attr,
+                    key: attr.$id || `temp-${index}`,
+                  }))
               }
               pagination={false}
             />

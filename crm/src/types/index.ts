@@ -31,6 +31,7 @@ export interface IProduct {
   subCategories?: ISubCategory | null | string;
   attributes?: IAttributes[] | string[];
   tags?: IDirectory[] | string[];
+  image?: File | string | null;
 }
 
 export interface Store<T> {

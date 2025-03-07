@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import { Form, Select, Input, Button, Space } from 'antd';
-import { useParams } from 'react-router-dom';
 import { useProductStore } from '@/store/useProductStore';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SCHEMA } from './productSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import useColorStore from '@/store/useColorStore';
-import useSizeStore from '@/store/useSizeStore';
-import useBrandStore from '@store/useBrandStore';
-import useSubCategoryStore from '@/store/useSubCategoryStore';
 import { useAttributeStore } from '@/store/useAttributeStore';
 import { IAttributes, IProduct } from '@/types';
 import AttributeField from '@/components/ui/Attributes/AttributesField';
-import useTagStore from '@/store/useTagsStore';
+import InputFileUpload from '@/components/ui/InputFileUpload/InputFileUpload';
+import { getFileUrl, imageUpload } from '@/utils/getFileUrl';
+import { useProductData } from './hooks/useProductData';
 
 interface SelectOption {
   label: string;
@@ -34,86 +31,11 @@ const ProductDetails: React.FC = () => {
     mode: 'all',
   });
 
-  const { id } = useParams();
-  const subCategoriesSelect = useSubCategoryStore(
-    (state) => state.subCategories
-  );
-  const brands = useBrandStore((state) => state.items);
-  const product = useProductStore((state) => state.product);
-  const colors = useColorStore((state) => state.items);
-  const sizes = useSizeStore((state) => state.items);
-  const tags = useTagStore((state) => state.items);
-
-  const fetchSubCategories = useSubCategoryStore(
-    (state) => state.fetchSubCategories
-  );
-  const fetchBrands = useBrandStore((state) => state.fetchItems);
-  const fetchColors = useColorStore((state) => state.fetchItems);
-  const fetchSizes = useSizeStore((state) => state.fetchItems);
-  const fetchTags = useTagStore((state) => state.fetchItems);
-  const getById = useProductStore((state) => state.fetchProductById);
   const createProduct = useProductStore((state) => state.create);
   const updateProduct = useProductStore((state) => state.update);
-  const createAttribute = useAttributeStore((state) => state.create);
-  const updateAttribute = useAttributeStore((state) => state.updateAttribute);
 
-  useEffect(() => {
-    if (id) {
-      getById(id);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (subCategoriesSelect.length === 0) fetchSubCategories();
-    if (brands.length === 0) fetchBrands();
-    if (colors.length === 0) fetchColors();
-    if (sizes.length === 0) fetchSizes();
-    if (tags.length === 0) fetchTags();
-  }, []);
-
-  useEffect(() => {
-    if (!product) return;
-    const { name, price, subCategories, brands, attributes } = product;
-
-    setValue('name', name);
-    setValue('price', price);
-    setValue(
-      'subCategories',
-      typeof subCategories === 'object' ? subCategories?.$id ?? '' : ''
-    );
-    setValue('brands', typeof brands === 'object' ? brands?.$id ?? '' : '');
-    setValue(
-      'tags',
-      tags.map((tag) => tag.$id)
-    );
-
-    const formattedAttributes =
-      attributes?.map((attr) => {
-        if (typeof attr === 'object') {
-          return {
-            $id: attr.$id,
-            quantity: attr.quantity,
-            colors:
-              typeof attr.colors === 'object'
-                ? attr.colors.$id
-                : attr.colors ?? '',
-            size:
-              typeof attr.size === 'object' ? attr.size.$id : attr.size ?? '',
-            products: product.$id ?? '',
-          };
-        } else {
-          return {
-            $id: '',
-            quantity: 1,
-            colors: '',
-            size: '',
-            products: product.$id ?? '',
-          };
-        }
-      }) ?? [];
-
-    setValue('attributes', formattedAttributes);
-  }, [product, setValue]);
+  const { id, product, subCategoriesSelect, brands, colors, sizes, tagsColl } =
+    useProductData();
 
   const categoryOptions: SelectOption[] = subCategoriesSelect.map(
     (category) => ({
@@ -127,30 +49,92 @@ const ProductDetails: React.FC = () => {
     value: brand.$id,
   }));
 
-  const tagsOption: SelectOption[] = tags.map((tag) => ({
+  const tagsOption: SelectOption[] = tagsColl.map((tag) => ({
     label: tag.name,
     value: tag.$id,
   }));
 
+  useEffect(() => {
+    if (!product) return;
+    const { name, price, subCategories, brands, attributes, image, tags } =
+      product;
+
+    setValue('name', name);
+    setValue('price', price);
+    setValue(
+      'subCategories',
+      typeof subCategories === 'object' ? subCategories?.$id ?? '' : ''
+    );
+    setValue('brands', typeof brands === 'object' ? brands?.$id ?? '' : '');
+    const tagsValue = tags?.map((tag) => {
+      if (typeof tag === 'object') {
+        return tag.$id;
+      }
+      return tag;
+    });
+
+    setValue('tags', tagsValue);
+
+    if (image) {
+      setValue('image', image);
+    }
+
+    const formattedAttributes =
+      attributes?.map((attr) => {
+        if (typeof attr !== 'object') {
+          return {
+            $id: '',
+            quantity: 1,
+            colors: '',
+            size: '',
+            products: product.$id ?? '',
+          };
+        }
+        const { $id, quantity, colors, size } = attr;
+        return {
+          $id,
+          quantity,
+          colors: typeof colors === 'object' ? colors.$id : colors ?? '',
+          size: typeof size === 'object' ? size.$id : size ?? '',
+          products: product.$id ?? '',
+        };
+      }) ?? [];
+
+    setValue('attributes', formattedAttributes);
+  }, [product, setValue]);
+
   const addAttribute = () => {
     const currentAttributes = getValues('attributes') || [];
-
     const newAttribute = {
       quantity: 1,
       colors: '',
       size: '',
     };
-
     setValue('attributes', [...currentAttributes, newAttribute].slice(0, 5));
   };
 
   const handleProductCreationOrUpdate = async (data: FormData) => {
+    console.log('DATA', data);
+    let imageToSave = data.image;
+
+    if (data.image instanceof File) {
+      try {
+        const fileId = await imageUpload(data.image);
+        imageToSave = getFileUrl(fileId);
+        console.log(imageToSave, 'imageToSave');
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+    }
+
     const dataForProduct: Omit<IProduct, '$id'> = {
       name: data.name,
       price: data.price,
       subCategories: data?.subCategories ? data?.subCategories : '',
       brands: data.brands ?? '',
       desc: data.desc || '',
+      image: imageToSave,
       tags: data?.tags ?? [],
       attributes:
         (data.attributes?.map(({ $id, quantity, colors, size }) => ({
@@ -167,80 +151,42 @@ const ProductDetails: React.FC = () => {
       await updateProduct(productId, dataForProduct);
     } else {
       const newProduct = await createProduct(dataForProduct);
-      if (!newProduct?.$id)
+      if (!newProduct?.$id) {
         throw new Error('Product creation failed: No ID received!');
+      }
       productId = newProduct.$id;
     }
     return productId;
   };
 
-  const handleAttributes = async (
-    attributes: IAttributes[],
-    productId: string
+  // Обработчик удаления атрибута: удаляем из базы (если уже сохранён) и из состояния формы
+  const handleDeleteAttribute = async (
+    index: number,
+    attribute: IAttributes
   ) => {
-    return Promise.all(
-      attributes.map(async (attr) => {
-        if (attr.$id) {
-          await updateAttribute(attr.$id, {
-            quantity: attr.quantity,
-            colors: attr.colors,
-            size: attr.size,
-            products: productId,
-          });
-          return attr.$id;
-        } else {
-          const createdAttribute = await createAttribute({
-            quantity: attr.quantity,
-            colors: attr.colors,
-            size: attr.size,
-            products: productId,
-          });
-          return createdAttribute.$id;
-        }
-      })
-    );
+    if (attribute.$id) {
+      try {
+        await useAttributeStore.getState().deleteAttribute(attribute.$id);
+      } catch (error) {
+        console.error('Ошибка удаления атрибута:', error);
+      }
+    }
+    const currentAttributes = getValues('attributes') || [];
+    const newAttributes = currentAttributes.filter((_, idx) => idx !== index);
+    setValue('attributes', newAttributes);
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('DATA', data);
-
     try {
-      const productId = await handleProductCreationOrUpdate(data);
-
-      const formattedAttributes: IAttributes[] = (data.attributes ?? [])
-        .filter(Boolean)
-        .map((attr) => ({
-          quantity: attr.quantity ?? 0,
-          colors: attr.colors,
-          size: attr.size,
-          products: productId,
-        }));
-
-      const attributeIds = await handleAttributes(
-        formattedAttributes,
-        productId
-      );
-
-      // ✅ Убираем ненужные данные перед обновлением продукта
-      const updatedProductData = {
-        name: data.name,
-        price: data.price,
-        subCategories: data?.subCategories,
-        brands: data?.brands,
-        tags: data?.tags ?? [],
-        attributes: attributeIds.filter((id): id is string => Boolean(id)),
-      };
-
-      await updateProduct(productId, updatedProductData as Partial<IProduct>);
+      await handleProductCreationOrUpdate(data);
     } catch (error) {
-      console.error('❌ Error processing product:', error);
+      console.error('Error processing product:', error);
     }
   };
 
   return (
     <div className='content-box'>
       <h2>Product</h2>
-
       <Form
         layout='vertical'
         onFinish={handleSubmit(onSubmit, (errors) => {
@@ -317,6 +263,7 @@ const ProductDetails: React.FC = () => {
               )}
             />
           </Form.Item>
+
           <Form.Item
             label='Tags'
             validateStatus={errors.brands ? 'error' : ''}
@@ -329,12 +276,24 @@ const ProductDetails: React.FC = () => {
                 <Select
                   mode='multiple'
                   {...field}
-                  placeholder='Select a brand'
+                  placeholder='Select a tags'
                   options={tagsOption}
                 />
               )}
             />
           </Form.Item>
+
+          <Controller
+            name='image'
+            control={control}
+            defaultValue={''}
+            render={({ field }) => (
+              <InputFileUpload
+                image={field.value ? field.value : ''}
+                setImage={field.onChange}
+              />
+            )}
+          />
         </Space>
 
         <Button
@@ -367,16 +326,18 @@ const ProductDetails: React.FC = () => {
                       newValue[idx] = newAttribute;
                       field.onChange(newValue);
                     }}
+                    onDelete={handleDeleteAttribute}
                   />
                 ))}
             </>
           )}
         />
+
         <Button
           type='primary'
           htmlType='submit'
         >
-          Save Product
+          {id ? 'Update' : 'Save'}
         </Button>
       </Form>
     </div>
