@@ -7,6 +7,7 @@ import useSubCategoryStore from '@/store/useSubCategoryStore';
 import './sub-categories.less';
 import useCategoryStore from '@/store/useCategoryStore';
 import BasicFilter from '@/components/Filters/BasicFilter';
+import Title from '@/components/ui/Title/Ttitle';
 
 const SubCategories: React.FC = () => {
   const subCategories = useSubCategoryStore((state) => state.subCategories);
@@ -44,12 +45,12 @@ const SubCategories: React.FC = () => {
 
   const columns = [
     {
-      title: 'SubCategory',
+      title: 'Группы',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Category',
+      title: 'Категории',
       dataIndex: 'categoryName',
       key: 'categoryName',
     },
@@ -57,7 +58,7 @@ const SubCategories: React.FC = () => {
 
   return (
     <div className='content-box'>
-      <h2>SubCategories</h2>
+      <Title text='Группы' />
       <Space>
         <CustomButton
           action='add'

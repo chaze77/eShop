@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Space, Table } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Input, Space, Table } from 'antd';
 import EditModal from '@/components/ui/Modal/EditModal';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import { IDirectory, Store } from '@/types';
+import Title from '../ui/Title/Ttitle';
 
 interface ReferenceTableProps {
   store: () => Store<IDirectory>;
@@ -82,25 +82,19 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
       key: 'name',
     },
     {
-      title: 'Actions',
+      title: 'Действие',
       key: 'actions',
       render: (_: string, record: DataSource) => (
         <Space>
-          <Button
-            type='primary'
-            icon={<EditOutlined />}
+          <CustomButton
+            action='edit'
             onClick={() => openEditModal(record.key)}
-          >
-            Edit
-          </Button>
-          <Button
-            type='primary'
-            danger
-            icon={<DeleteOutlined />}
+          />
+
+          <CustomButton
+            action='delete'
             onClick={() => openDeleteModal(record.key)}
-          >
-            Delete
-          </Button>
+          />
         </Space>
       ),
     },
@@ -108,8 +102,8 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
 
   return (
     <div>
-      <h2>{title}</h2>
-      <Space>
+      <Title text={title} />
+      <Space style={{ marginBottom: '12px' }}>
         <CustomButton
           action='create'
           onClick={handleCreate}

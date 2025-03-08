@@ -5,7 +5,7 @@ const Categories = () => {
   return (
     <ReferenceTable
       store={useCategoryStore}
-      title='Categories'
+      title='Категории'
     />
   );
 };

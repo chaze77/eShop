@@ -5,7 +5,7 @@ const Brands = () => {
   return (
     <ReferenceTable
       store={useBrandStore}
-      title='Brands'
+      title='Бренд'
     />
   );
 };

@@ -1,15 +1,16 @@
 export const modalTexts = {
   deleteModal: {
-    title: 'Are you sure?',
+    title: 'Вы уверены?',
     content:
-      'Do you really want to delete this item? This action cannot be undone.',
-    okText: 'Delete',
-    cancelText: 'Cancel',
+      'Вы действительно хотите удалить этот элемент? Это действие нельзя отменить.',
+    okText: 'Удалить',
+    cancelText: 'Отмена',
   },
+
   confirmationModal: {
-    title: 'Confirmation',
-    content: 'Do you want to proceed with this action?',
-    okText: 'Yes',
-    cancelText: 'No',
+    title: 'Подтверждение',
+    content: 'Вы хотите продолжить это действие?',
+    okText: 'Да',
+    cancelText: 'Нет',
   },
 };

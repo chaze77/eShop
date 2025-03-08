@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Form, Select, Input, Button, Space } from 'antd';
+import { Form, Select, Input, Button, Space, Row, Col, Flex } from 'antd';
 import { useProductStore } from '@/store/useProductStore';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SCHEMA } from './productSchema';
@@ -11,6 +11,9 @@ import AttributeField from '@/components/ui/Attributes/AttributesField';
 import InputFileUpload from '@/components/ui/InputFileUpload/InputFileUpload';
 import { getFileUrl, imageUpload } from '@/utils/getFileUrl';
 import { useProductData } from './hooks/useProductData';
+import CustomButton from '@/components/ui/CustomButton/CustomButton';
+import Title from '@/components/ui/Title/Ttitle';
+import './product.less';
 
 interface SelectOption {
   label: string;
@@ -185,162 +188,166 @@ const ProductDetails: React.FC = () => {
   };
 
   return (
-    <div className='content-box'>
-      <h2>Product</h2>
+    <Flex vertical>
+      <Title text='Продукт' />
       <Form
         layout='vertical'
         onFinish={handleSubmit(onSubmit, (errors) => {
           console.error('Validation errors:', errors);
         })}
       >
-        <Space>
-          <Form.Item
-            label='Product Name'
-            validateStatus={errors.name ? 'error' : ''}
-            help={errors.name?.message}
-          >
-            <Controller
-              name='name'
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder='Product name'
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label='Price'
-            validateStatus={errors.price ? 'error' : ''}
-            help={errors.price?.message}
-          >
-            <Controller
-              name='price'
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder='Price'
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label='Category'
-            validateStatus={errors.subCategories ? 'error' : ''}
-            help={errors.subCategories?.message}
-          >
-            <Controller
-              name='subCategories'
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder='Select a category'
-                  options={categoryOptions}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label='Brand'
-            validateStatus={errors.brands ? 'error' : ''}
-            help={errors.brands?.message}
-          >
-            <Controller
-              name='brands'
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder='Select a brand'
-                  options={brandOptions}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label='Tags'
-            validateStatus={errors.brands ? 'error' : ''}
-            help={errors.brands?.message}
-          >
-            <Controller
-              name='tags'
-              control={control}
-              render={({ field }) => (
-                <Select
-                  mode='multiple'
-                  {...field}
-                  placeholder='Select a tags'
-                  options={tagsOption}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Controller
-            name='image'
-            control={control}
-            defaultValue={''}
-            render={({ field }) => (
-              <InputFileUpload
-                image={field.value ? field.value : ''}
-                setImage={field.onChange}
+        <Space direction='vertical'>
+          <Space>
+            <Form.Item
+              label='Наименование'
+              validateStatus={errors.name ? 'error' : ''}
+              help={errors.name?.message}
+            >
+              <Controller
+                name='name'
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder='Наименование'
+                  />
+                )}
               />
-            )}
-          />
+            </Form.Item>
+
+            <Form.Item
+              label='Цена'
+              validateStatus={errors.price ? 'error' : ''}
+              help={errors.price?.message}
+            >
+              <Controller
+                name='price'
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder='Price'
+                  />
+                )}
+              />
+            </Form.Item>
+          </Space>
+          <Space>
+            <Form.Item
+              label='Группа'
+              validateStatus={errors.subCategories ? 'error' : ''}
+              help={errors.subCategories?.message}
+            >
+              <Controller
+                name='subCategories'
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    placeholder='Select a category'
+                    options={categoryOptions}
+                  />
+                )}
+              />
+            </Form.Item>
+            <Form.Item
+              label='Бренд'
+              validateStatus={errors.brands ? 'error' : ''}
+              help={errors.brands?.message}
+            >
+              <Controller
+                name='brands'
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    placeholder='Select a brand'
+                    options={brandOptions}
+                  />
+                )}
+              />
+            </Form.Item>
+            <Form.Item
+              label='Теги'
+              validateStatus={errors.brands ? 'error' : ''}
+              help={errors.brands?.message}
+            >
+              <Controller
+                name='tags'
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    mode='multiple'
+                    {...field}
+                    placeholder='Select a tags'
+                    options={tagsOption}
+                  />
+                )}
+              />
+            </Form.Item>
+
+            <Controller
+              name='image'
+              control={control}
+              defaultValue={''}
+              render={({ field }) => (
+                <InputFileUpload
+                  image={field.value ? field.value : ''}
+                  setImage={field.onChange}
+                />
+              )}
+            />
+          </Space>
+          <Button
+            onClick={addAttribute}
+            variant='outlined'
+          >
+            Добавить атрибут
+          </Button>
         </Space>
 
-        <Button
-          onClick={addAttribute}
-          variant='outlined'
-        >
-          Add attribute
-        </Button>
+        <Title text='Атрибуты' />
 
-        <h2>Attributes</h2>
+        <Row gutter={[16, 16]}>
+          <Controller
+            name='attributes'
+            control={control}
+            render={({ field }) => (
+              <>
+                {field.value &&
+                  field.value.map((attribute, index) => (
+                    <Col
+                      key={attribute.$id || index}
+                      span={12}
+                    >
+                      <AttributeField
+                        attribute={{
+                          ...attribute,
+                          quantity: attribute.quantity ?? 1,
+                        }}
+                        index={index}
+                        colors={colors}
+                        sizes={sizes}
+                        onChange={(newAttribute, idx) => {
+                          const newValue = [...field.value];
+                          newValue[idx] = newAttribute;
+                          field.onChange(newValue);
+                        }}
+                        onDelete={handleDeleteAttribute}
+                      />
+                    </Col>
+                  ))}
+              </>
+            )}
+          />
+        </Row>
 
-        <Controller
-          name='attributes'
-          control={control}
-          render={({ field }) => (
-            <>
-              {field.value &&
-                field.value.map((attribute, index) => (
-                  <AttributeField
-                    key={attribute.$id || index}
-                    attribute={{
-                      ...attribute,
-                      quantity: attribute.quantity ?? 1,
-                    }}
-                    index={index}
-                    colors={colors}
-                    sizes={sizes}
-                    onChange={(newAttribute, idx) => {
-                      const newValue = [...field.value];
-                      newValue[idx] = newAttribute;
-                      field.onChange(newValue);
-                    }}
-                    onDelete={handleDeleteAttribute}
-                  />
-                ))}
-            </>
-          )}
-        />
-
-        <Button
-          type='primary'
+        <CustomButton
+          action={id ? 'update' : 'create'}
           htmlType='submit'
-        >
-          {id ? 'Update' : 'Save'}
-        </Button>
+        />
       </Form>
-    </div>
+    </Flex>
   );
 };
 
