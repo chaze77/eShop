@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useAuthStore from '@/store/useAuthStore';
-import Login from '@/pages/login/Login'; // Импортируем компонент Login
+import Login from '@/pages/login/Login';
 
 const ProtectedRoutes: React.FC = () => {
   const user = useAuthStore((state) => state.user);
