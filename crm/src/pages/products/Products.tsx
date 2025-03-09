@@ -32,7 +32,13 @@ const Products: React.FC = () => {
       title: 'Цена',
       dataIndex: 'price',
       key: 'price',
-      render: (price: string) => `${price} kgs`,
+      render: (price: string) => price,
+    },
+    {
+      title: 'Описание',
+      dataIndex: 'desc',
+      key: 'desc',
+      render: (desc: string) => desc,
     },
     {
       title: 'Бренд',
@@ -48,6 +54,7 @@ const Products: React.FC = () => {
         <>
           {tags?.map((tag) => (
             <Tag
+              style={{ marginBottom: '2px' }}
               key={tag.$id}
               color='cyan'
             >

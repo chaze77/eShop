@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react';
+// ReferenceTable.tsx
+import React, { useEffect, useState } from 'react';
 import { Input, Space, Table } from 'antd';
 import EditModal from '@/components/ui/Modal/EditModal';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import { IDirectory, Store } from '@/types';
 import Title from '../ui/Title/Ttitle';
+import useLoaderStore from '@/store/useLoaderStore';
+
+// interface SelectOption {
+//   label: string;
+//   value: string;
+// }
 
 interface ReferenceTableProps {
   store: () => Store<IDirectory>;
@@ -19,13 +26,21 @@ interface DataSource {
 const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
   const { fetchItems, items, deleteItem, getById, item, update, create } =
     store();
+  const setLoading = useLoaderStore((state) => state.setLoading);
   const [formState, setFormState] = useState({ name: '' });
   const [editOpen, setEditOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  // Загрузка элементов при монтировании компонента
   useEffect(() => {
-    if (items.length === 0) fetchItems();
-  }, []);
+    if (items.length === 0) {
+      (async () => {
+        setLoading(true);
+        await fetchItems();
+        setLoading(false);
+      })();
+    }
+  }, [items.length, fetchItems, setLoading]);
 
   const dataSource = items.map((item: IDirectory) => ({
     key: item.$id,
@@ -34,8 +49,10 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
 
   const handleDelete = async (id: string) => {
     if (id) {
+      setLoading(true);
       await deleteItem(id);
-      fetchItems();
+      await fetchItems();
+      setLoading(false);
     }
   };
 
@@ -49,6 +66,7 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
   const openEditModal = async (id: string) => {
     setEditOpen(true);
     setEditingId(id);
+
     await getById(id);
   };
 
@@ -59,20 +77,24 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
 
   const handleUpdate = async (values: { name: string }) => {
     if (!editingId) return;
-
     try {
+      setLoading(true);
       await update(editingId, values);
-      fetchItems();
+      await fetchItems();
       closeEditModal();
     } catch (error) {
       console.error('Ошибка обновления:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCreate = async () => {
+    setLoading(true);
     await create({ name: formState.name });
-    fetchItems();
+    await fetchItems();
     setFormState({ name: '' });
+    setLoading(false);
   };
 
   const columns = [
@@ -90,7 +112,6 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
             action='edit'
             onClick={() => openEditModal(record.key)}
           />
-
           <CustomButton
             action='delete'
             onClick={() => openDeleteModal(record.key)}

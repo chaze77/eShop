@@ -15,7 +15,7 @@ interface ProductStore {
   products: IProduct[];
   product: IProduct | null;
   fetchProducts: (filters?: {
-    description?: string;
+    desc?: string;
     brands?: string;
     subCategories?: string[];
     price?: number;
@@ -113,12 +113,12 @@ export const useProductStore = create<ProductStore>((set) => ({
   delete: async (id: string): Promise<void> => {
     try {
       await deleteDocument(DATABASE_ID, COLLECTION_ID, id);
-      console.log(`🗑️ Продукт с ID ${id} удален!`);
+      console.log(`Продукт с ID ${id} удален!`);
       set((state) => ({
         products: state.products.filter((product) => product.$id !== id),
       }));
     } catch (error) {
-      console.error(`❌ Ошибка при удалении товара ${id}:`, error);
+      console.error(`Ошибка при удалении товара ${id}:`, error);
       throw error;
     }
   },

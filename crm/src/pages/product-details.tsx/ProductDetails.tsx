@@ -14,6 +14,7 @@ import { useProductData } from './hooks/useProductData';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
 import './product.less';
+import { useLocation } from 'react-router-dom';
 
 interface SelectOption {
   label: string;
@@ -28,6 +29,7 @@ const ProductDetails: React.FC = () => {
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(SCHEMA),
@@ -36,6 +38,11 @@ const ProductDetails: React.FC = () => {
 
   const createProduct = useProductStore((state) => state.create);
   const updateProduct = useProductStore((state) => state.update);
+  const location = useLocation();
+
+  useEffect(() => {
+    reset();
+  }, [location.key]);
 
   const { id, product, subCategoriesSelect, brands, colors, sizes, tagsColl } =
     useProductData();
@@ -57,12 +64,23 @@ const ProductDetails: React.FC = () => {
     value: tag.$id,
   }));
 
+  const { TextArea } = Input;
+
   useEffect(() => {
-    if (!product) return;
-    const { name, price, subCategories, brands, attributes, image, tags } =
-      product;
+    if (!product || !id) return;
+    const {
+      name,
+      price,
+      subCategories,
+      brands,
+      attributes,
+      image,
+      tags,
+      desc,
+    } = product;
 
     setValue('name', name);
+    setValue('desc', desc);
     setValue('price', price);
     setValue(
       'subCategories',
@@ -104,7 +122,7 @@ const ProductDetails: React.FC = () => {
       }) ?? [];
 
     setValue('attributes', formattedAttributes);
-  }, [product, setValue]);
+  }, [product, id, setValue]);
 
   const addAttribute = () => {
     const currentAttributes = getValues('attributes') || [];
@@ -182,6 +200,7 @@ const ProductDetails: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       await handleProductCreationOrUpdate(data);
+      reset();
     } catch (error) {
       console.error('Error processing product:', error);
     }
@@ -197,7 +216,7 @@ const ProductDetails: React.FC = () => {
         })}
       >
         <Space direction='vertical'>
-          <Space>
+          <Space align='end'>
             <Form.Item
               label='Наименование'
               validateStatus={errors.name ? 'error' : ''}
@@ -209,7 +228,7 @@ const ProductDetails: React.FC = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder='Наименование'
+                    placeholder='наименование'
                   />
                 )}
               />
@@ -226,13 +245,30 @@ const ProductDetails: React.FC = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder='Price'
+                    placeholder='цена'
+                  />
+                )}
+              />
+            </Form.Item>
+            <Form.Item
+              label='Описание'
+              validateStatus={errors.desc ? 'error' : ''}
+              help={errors.desc?.message}
+            >
+              <Controller
+                name='desc'
+                control={control}
+                render={({ field }) => (
+                  <TextArea
+                    className='input-textarea'
+                    {...field}
+                    placeholder='описание'
                   />
                 )}
               />
             </Form.Item>
           </Space>
-          <Space>
+          <Space align='start'>
             <Form.Item
               label='Группа'
               validateStatus={errors.subCategories ? 'error' : ''}
@@ -244,7 +280,8 @@ const ProductDetails: React.FC = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    placeholder='Select a category'
+                    className='select-width'
+                    placeholder='группа'
                     options={categoryOptions}
                   />
                 )}
@@ -261,7 +298,8 @@ const ProductDetails: React.FC = () => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    placeholder='Select a brand'
+                    className='select-width'
+                    placeholder='бренд'
                     options={brandOptions}
                   />
                 )}
@@ -277,9 +315,10 @@ const ProductDetails: React.FC = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    className='select-width'
                     mode='multiple'
                     {...field}
-                    placeholder='Select a tags'
+                    placeholder='теги'
                     options={tagsOption}
                   />
                 )}
@@ -298,17 +337,22 @@ const ProductDetails: React.FC = () => {
               )}
             />
           </Space>
-          <Button
-            onClick={addAttribute}
-            variant='outlined'
-          >
-            Добавить атрибут
-          </Button>
+          <Space style={{ marginBottom: '8px' }}>
+            <Button
+              onClick={addAttribute}
+              variant='outlined'
+            >
+              Добавить атрибут
+            </Button>
+          </Space>
         </Space>
 
-        <Title text='Атрибуты' />
+        <h4>Атрибуты</h4>
 
-        <Row gutter={[16, 16]}>
+        <Row
+          gutter={[16, 16]}
+          style={{ marginBottom: '8px' }}
+        >
           <Controller
             name='attributes'
             control={control}
