@@ -1,3 +1,5 @@
+'use client';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay, Keyboard } from 'swiper/modules';
 import 'swiper/css';

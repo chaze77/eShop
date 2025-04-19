@@ -1,4 +1,4 @@
-import { advantagesItems } from '@/app/constants/advantagesItems';
+import { advantagesItems } from '@/constants/advantagesItems';
 import Title from '../../ui/Title';
 
 export default function About() {

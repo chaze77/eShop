@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay, Keyboard } from 'swiper/modules';
@@ -8,7 +10,7 @@ import 'swiper/css/pagination';
 import CustomButton from '../../ui/CustomButton';
 import Title from '../../ui/Title';
 import CardBlog from './CardBlog';
-import { blogItems } from '../../../constants/blogItems';
+import { blogItems } from '@/constants/blogItems';
 
 export default function Blog() {
   return (

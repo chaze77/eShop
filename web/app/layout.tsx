@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Provider } from './provider/Provider';
-import Header from './components/common/Header';
+
 import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
+import Header from '@/components/common/Header';
+import { Provider } from '@/provider/Provider';
 
 const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
 const COLLECTION_ID = process.env.NEXT_PUBLIC_CATEGORIES_COLLECTION_ID!;
