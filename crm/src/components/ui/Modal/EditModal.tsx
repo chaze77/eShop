@@ -34,11 +34,11 @@ const EditModal: React.FC<EditModalProps> = ({
         onFinish={onSave}
       >
         <Form.Item
-          label='Name'
+          label='Наименование'
           name='name'
-          rules={[{ required: true, message: 'Enter a name' }]}
+          rules={[{ required: true, message: 'Введите наименование' }]}
         >
-          <Input placeholder='Enter name' />
+          <Input placeholder='Введите наименование' />
         </Form.Item>
         <Space>
           {' '}
@@ -46,14 +46,14 @@ const EditModal: React.FC<EditModalProps> = ({
             type='primary'
             htmlType='submit'
           >
-            Save
+            Сохранить
           </Button>
           <Button
             color='default'
             variant='filled'
             onClick={onCancel}
           >
-            Close
+            Закрыть
           </Button>
         </Space>
       </Form>

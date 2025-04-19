@@ -5,7 +5,7 @@ const Colors = () => {
   return (
     <ReferenceTable
       store={useColorStore}
-      title='Colors'
+      title='Цвет'
     />
   );
 };

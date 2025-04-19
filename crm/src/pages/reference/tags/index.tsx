@@ -5,7 +5,7 @@ export default function Tags() {
   return (
     <ReferenceTable
       store={useTagStore}
-      title='Tags'
+      title='Тэги'
     />
   );
 }

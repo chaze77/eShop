@@ -1,0 +1,25 @@
+@import '../../../assets/style/variables.less';
+
+.button-edit.ant-btn,
+.button-edit.ant-btn:hover {
+  background-color: @teal-color;
+  color: white;
+  border: none;
+
+  &:hover {
+    background-color: darken(@teal-color, 10%);
+    color: white;
+  }
+}
+
+.button-delete.ant-btn,
+.button-delete.ant-btn:hover {
+  background-color: @red-color;
+  color: @button-text-color;
+  border: none;
+
+  &:hover {
+    background-color: darken(@red-color, 10%);
+    color: @button-text-color;
+  }
+}

@@ -28,37 +28,37 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   const actionConfig = {
     create: {
-      text: 'Create',
+      text: 'Создать',
       icon: <PlusOutlined />,
       className: 'button-create',
     },
     update: {
-      text: 'Update',
+      text: 'Обновить',
       icon: <CheckOutlined />,
       className: 'button-update',
     },
     delete: {
-      text: 'Delete',
+      text: 'Удалить',
       icon: <DeleteOutlined />,
       className: 'button-delete',
     },
     filter: {
-      text: 'Filter',
+      text: 'Фильтр',
       icon: <FilterOutlined />,
       className: 'button-filter',
     },
     close: {
-      text: 'Close',
+      text: 'Закрыть',
       icon: <CloseCircleOutlined />,
       className: 'button-close',
     },
     edit: {
-      text: 'Edit',
+      text: 'Редактировать',
       icon: <EditOutlined />,
       className: 'button-edit',
     },
     add: {
-      text: 'Add',
+      text: 'Добавить',
       icon: <EditOutlined />,
       className: 'button-add',
     },

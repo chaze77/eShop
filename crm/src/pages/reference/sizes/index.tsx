@@ -5,7 +5,7 @@ const Sizes = () => {
   return (
     <ReferenceTable
       store={useSizeStore}
-      title='Size'
+      title='Размер'
     />
   );
 };

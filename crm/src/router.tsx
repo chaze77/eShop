@@ -9,7 +9,7 @@ import Colors from './pages/reference/colors';
 import Tags from './pages/reference/tags';
 import Brands from './pages/reference/brands';
 import Products from './pages/products/Products';
-import ProductDetails from './pages/product-details.tsx/productDetails';
+import ProductDetails from './pages/product-details.tsx/ProductDetails';
 
 const routes: RouteObject[] = [
   {

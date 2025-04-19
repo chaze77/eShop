@@ -28,7 +28,6 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
   }, [image]);
 
   const handleButtonClick = () => {
-    // «Клик» по скрытому инпуту
     if (hiddenFileInputRef.current) {
       hiddenFileInputRef.current.click();
     }
@@ -44,7 +43,22 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Tooltip title={fileName || 'выберите файл'}>
+        <Text
+          ellipsis
+          style={{
+            maxWidth: 300,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: 'block',
+          }}
+          type='secondary'
+        >
+          {fileName || 'выберите файл'}
+        </Text>
+      </Tooltip>
       <Button
+        type='primary'
         icon={<UploadOutlined />}
         onClick={handleButtonClick}
       >
@@ -58,24 +72,6 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-
-      {/* Показываем имя файла, если оно есть */}
-      {fileName && (
-        <Tooltip title={fileName}>
-          <Text
-            ellipsis
-            style={{
-              maxWidth: 300,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: 'block',
-            }}
-            type='secondary'
-          >
-            {fileName}
-          </Text>
-        </Tooltip>
-      )}
     </div>
   );
 };

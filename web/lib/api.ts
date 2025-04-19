@@ -4,9 +4,8 @@ import { ID } from 'appwrite';
 export const fetchDocuments = async <T>(
   databaseId: string,
   collectionId: string,
-  filters?: string[] // Фильтры как необязательный параметр
+  filters?: string[]
 ): Promise<T[]> => {
-  // Передаём фильтры в запрос, если они существуют
   const response = await databases.listDocuments(
     databaseId,
     collectionId,

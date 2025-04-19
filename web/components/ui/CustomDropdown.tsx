@@ -7,11 +7,9 @@ import {
   DropdownItem,
 } from '@nextui-org/react';
 import Chevron from '../icons/Chevron';
-import { ICategory, ISubCategory } from '../../../types/index';
+import { ICategory, ISubCategory } from '../../types/index';
 
 export default function CustomDropdown({ category }: { category: ICategory }) {
-  console.log(category, 'category');
-
   return (
     <Dropdown className='p-0 min-w-20 mx-4'>
       <DropdownTrigger>

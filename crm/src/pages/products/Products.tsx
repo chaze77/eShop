@@ -5,6 +5,8 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { IAttributes, IDirectory, IProduct } from '@/types';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
+import CustomButton from '@/components/ui/CustomButton/CustomButton';
+import Title from '@/components/ui/Title/Ttitle';
 
 const Products: React.FC = () => {
   const products = useProductStore((state) => state.products);
@@ -30,7 +32,13 @@ const Products: React.FC = () => {
       title: 'Цена',
       dataIndex: 'price',
       key: 'price',
-      render: (price: string) => `${price} kgs`,
+      render: (price: string) => price,
+    },
+    {
+      title: 'Описание',
+      dataIndex: 'desc',
+      key: 'desc',
+      render: (desc: string) => desc,
     },
     {
       title: 'Бренд',
@@ -46,6 +54,7 @@ const Products: React.FC = () => {
         <>
           {tags?.map((tag) => (
             <Tag
+              style={{ marginBottom: '2px' }}
               key={tag.$id}
               color='cyan'
             >
@@ -84,12 +93,14 @@ const Products: React.FC = () => {
       render: (_: string, product: IProduct) => (
         <Space>
           <Button
+            className='button-edit'
             type='primary'
             icon={<EditOutlined />}
             onClick={() => navigate(`/product-details/${product.$id}`)}
           />
           <Button
             type='primary'
+            className='button-delete'
             danger
             icon={<DeleteOutlined />}
             onClick={() => openDeleteModal(product?.$id ? product?.$id : '')}
@@ -101,7 +112,14 @@ const Products: React.FC = () => {
 
   return (
     <div>
-      <Button onClick={() => navigate('/product-details')}>Add</Button>
+      <Title text='Продукт' />
+      <div style={{ marginBottom: '12px' }}>
+        <CustomButton
+          action='add'
+          onClick={() => navigate('/product-details')}
+        />
+      </div>
+
       <Table
         columns={columns}
         dataSource={products.map((product) => ({
@@ -116,13 +134,13 @@ const Products: React.FC = () => {
               columns={[
                 { title: 'Количество', dataIndex: 'quantity', key: 'quantity' },
                 {
-                  title: 'Цвета',
+                  title: 'Цвет',
                   dataIndex: 'colors',
                   key: 'colors',
                   render: (colors) => (colors ? colors.name : ''),
                 },
                 {
-                  title: 'Размеры',
+                  title: 'Размер',
                   dataIndex: 'size',
                   key: 'size',
                   render: (sizes) => (sizes ? sizes.name : ''),
@@ -143,7 +161,6 @@ const Products: React.FC = () => {
             />
           ),
           rowExpandable: (product) => {
-            // Проверяем, что attributes - массив, и в нем есть хотя бы один элемент
             return (
               Array.isArray(product?.attributes) &&
               product.attributes.length > 0
