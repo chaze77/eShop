@@ -17,3 +17,15 @@ export interface ISubCategory extends IBaseDocument {
   name: string;
   relatedCategory: ICategory;
 }
+
+export interface IProduct extends IBaseDocument {
+  $id?: string;
+  name: string;
+  desc?: string;
+  price: string;
+  brands?: IDirectory | null | string;
+  subCategories?: ISubCategory | null | string;
+  attributes?: IAttributes[] | string[];
+  tags?: IDirectory[] | string[];
+  image?: File | string | null;
+}
