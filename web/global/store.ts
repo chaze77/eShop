@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import categoryReducer from './features/category-slice';
+import favoriteReducer from './features/favorites-slice';
 
 const store = configureStore({
-  reducer: { categories: categoryReducer },
+  reducer: {
+    categories: categoryReducer,
+    favorites: favoriteReducer,
+  },
 });
 
 export default store;

@@ -7,7 +7,7 @@ interface CategoryState {
 }
 
 const initialState: CategoryState = {
-  categories: [], // Категории загружаются из `getStaticProps`
+  categories: [],
 };
 
 const categorySlice = createSlice({

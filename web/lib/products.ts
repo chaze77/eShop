@@ -41,7 +41,7 @@ export const getProductsBySubCategoryIds = async (
 
   let attributeProductIds: string[] = [];
 
-  if ((filters.sizes?.length || filters.colors?.length)) {
+  if (filters.sizes?.length || filters.colors?.length) {
     const attrQueries: string[] = [];
 
     if (filters.sizes?.length) {
@@ -54,7 +54,11 @@ export const getProductsBySubCategoryIds = async (
       console.log('🎨 [color filter]:', filters.colors);
     }
 
-    const attrResponse = await databases.listDocuments(DB_ID, ATTRIBUTES, attrQueries);
+    const attrResponse = await databases.listDocuments(
+      DB_ID,
+      ATTRIBUTES,
+      attrQueries
+    );
     console.log('📋 [raw attrResponse]:', attrResponse);
 
     attributeProductIds = attrResponse.documents.map((doc) => doc.products.$id);
@@ -70,7 +74,11 @@ export const getProductsBySubCategoryIds = async (
 
   console.log('🧩 [Итоговый productQuery]:', productQueries);
 
-  const response = await databases.listDocuments(DB_ID, PRODUCTS, productQueries);
+  const response = await databases.listDocuments(
+    DB_ID,
+    PRODUCTS,
+    productQueries
+  );
 
   console.log('✅ [products получены]:', response.documents);
 

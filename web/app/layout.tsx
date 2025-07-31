@@ -5,6 +5,7 @@ import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
 import Header from '@/components/common/Header';
 import { Provider } from '@/provider/Provider';
+import { ReduxProvider } from '@/global/provider';
 
 const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
 const COLLECTION_ID = process.env.NEXT_PUBLIC_CATEGORIES_COLLECTION_ID!;
@@ -32,8 +33,10 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Header categories={categories} />
-        <Provider>{children}</Provider>
+        <ReduxProvider>
+          <Header categories={categories} />
+          <Provider>{children}</Provider>
+        </ReduxProvider>
       </body>
     </html>
   );

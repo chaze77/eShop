@@ -70,10 +70,8 @@ export default function Products({ items }: ProductsProps) {
                   subCat.products.map((product) => (
                     <SwiperSlide key={product.$id}>
                       <ProductCard
-                        id={product.$id}
-                        name={product.name}
-                        price={product.price}
-                        image={product.image}
+                        product={product}
+                        key={product.$id}
                       />
                     </SwiperSlide>
                   ))

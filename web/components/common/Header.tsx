@@ -16,14 +16,19 @@ import UserIcon from '../icons/UserIcon';
 import { useState } from 'react';
 import CustomAccordion from '../ui/CustomAccordion';
 import { ICategory } from '@/types';
+import { useRouter } from 'next/navigation';
 
 export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <Navbar className='bg-headers'>
       <NavbarContent>
-        <NavbarItem className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 xs:static xs:left-auto xs:top-auto xs:transform-none order-2 xs:order-1 px-6'>
+        <NavbarItem
+          className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 xs:static xs:left-auto xs:top-auto xs:transform-none order-2 xs:order-1 px-6'
+          onClick={() => router.push('/')}
+        >
           <MainLogo />
         </NavbarItem>
 

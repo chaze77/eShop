@@ -48,7 +48,7 @@ const CustomButton: React.FC<
 
   const { className, variant, iconColor } = actionConfig[action] || {
     className: '',
-    variant: 'solid', // Значение по умолчанию
+    variant: 'solid',
     iconColor: 'black',
   };
 
