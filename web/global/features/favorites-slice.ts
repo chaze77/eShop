@@ -1,61 +1,40 @@
+// global/features/favorites-slice.ts
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-import { IProduct } from '@/types';
+import type { RootState } from '../store';
+import type { IProduct } from '@/types';
 
 interface FavoritesState {
   favorites: IProduct[];
 }
 
-// Load persisted favorites from localStorage
-const loadFavorites = (): IProduct[] => {
-  const stored = localStorage.getItem('favorites');
-  return stored ? JSON.parse(stored) : [];
-};
+const initialState: FavoritesState = { favorites: [] };
 
-const initialState: FavoritesState = {
-  favorites: loadFavorites(),
-};
-
-const favoriteSlice = createSlice({
+const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,
   reducers: {
-    // Replace the entire favorites array
     setFavorites: (state, action: PayloadAction<IProduct[]>) => {
       state.favorites = action.payload;
-      localStorage.setItem('favorites', JSON.stringify(state.favorites));
     },
-
-    // Add a single product to favorites
     addFavorite: (state, action: PayloadAction<IProduct>) => {
-      state.favorites.push(action.payload);
-      localStorage.setItem('favorites', JSON.stringify(state.favorites));
+      if (!state.favorites.some((p) => p.$id === action.payload.$id)) {
+        state.favorites.push(action.payload);
+      }
     },
-
-    // Remove a product by its ID ($id)
     removeFavorite: (state, action: PayloadAction<string>) => {
       state.favorites = state.favorites.filter((p) => p.$id !== action.payload);
-      localStorage.setItem('favorites', JSON.stringify(state.favorites));
     },
-
-    // Clear all favorites
     clearFavorites: (state) => {
       state.favorites = [];
-      localStorage.removeItem('favorites');
     },
   },
 });
 
 export const { setFavorites, addFavorite, removeFavorite, clearFavorites } =
-  favoriteSlice.actions;
+  favoritesSlice.actions;
 
-// Selector: get the array
-export const selectFavorites = (state: RootState) => state.favorites.favorites;
-
-// Selector factory: check if a given ID is in favorites
+export const selectFavorites = (s: RootState) => s.favorites.favorites;
 export const selectIsFavorite = (id: string) =>
-  createSelector(selectFavorites, (favorites) =>
-    favorites.some((p) => p.$id === id)
-  );
+  createSelector(selectFavorites, (favs) => favs.some((p) => p.$id === id));
 
-export default favoriteSlice.reducer;
+export default favoritesSlice.reducer;

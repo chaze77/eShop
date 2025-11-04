@@ -14,7 +14,6 @@ const categorySlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    // Экшен для обновления категорий
     setCategories: (state, action: PayloadAction<ICategory[]>) => {
       state.categories = action.payload;
     },

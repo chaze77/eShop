@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
-
 import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
 import Header from '@/components/common/Header';
 import { Provider } from '@/provider/Provider';
 import { ReduxProvider } from '@/global/provider';
-
-const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
-const COLLECTION_ID = process.env.NEXT_PUBLIC_CATEGORIES_COLLECTION_ID!;
+import { appwriteKeys } from '@/appwrite/environment';
 
 export const revalidate = 86400;
 
@@ -25,7 +22,10 @@ export default async function RootLayout({
   let categories: ICategory[] = [];
 
   try {
-    categories = await fetchDocuments<ICategory>(DATABASE_ID, COLLECTION_ID);
+    categories = await fetchDocuments<ICategory>(
+      appwriteKeys.DATABASE_ID,
+      appwriteKeys.CATEGORIES_COLLECTION_ID
+    );
   } catch (error) {
     console.error('Ошибка загрузки категорий:', error);
   }

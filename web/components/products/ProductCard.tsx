@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Image } from '@nextui-org/react';
-import React from 'react';
-import { HeartIcon } from '../icons/HeartIcon';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import {
   addFavorite,
@@ -11,6 +10,7 @@ import {
   selectIsFavorite,
 } from '@/global/features/favorites-slice';
 import { IProduct } from '@/types';
+import StarIcon from '../icons/StarIcon';
 
 interface ProductCardProps {
   product: IProduct;
@@ -20,7 +20,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // получаем, есть ли этот продукт в избранном
   const isFav = useAppSelector(selectIsFavorite(product.$id));
 
   const handleClick = () => {
@@ -46,12 +45,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         className='absolute top-3 right-3 z-10'
         aria-label={isFav ? 'Убрать из избранного' : 'Добавить в избранное'}
       >
-        <HeartIcon
+        <StarIcon
           size={24}
           strokeWidth={1.5}
-          fill={isFav ? 'red' : 'none'}
+          filled={isFav ? true : false}
           className={`transition ${
-            isFav ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+            isFav ? 'text-yellow-300' : 'text-gray-400 hover:text-yellow-500'
           }`}
         />
       </button>
@@ -60,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Image
           alt={product.$id}
           isZoomed
-          className='w-full object-cover h-[240px]'
+          className='w-full object-cover h-[160px]'
           radius='lg'
           src={product.image}
           width={250}
