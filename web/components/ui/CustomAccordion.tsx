@@ -3,31 +3,31 @@
 import { Accordion, AccordionItem } from '@nextui-org/react';
 import ArrayRight from '../icons/ArrayRight';
 import { useRouter } from 'next/navigation';
+import { ICategory } from '@/types';
 
-export default function CustomAccordion({ category }) {
+export default function CustomAccordion({ category }: { category: ICategory }) {
   const router = useRouter();
 
   console.log(category, 'cat123');
 
-  const handleSubcategoryClick = (subcategoryKey) => {
-    // Переход на страницу категории с query параметром фильтра
-    router.push(`/category/${category.key}?subcategory=${subcategoryKey}`);
+  const handleSubcategoryClick = (subcategoryKey: string) => {
+    router.push(`/category/${category.$id}?subcategory=${subcategoryKey}`);
   };
 
   return (
     <Accordion className='w-full text-white'>
       <AccordionItem
         className='text-white'
-        title={category.label}
+        title={category.name}
         indicator={<ArrayRight />}
       >
-        {category.subcategories?.map((subcategory) => (
+        {category.subCategories?.map((subcategory) => (
           <div
-            key={subcategory.key}
+            key={subcategory.$id}
             className='py-2 text-sm text-gray-300 hover:text-white cursor-pointer'
-            onClick={() => handleSubcategoryClick(subcategory.key)}
+            onClick={() => handleSubcategoryClick(subcategory.$id)}
           >
-            {subcategory.label}
+            {subcategory.name}
           </div>
         ))}
       </AccordionItem>

@@ -10,161 +10,153 @@ import {
 
 import CategoryProducts from '@/components/products/CategoryProducts';
 import FilterSidebar from '@/components/products/FilterSidebar';
-import { getCategoryById } from '@/lib/categories';
-import { getProductsBySubCategoryIds } from '@/lib/products';
-import { getSubCategoriesByCategoryId } from '@/lib/subCategories';
-import { ICategory, IProduct } from '@/types';
+import { ICategory, IDirectory, IProduct, ISubCategory } from '@/types';
 import Container from '@/components/ui/Container';
 import EmptyState from '@/components/common/EmtyState';
+import { getProductsByFilters, getProductsBySubIds } from '@/lib/products';
+import { getSubCategoriesByCategoryId } from '@/lib/subCategories';
+import { getCategoryById } from '@/lib/categories';
+import { collectUniqueItemToMap } from '@/helpers';
+import { FilterKey, Selected } from '../types';
+import LoaderOverlay from '@/components/ui/LoaderOverlay';
 
 export default function Page() {
-  const params = useParams();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const { id } = useParams();
 
   const [categoryName, setCategoryName] = useState('');
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [initialFilters, setInitialFilters] = useState({
-    subCategories: [] as { $id: string; name: string }[],
-    sizes: [] as { $id: string; name: string }[],
-    brands: [] as { $id: string; name: string }[],
-    colors: [] as { $id: string; name: string }[],
-  });
+  const [subCategoryIds, setSubCategoryIds] = useState<string[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
-  const [selectedFilters, setSelectedFilters] = useState({
-    sizes: [] as string[],
-    brands: [] as string[],
-    colors: [] as string[],
-    subCategories: [] as string[],
-  });
+  const [filtersOptions, setFiltersOptions] = useState<{
+    subCategories: IDirectory[];
+    sizes: IDirectory[];
+    brands: IDirectory[];
+    colors: IDirectory[];
+  }>({ subCategories: [], sizes: [], brands: [], colors: [] });
 
-  const [activeSizeIds, setActiveSizeIds] = useState<string[]>([]);
-  const [activeBrandIds, setActiveBrandIds] = useState<string[]>([]);
-  const [activeColorIds, setActiveColorIds] = useState<string[]>([]);
-
-  const setFilter = (
-    key: keyof typeof selectedFilters,
-    valueOrValues: string | string[]
-  ) => {
-    let updated: string[];
-
-    if (Array.isArray(valueOrValues)) {
-      updated = valueOrValues;
-    } else {
-      const exists = selectedFilters[key].includes(valueOrValues);
-      updated = exists
-        ? selectedFilters[key].filter((v) => v !== valueOrValues)
-        : [...selectedFilters[key], valueOrValues];
-    }
-
-    const currentParams = new URLSearchParams(
-      Array.from(searchParams.entries())
-    );
-    currentParams.delete(key);
-    updated.forEach((v) => currentParams.append(key, v));
-
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [key]: updated,
-    }));
-
-    setTimeout(() => {
-      router.push(`${pathname}?${currentParams.toString()}`);
-    }, 0);
-  };
+  const categoryId = decodeURIComponent(id as string);
 
   useEffect(() => {
-    async function loadInitialFilters() {
-      const categoryId = decodeURIComponent(params.id as string);
+    async function loadCategory() {
+      const uniqueSizesMap = new Map<string, IDirectory>();
+      const uniqueBrandsMap = new Map<string, IDirectory>();
+      const uniqueColorsMap = new Map<string, IDirectory>();
+      const uniqueSubCategoriesMap = new Map<string, IDirectory>();
+
       const category: ICategory = await getCategoryById(categoryId);
+
       if (!category) return;
+      setCategoryName(category?.name);
 
-      setCategoryName(category.name);
+      const subCategoriesInfo = (await getSubCategoriesByCategoryId(
+        categoryId
+      )) as ISubCategory[];
 
-      const subCategories = await getSubCategoriesByCategoryId(category.$id);
-      const subCategoryIds = subCategories.map((s) => s.$id);
+      const urlSubId = searchParams.getAll('subCategories');
 
-      // Поддержка и subCategories и subcategory
-      const filters = {
+      const idToUse =
+        urlSubId.length > 0 ? urlSubId : subCategoriesInfo?.map((s) => s.$id);
+
+      const productsBySubIds = await getProductsBySubIds(idToUse);
+
+      setSubCategoryIds(idToUse);
+
+      subCategoriesInfo.forEach((sub: ISubCategory) => {
+        collectUniqueItemToMap(uniqueSubCategoriesMap, sub);
+      });
+
+      productsBySubIds.forEach((p) => {
+        collectUniqueItemToMap(uniqueBrandsMap, p.brands);
+
+        p.attributes?.forEach((a: any) => {
+          collectUniqueItemToMap(uniqueSizesMap, a.size);
+          collectUniqueItemToMap(uniqueColorsMap, a.colors);
+        });
+      });
+
+      setFiltersOptions({
+        subCategories: [...uniqueSubCategoriesMap.values()],
+        brands: [...uniqueBrandsMap.values()],
+        sizes: [...uniqueSizesMap.values()],
+        colors: [...uniqueColorsMap.values()],
+      });
+    }
+
+    setLoadingOptions(true);
+    loadCategory()
+      .catch((e) => console.error('[loadCategory] error', e))
+      .finally(() => setLoadingOptions(false));
+  }, [categoryId]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      if (subCategoryIds.length === 0) {
+        return;
+      }
+      const selectedFromURL: Selected = {
         sizes: searchParams.getAll('sizes'),
         brands: searchParams.getAll('brands'),
         colors: searchParams.getAll('colors'),
-        subCategories: searchParams.getAll('subCategories').length
-          ? searchParams.getAll('subCategories')
-          : searchParams.getAll('subcategory'),
+        subCategories: searchParams.getAll('subCategories'),
       };
 
-      setSelectedFilters(filters);
-
-      const allProducts = await getProductsBySubCategoryIds(subCategoryIds, {
-        sizes: [],
-        brands: [],
-        colors: [],
-        subCategories: [],
+      const res = await getProductsByFilters({
+        subCategories: subCategoryIds,
+        sizes: selectedFromURL.sizes,
+        brands: selectedFromURL.brands,
+        colors: selectedFromURL.colors,
       });
 
-      const sizes = new Map();
-      const brands = new Map();
-      const colors = new Map();
-
-      allProducts.forEach((p) => {
-        p.attributes.forEach((a: any) => {
-          if (a.size?.$id) sizes.set(a.size.$id, a.size);
-          if (a.colors?.$id) colors.set(a.colors.$id, a.colors);
-        });
-        if (p.brands?.$id) brands.set(p.brands.$id, p.brands);
-      });
-
-      setInitialFilters({
-        subCategories,
-        sizes: Array.from(sizes.values()),
-        brands: Array.from(brands.values()),
-        colors: Array.from(colors.values()),
-      });
-
-      const filteredProducts = await getProductsBySubCategoryIds(
-        subCategoryIds,
-        filters
-      );
-      setProducts(filteredProducts);
-
-      const sizeIds: string[] = [];
-      const brandIds: string[] = [];
-      const colorIds: string[] = [];
-
-      filteredProducts.forEach((p) => {
-        p.attributes.forEach((a: any) => {
-          if (a.size?.$id) sizeIds.push(a.size.$id);
-          if (a.colors?.$id) colorIds.push(a.colors.$id);
-        });
-        if (p.brands?.$id) brandIds.push(p.brands.$id);
-      });
-
-      setActiveSizeIds([...new Set(sizeIds)]);
-      setActiveBrandIds([...new Set(brandIds)]);
-      setActiveColorIds([...new Set(colorIds)]);
+      setProducts(res);
     }
+    setLoadingProducts(true);
+    loadProducts()
+      .catch((e) => console.error('[loadProducts] error', e))
+      .finally(() => setLoadingProducts(false));
+  }, [searchParams, subCategoryIds]);
 
-    loadInitialFilters();
-  }, [params.id, searchParams]);
+  const setFilter = (key: FilterKey, value: string) => {
+    const next = new URLSearchParams(searchParams);
+    const currentValues = next.getAll(key);
+    const set = new Set(currentValues);
+    const had = set.has(value);
+    if (had) {
+      set.delete(value);
+    } else {
+      set.add(value);
+    }
+    next.delete(key);
+    const sorted = [...set].sort();
+    sorted.forEach((v) => next.append(key, v));
+    const url = `${pathname}?${next.toString()}`;
+    router.replace(url, { scroll: false });
+  };
 
   return (
     <Container className='max-w-[1500px] w-full'>
       <div className='flex gap-8 p-8'>
         <FilterSidebar
-          subCategories={initialFilters.subCategories}
-          sizes={initialFilters.sizes}
-          brands={initialFilters.brands}
-          colors={initialFilters.colors}
-          selected={selectedFilters}
-          onToggleFilter={setFilter}
-          activeBrandIds={activeBrandIds}
-          activeSizeIds={activeSizeIds}
-          activeColorIds={activeColorIds}
+          subCategories={filtersOptions.subCategories}
+          sizes={filtersOptions.sizes}
+          brands={filtersOptions.brands}
+          colors={filtersOptions.colors}
+          setFilter={setFilter}
+          selected={{
+            sizes: searchParams.getAll('sizes'),
+            brands: searchParams.getAll('brands'),
+            colors: searchParams.getAll('colors'),
+            subCategories: searchParams.getAll('subCategories'),
+          }}
         />
         <div className='flex-1'>
-          <h1 className='text-2xl font-bold mb-4'>{categoryName}</h1>
+          <h1 className='text-2xl font-bold mb-4'>
+            {categoryName.toUpperCase()}
+          </h1>
           {products.length > 0 ? (
             <CategoryProducts products={products} />
           ) : (
@@ -172,6 +164,7 @@ export default function Page() {
           )}
         </div>
       </div>
+      <LoaderOverlay show={loadingOptions || loadingProducts} />
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 export default function SearchIcon() {
   return (
     <svg
+      className='cursor-pointer'
       width='18'
       height='19'
       viewBox='0 0 18 19'

@@ -1,12 +1,10 @@
 import { Query } from 'appwrite';
 import { databases } from '@/appwrite/config';
+import { IProduct } from '@/types';
+import { fetchDocuments } from './api';
+import { appwriteKeys } from '@/appwrite/environment';
 
-const DB_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
-const PRODUCTS = process.env.NEXT_PUBLIC_PRODUCTS_COLLECTION_ID!;
-const ATTRIBUTES = process.env.NEXT_PUBLIC_ATTRIBUTES_COLLECTION_ID!;
-
-export const getProductsBySubCategoryIds = async (
-  subCategoryIds: string[],
+export const getProductsByFilters = async (
   filters: {
     sizes?: string[];
     brands?: string[];
@@ -18,26 +16,17 @@ export const getProductsBySubCategoryIds = async (
 ): Promise<any[]> => {
   console.log('📥 [filters получены]:', filters);
 
-  const productQueries = [Query.equal('subCategories', subCategoryIds)];
-  console.log('🔗 [subCategories]:', subCategoryIds);
+  let productQueries = [];
 
   if (filters.brands?.length) {
     productQueries.push(Query.equal('brands', filters.brands));
-    console.log('🏷 [brands]:', filters.brands);
+    // console.log('🏷 [brands]:', filters.brands);
   }
 
   if (filters.subCategories?.length) {
     productQueries.push(Query.equal('subCategories', filters.subCategories));
-    console.log('🏷 [brands]:', filters.brands);
+    // console.log('🏷 [brands]:', filters.subCategories);
   }
-
-  // Цены (если нужно)
-  // if (filters.minPrice !== undefined) {
-  //   productQueries.push(Query.greaterThanEqual('price', filters.minPrice));
-  // }
-  // if (filters.maxPrice !== undefined) {
-  //   productQueries.push(Query.lessThanEqual('price', filters.maxPrice));
-  // }
 
   let attributeProductIds: string[] = [];
 
@@ -46,41 +35,74 @@ export const getProductsBySubCategoryIds = async (
 
     if (filters.sizes?.length) {
       attrQueries.push(Query.equal('size', filters.sizes));
-      console.log('📏 [size filter]:', filters.sizes);
+      // console.log('📏 [size filter]:', filters.sizes);
     }
 
     if (filters.colors?.length) {
       attrQueries.push(Query.equal('colors', filters.colors));
-      console.log('🎨 [color filter]:', filters.colors);
+      // console.log('🎨 [color filter]:', filters.colors);
     }
 
-    const attrResponse = await databases.listDocuments(
-      DB_ID,
-      ATTRIBUTES,
+    const attrResponse = await fetchDocuments(
+      appwriteKeys.DATABASE_ID,
+      appwriteKeys.ATTRIBUTES_COLLECTION_ID,
       attrQueries
     );
-    console.log('📋 [raw attrResponse]:', attrResponse);
+    // console.log('📋 [raw attrResponse]:', attrResponse);
 
-    attributeProductIds = attrResponse.documents.map((doc) => doc.products.$id);
-    console.log('📦 [product IDs из attributes]:', attributeProductIds);
+    attributeProductIds = attrResponse.map((doc: any) => doc.products.$id);
+    // console.log('📦 [product IDs из attributes]:', attributeProductIds);
 
     if (attributeProductIds.length === 0) {
-      console.warn('⚠️ [нет совпадений по атрибутам]');
+      // console.warn('⚠️ [нет совпадений по атрибутам]');
       return [];
     }
 
     productQueries.push(Query.equal('$id', attributeProductIds));
   }
 
-  console.log('🧩 [Итоговый productQuery]:', productQueries);
+  // console.log('🧩 [Итоговый productQuery]:', productQueries);
 
-  const response = await databases.listDocuments(
-    DB_ID,
-    PRODUCTS,
+  const response = await fetchDocuments(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.PRODUCTS_COLLECTION_ID,
     productQueries
   );
 
-  console.log('✅ [products получены]:', response.documents);
+  return response as any[];
+};
 
-  return response.documents as any[];
+export const getProductsByName = async (value: string): Promise<IProduct[]> => {
+  const query = [Query.contains('name', value)];
+
+  try {
+    const response = await fetchDocuments(
+      appwriteKeys.DATABASE_ID,
+      appwriteKeys.PRODUCTS_COLLECTION_ID,
+      query
+    );
+
+    return response as IProduct[];
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+};
+
+export const getProductsBySubIds = async (
+  subIds: any[]
+): Promise<IProduct[]> => {
+  const queries = [Query.equal('subCategories', subIds)];
+  try {
+    const response = await fetchDocuments(
+      appwriteKeys.DATABASE_ID,
+      appwriteKeys.PRODUCTS_COLLECTION_ID,
+      queries
+    );
+
+    return response as IProduct[];
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
 };

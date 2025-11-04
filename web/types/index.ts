@@ -9,12 +9,12 @@ export interface IBaseDocument {
 
 export interface ICategory extends IBaseDocument {
   name: string;
-  parent_id: string;
+  subCategories: ISubCategory[];
 }
 
 export interface ISubCategory extends IBaseDocument {
   name: string;
-  relatedCategory: ICategory;
+  products: IProduct[];
 }
 
 export interface IDirectory {
@@ -25,8 +25,8 @@ export interface IDirectory {
 export interface IAttributes {
   $id?: string;
   quantity: number;
-  colors?: IDirectory | string;
-  size?: IDirectory | string;
+  colors?: IDirectory;
+  size?: IDirectory;
   products?: string;
 }
 
@@ -34,7 +34,7 @@ export interface IProduct extends IBaseDocument {
   name: string;
   desc?: string;
   price: string;
-  brands?: IDirectory | null | string;
+  brands?: IDirectory;
   subCategories?: ISubCategory;
   attributes?: IAttributes[] | string[];
   tags?: IDirectory[] | string[];

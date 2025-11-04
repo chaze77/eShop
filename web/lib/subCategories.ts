@@ -1,12 +1,12 @@
 import { Query } from 'appwrite';
-import { databases } from '@/appwrite/config';
-
-const DB_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
-const SUBCATEGORIES = process.env.NEXT_PUBLIC_SUBCATEGORIES_COLLECTION_ID!;
+import { appwriteKeys } from '@/appwrite/environment';
+import { fetchDocuments } from './api';
 
 export const getSubCategoriesByCategoryId = async (categoryId: string) => {
-  const response = await databases.listDocuments(DB_ID, SUBCATEGORIES, [
-    Query.equal('relatedCategory', categoryId),
-  ]);
-  return response.documents;
+  const response = await fetchDocuments(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.SUBCATEGORIES_COLLECTION_ID,
+    [Query.equal('relatedCategory', categoryId)]
+  );
+  return response;
 };

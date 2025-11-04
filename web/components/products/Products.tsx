@@ -5,38 +5,14 @@ import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
 import Title from '../ui/Title';
 import CustomButton from '../ui/CustomButton';
 import ProductCard from './ProductCard';
 import './style.css';
 import Link from 'next/link';
+import { ICategory } from '@/types';
 
-interface Product {
-  $id: string;
-  name: string;
-  price: string;
-  desc: string;
-  image: string;
-}
-
-interface SubCategory {
-  $id: string;
-  name: string;
-  products: Product[];
-}
-
-interface Category {
-  $id: string;
-  name: string;
-  subCategories: SubCategory[];
-}
-
-interface ProductsProps {
-  items: Category[];
-}
-
-export default function Products({ items }: ProductsProps) {
+export default function Products({ items }: { items: ICategory[] }) {
   return (
     <div className='mb-10'>
       {items.map((category) => (
@@ -46,7 +22,6 @@ export default function Products({ items }: ProductsProps) {
         >
           <div className='flex justify-between p-8'>
             <Title text={category.name} />
-
             <Link href={`/category/${encodeURIComponent(category.$id)}`}>
               <CustomButton
                 action='second'

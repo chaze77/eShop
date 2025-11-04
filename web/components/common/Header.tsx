@@ -10,24 +10,41 @@ import {
 } from '@nextui-org/react';
 import CustomDropdown from '../ui/CustomDropdown';
 import MainLogo from '../icons/MainLogo';
-import SearchIcon from '../icons/SearchIcon';
 import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
 import { useState } from 'react';
-import CustomAccordion from '../ui/CustomAccordion';
 import { ICategory } from '@/types';
 import { useRouter } from 'next/navigation';
+import SearchInput from '../ui/SearchInput';
+import CustomAccordion from '../ui/CustomAccordion';
+import { useAppDispatch } from '@/global/store';
+import {
+  clearProducts,
+  fetchProductsByName,
+} from '@/global/features/products-slice';
 
 export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const handleSearch = (value: string) => {
+    if (!value) return;
+    dispatch(fetchProductsByName(value));
+    router.replace(value ? `/?q=${encodeURIComponent(value)}` : '/');
+  };
+
+  const handleBackToMain = () => {
+    dispatch(clearProducts());
+    router.push('/');
+  };
 
   return (
     <Navbar className='bg-headers'>
       <NavbarContent>
         <NavbarItem
-          className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 xs:static xs:left-auto xs:top-auto xs:transform-none order-2 xs:order-1 px-6'
-          onClick={() => router.push('/')}
+          className='cursor-pointer absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 xs:static xs:left-auto xs:top-auto xs:transform-none order-2 xs:order-1 px-6'
+          onClick={handleBackToMain}
         >
           <MainLogo />
         </NavbarItem>
@@ -50,10 +67,13 @@ export default function Header({ categories }: { categories: ICategory[] }) {
       </NavbarContent>
       <NavbarContent justify='end'>
         <NavbarItem className='absolute xs:static left-20'>
-          <SearchIcon />
+          <SearchInput onSearch={handleSearch} />
         </NavbarItem>
         <NavbarItem>
-          <StarIcon />
+          <StarIcon
+            filled={false}
+            className='text-white'
+          />
         </NavbarItem>
         <NavbarItem>
           <UserIcon />
@@ -72,9 +92,9 @@ export default function Header({ categories }: { categories: ICategory[] }) {
           </Button>
         </NavbarItem> */}
         <NavbarMenu className='bg-black'>
-          {categories.map((item, index) => (
+          {categories.map((item) => (
             <NavbarMenuItem key={item.$id}>
-              <CustomAccordion category={item.name} />
+              <CustomAccordion category={item} />
             </NavbarMenuItem>
           ))}
         </NavbarMenu>

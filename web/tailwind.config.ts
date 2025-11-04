@@ -17,7 +17,7 @@ export default {
         foreground: 'var(--foreground)',
       },
       fontFamily: {
-        rfdewi: ['RFDewi', 'Arial', 'sans-serif'], // Добавляем кастомный шрифт
+        rfdewi: ['RFDewi', 'Arial', 'sans-serif'],
       },
 
       screens: {
