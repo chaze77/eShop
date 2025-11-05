@@ -6,12 +6,24 @@ export const fetchDocuments = async <T>(
   collectionId: string,
   filters?: string[]
 ): Promise<T[]> => {
-  const response = await databases.listDocuments(
-    databaseId,
-    collectionId,
-    filters ? filters : undefined
-  );
-  return response.documents as T[];
+  try {
+    const response = await databases.listDocuments(
+      databaseId,
+      collectionId,
+      filters ? filters : undefined
+    );
+    return response.documents as T[];
+  } catch (e) {
+    console.warn('[fetchDocuments] network/error fallback -> []', e);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('app:error', {
+          detail: 'Не удалось загрузить данные. Проверьте интернет-соединение.',
+        })
+      );
+    }
+    return [] as T[];
+  }
 };
 
 export const getDocumentById = async <T>(
@@ -19,8 +31,20 @@ export const getDocumentById = async <T>(
   collectionId: string,
   id: string
 ): Promise<T> => {
-  const response = await databases.getDocument(databaseId, collectionId, id);
-  return response as T;
+  try {
+    const response = await databases.getDocument(databaseId, collectionId, id);
+    return response as T;
+  } catch (e) {
+    console.warn('[getDocumentById] network/error fallback -> null', e);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('app:error', {
+          detail: 'Не удалось загрузить данные. Проверьте интернет-соединение.',
+        })
+      );
+    }
+    return null as unknown as T;
+  }
 };
 
 export const createDocument = async (
@@ -28,7 +52,19 @@ export const createDocument = async (
   collectionId: string,
   data: Record<string, any>
 ): Promise<void> => {
-  await databases.createDocument(databaseId, collectionId, ID.unique(), data);
+  try {
+    await databases.createDocument(databaseId, collectionId, ID.unique(), data);
+  } catch (e) {
+    console.error('[createDocument] error', e);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('app:error', {
+          detail:
+            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
+        })
+      );
+    }
+  }
 };
 
 export const updateDocument = async (
@@ -37,7 +73,19 @@ export const updateDocument = async (
   id: string,
   data: Record<string, any>
 ): Promise<void> => {
-  await databases.updateDocument(databaseId, collectionId, id, data);
+  try {
+    await databases.updateDocument(databaseId, collectionId, id, data);
+  } catch (e) {
+    console.error('[updateDocument] error', e);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('app:error', {
+          detail:
+            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
+        })
+      );
+    }
+  }
 };
 
 export const deleteDocument = async (
@@ -45,5 +93,17 @@ export const deleteDocument = async (
   collectionId: string,
   id: string
 ): Promise<void> => {
-  await databases.deleteDocument(databaseId, collectionId, id);
+  try {
+    await databases.deleteDocument(databaseId, collectionId, id);
+  } catch (e) {
+    console.error('[deleteDocument] error', e);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('app:error', {
+          detail:
+            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
+        })
+      );
+    }
+  }
 };

@@ -4,6 +4,7 @@ import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
 import Header from '@/components/common/Header';
 import { Provider } from '@/provider/Provider';
+import GlobalErrorListener from '@/components/ui/GlobalErrorListener';
 import { ReduxProvider } from '@/global/provider';
 import { appwriteKeys } from '@/appwrite/environment';
 
@@ -35,7 +36,10 @@ export default async function RootLayout({
       <body>
         <ReduxProvider>
           <Header categories={categories} />
-          <Provider>{children}</Provider>
+          <Provider>
+            <GlobalErrorListener />
+            {children}
+          </Provider>
         </ReduxProvider>
       </body>
     </html>

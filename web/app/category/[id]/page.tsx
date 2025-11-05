@@ -10,15 +10,21 @@ import {
 
 import CategoryProducts from '@/components/products/CategoryProducts';
 import FilterSidebar from '@/components/products/FilterSidebar';
-import { ICategory, IDirectory, IProduct, ISubCategory } from '@/types';
 import Container from '@/components/ui/Container';
 import EmptyState from '@/components/common/EmtyState';
+import LoaderOverlay from '@/components/ui/LoaderOverlay';
+import {
+  FILTERS,
+  ICategory,
+  IDirectory,
+  IProduct,
+  ISubCategory,
+} from '@/types';
 import { getProductsByFilters, getProductsBySubIds } from '@/lib/products';
 import { getSubCategoriesByCategoryId } from '@/lib/subCategories';
 import { getCategoryById } from '@/lib/categories';
 import { collectUniqueItemToMap } from '@/helpers';
 import { FilterKey, Selected } from '../types';
-import LoaderOverlay from '@/components/ui/LoaderOverlay';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -29,8 +35,7 @@ export default function Page() {
   const [categoryName, setCategoryName] = useState('');
   const [products, setProducts] = useState<IProduct[]>([]);
   const [subCategoryIds, setSubCategoryIds] = useState<string[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(false);
-  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
 
   const [filtersOptions, setFiltersOptions] = useState<{
     subCategories: IDirectory[];
@@ -57,7 +62,7 @@ export default function Page() {
         categoryId
       )) as ISubCategory[];
 
-      const urlSubId = searchParams.getAll('subCategories');
+      const urlSubId = searchParams.getAll(FILTERS.SUB_CATEGORIES);
 
       const idToUse =
         urlSubId.length > 0 ? urlSubId : subCategoriesInfo?.map((s) => s.$id);
@@ -87,22 +92,30 @@ export default function Page() {
       });
     }
 
-    setLoadingOptions(true);
-    loadCategory()
-      .catch((e) => console.error('[loadCategory] error', e))
-      .finally(() => setLoadingOptions(false));
+    loadCategory().catch((e) => {
+      console.error('[loadCategory] error', e);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('app:error', {
+            detail: 'Не удалось загрузить категорию. Проверьте интернет-соединение.',
+          })
+        );
+      }
+      setIsloading(false);
+    });
   }, [categoryId]);
 
   useEffect(() => {
     async function loadProducts() {
       if (subCategoryIds.length === 0) {
+        setProducts([]);
         return;
       }
       const selectedFromURL: Selected = {
-        sizes: searchParams.getAll('sizes'),
-        brands: searchParams.getAll('brands'),
-        colors: searchParams.getAll('colors'),
-        subCategories: searchParams.getAll('subCategories'),
+        sizes: searchParams.getAll(FILTERS.SIZES),
+        brands: searchParams.getAll(FILTERS.BRANDS),
+        colors: searchParams.getAll(FILTERS.COLORS),
+        subCategories: searchParams.getAll(FILTERS.SUB_CATEGORIES),
       };
 
       const res = await getProductsByFilters({
@@ -114,10 +127,20 @@ export default function Page() {
 
       setProducts(res);
     }
-    setLoadingProducts(true);
+    if (subCategoryIds.length === 0) return;
+    setIsloading(true);
     loadProducts()
-      .catch((e) => console.error('[loadProducts] error', e))
-      .finally(() => setLoadingProducts(false));
+      .catch((e) => {
+        console.error('[loadProducts] error', e);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('app:error', {
+              detail: 'Не удалось загрузить товары. Проверьте интернет-соединение.',
+            })
+          );
+        }
+      })
+      .finally(() => setIsloading(false));
   }, [searchParams, subCategoryIds]);
 
   const setFilter = (key: FilterKey, value: string) => {
@@ -147,24 +170,22 @@ export default function Page() {
           colors={filtersOptions.colors}
           setFilter={setFilter}
           selected={{
-            sizes: searchParams.getAll('sizes'),
-            brands: searchParams.getAll('brands'),
-            colors: searchParams.getAll('colors'),
-            subCategories: searchParams.getAll('subCategories'),
+            sizes: searchParams.getAll(FILTERS.SIZES),
+            brands: searchParams.getAll(FILTERS.BRANDS),
+            colors: searchParams.getAll(FILTERS.COLORS),
+            subCategories: searchParams.getAll(FILTERS.SUB_CATEGORIES),
           }}
         />
         <div className='flex-1'>
-          <h1 className='text-2xl font-bold mb-4'>
-            {categoryName.toUpperCase()}
-          </h1>
+          <h1 className='text-2xl font-bold mb-4'>{categoryName}</h1>
           {products.length > 0 ? (
             <CategoryProducts products={products} />
           ) : (
-            <EmptyState />
+            !isLoading && <EmptyState />
           )}
         </div>
       </div>
-      <LoaderOverlay show={loadingOptions || loadingProducts} />
+      {<LoaderOverlay show={isLoading} />}
     </Container>
   );
 }

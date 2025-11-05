@@ -40,3 +40,10 @@ export interface IProduct extends IBaseDocument {
   tags?: IDirectory[] | string[];
   image?: string;
 }
+
+export enum FILTERS {
+  BRANDS = 'brands',
+  COLORS = 'colors',
+  SIZES = 'sizes',
+  SUB_CATEGORIES = 'subCategories',
+}

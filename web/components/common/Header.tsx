@@ -39,6 +39,10 @@ export default function Header({ categories }: { categories: ICategory[] }) {
     router.push('/');
   };
 
+  const handleToFavirites = () => {
+    router.push('/favorites');
+  };
+
   return (
     <Navbar className='bg-headers'>
       <NavbarContent>
@@ -69,7 +73,10 @@ export default function Header({ categories }: { categories: ICategory[] }) {
         <NavbarItem className='absolute xs:static left-20'>
           <SearchInput onSearch={handleSearch} />
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem
+          onClick={handleToFavirites}
+          className='cursor-pointer'
+        >
           <StarIcon
             filled={false}
             className='text-white'

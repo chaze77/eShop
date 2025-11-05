@@ -1,6 +1,5 @@
 import { Query } from 'appwrite';
-import { databases } from '@/appwrite/config';
-import { IProduct } from '@/types';
+import { FILTERS, IProduct } from '@/types';
 import { fetchDocuments } from './api';
 import { appwriteKeys } from '@/appwrite/environment';
 
@@ -14,18 +13,16 @@ export const getProductsByFilters = async (
     maxPrice?: number;
   } = {}
 ): Promise<any[]> => {
-  console.log('📥 [filters получены]:', filters);
-
   let productQueries = [];
 
   if (filters.brands?.length) {
-    productQueries.push(Query.equal('brands', filters.brands));
-    // console.log('🏷 [brands]:', filters.brands);
+    productQueries.push(Query.equal(FILTERS.BRANDS, filters.brands));
   }
 
   if (filters.subCategories?.length) {
-    productQueries.push(Query.equal('subCategories', filters.subCategories));
-    // console.log('🏷 [brands]:', filters.subCategories);
+    productQueries.push(
+      Query.equal(FILTERS.SUB_CATEGORIES, filters.subCategories)
+    );
   }
 
   let attributeProductIds: string[] = [];
@@ -34,13 +31,11 @@ export const getProductsByFilters = async (
     const attrQueries: string[] = [];
 
     if (filters.sizes?.length) {
-      attrQueries.push(Query.equal('size', filters.sizes));
-      // console.log('📏 [size filter]:', filters.sizes);
+      attrQueries.push(Query.equal(FILTERS.SIZES, filters.sizes));
     }
 
     if (filters.colors?.length) {
-      attrQueries.push(Query.equal('colors', filters.colors));
-      // console.log('🎨 [color filter]:', filters.colors);
+      attrQueries.push(Query.equal(FILTERS.COLORS, filters.colors));
     }
 
     const attrResponse = await fetchDocuments(
@@ -51,17 +46,13 @@ export const getProductsByFilters = async (
     // console.log('📋 [raw attrResponse]:', attrResponse);
 
     attributeProductIds = attrResponse.map((doc: any) => doc.products.$id);
-    // console.log('📦 [product IDs из attributes]:', attributeProductIds);
 
     if (attributeProductIds.length === 0) {
-      // console.warn('⚠️ [нет совпадений по атрибутам]');
       return [];
     }
 
     productQueries.push(Query.equal('$id', attributeProductIds));
   }
-
-  // console.log('🧩 [Итоговый productQuery]:', productQueries);
 
   const response = await fetchDocuments(
     appwriteKeys.DATABASE_ID,

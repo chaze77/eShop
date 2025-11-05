@@ -8,10 +8,16 @@ import HomeClient from './HomeClient';
 import { appwriteKeys } from '@/appwrite/environment';
 
 export default async function Home() {
-  const productsByCategory = await fetchDocuments(
-    appwriteKeys.DATABASE_ID,
-    appwriteKeys.CATEGORIES_COLLECTION_ID
-  );
+  let productsByCategory: ICategory[] = [];
+  try {
+    productsByCategory = await fetchDocuments<ICategory>(
+      appwriteKeys.DATABASE_ID,
+      appwriteKeys.CATEGORIES_COLLECTION_ID
+    );
+  } catch (e) {
+    console.error('[Home] Ошибка загрузки категорий:', e);
+    productsByCategory = [];
+  }
 
   return (
     <main className='flex flex-col  items-center'>
