@@ -25,6 +25,7 @@ import { getSubCategoriesByCategoryId } from '@/lib/subCategories';
 import { getCategoryById } from '@/lib/categories';
 import { collectUniqueItemToMap } from '@/helpers';
 import { FilterKey, Selected } from '../types';
+import { emitter } from '@/global/events/event-bus';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -92,17 +93,13 @@ export default function Page() {
       });
     }
 
-    loadCategory().catch((e) => {
-      console.error('[loadCategory] error', e);
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-          new CustomEvent('app:error', {
-            detail: 'Не удалось загрузить категорию. Проверьте интернет-соединение.',
-          })
-        );
-      }
-      setIsloading(false);
-    });
+    loadCategory()
+      .catch((e) => {
+        console.error('[loadCategory] error', e);
+        emitter.emit('app:error', 'похоже нет соединения');
+        setIsloading(false);
+      })
+      .finally(() => setIsloading(false));
   }, [categoryId]);
 
   useEffect(() => {
@@ -132,13 +129,8 @@ export default function Page() {
     loadProducts()
       .catch((e) => {
         console.error('[loadProducts] error', e);
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(
-            new CustomEvent('app:error', {
-              detail: 'Не удалось загрузить товары. Проверьте интернет-соединение.',
-            })
-          );
-        }
+        emitter.emit('app:error', 'похоже нет соединения');
+        setIsloading(false);
       })
       .finally(() => setIsloading(false));
   }, [searchParams, subCategoryIds]);

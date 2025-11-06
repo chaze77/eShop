@@ -18,12 +18,12 @@ export default function GlobalError({
         <main className='min-h-screen flex items-center justify-center p-6'>
           <div className='max-w-md text-center space-y-4'>
             <h2 className='text-xl font-semibold'>
-              Не удалось загрузить данные
+              Не удалось загрузить приложение
             </h2>
             <p className='text-gray-500'>
               {offline
                 ? 'Похоже, нет соединения с интернетом.'
-                : 'Произошла ошибка запроса.'}
+                : 'Произошла ошибка при рендеринге на сервере.'}
             </p>
             <div className='flex gap-3 justify-center'>
               <button

@@ -14,7 +14,7 @@ import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
 import { useState } from 'react';
 import { ICategory } from '@/types';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import SearchInput from '../ui/SearchInput';
 import CustomAccordion from '../ui/CustomAccordion';
 import { useAppDispatch } from '@/global/store';
@@ -42,6 +42,10 @@ export default function Header({ categories }: { categories: ICategory[] }) {
   const handleToFavirites = () => {
     router.push('/favorites');
   };
+
+  if (!categories.length) {
+    return null;
+  }
 
   return (
     <Navbar className='bg-headers'>

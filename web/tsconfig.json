@@ -18,18 +18,23 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".", // Указывает корень проекта
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"], // Алиас для корня проекта
-      "@/components/*": ["components/*"] // Алиас для папки components
+      "@/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["common/lib/*"],
+      "@/helpers": ["common/helpers/index.ts"],
+      "@/types": ["common/types/index.ts"],
+      "@/provider/*": ["global/provider/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "components/**/*.tsx",
+    "common/**/*.tsx",
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
+

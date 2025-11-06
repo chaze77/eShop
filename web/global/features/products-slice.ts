@@ -16,7 +16,6 @@ interface ProductsState {
   error: string | null;
 }
 
-// Начальное состояние
 const initialState: ProductsState = {
   products: [],
   status: 'idle',

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import ErrorModal from './ErrorModal';
 import { useRouter } from 'next/navigation';
+import { emitter } from '@/global/events/event-bus';
 
 export default function GlobalErrorListener() {
   const [open, setOpen] = useState(false);
@@ -16,26 +17,20 @@ export default function GlobalErrorListener() {
   }, [router]);
 
   useEffect(() => {
-    const onAppError = (e: Event) => {
-      const detail = (e as CustomEvent)?.detail as string | undefined;
-      setMessage(detail || 'Произошла ошибка при загрузке данных.');
+    const onError = (msg: string) => {
+      setMessage(msg);
       setOpen(true);
     };
     const onOffline = () => {
-      setMessage('Похоже, нет соединения с интернетом.');
+      setMessage('Нет соединения с интернетом');
       setOpen(true);
     };
-    const onOnline = () => {
-      // можно автоматически скрывать при восстановлении сети
-      // setOpen(false);
-    };
-    window.addEventListener('app:error', onAppError as EventListener);
-    window.addEventListener('offline', onOffline);
-    window.addEventListener('online', onOnline);
+
+    emitter.on('app:error', onError);
+    emitter.on('app:offline', onOffline);
     return () => {
-      window.removeEventListener('app:error', onAppError as EventListener);
-      window.removeEventListener('offline', onOffline);
-      window.removeEventListener('online', onOnline);
+      emitter.off('app:error', onError);
+      emitter.on('app:offline', onOffline);
     };
   }, []);
 

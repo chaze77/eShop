@@ -1,22 +1,22 @@
-import MainBanner from '../components/main/banner/MainBanner';
-import About from '../components/main/about/About';
-import Blog from '../components/main/blog/Blog';
-import Container from '../components/ui/Container';
+import MainBanner from '@/components/main/banner/MainBanner';
+import About from '@/components/main/about/About';
+import Blog from '@/components/main/blog/Blog';
+import Container from '@/components/ui/Container';
 import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
 import HomeClient from './HomeClient';
 import { appwriteKeys } from '@/appwrite/environment';
+import { notFound } from 'next/navigation';
 
 export default async function Home() {
   let productsByCategory: ICategory[] = [];
-  try {
-    productsByCategory = await fetchDocuments<ICategory>(
-      appwriteKeys.DATABASE_ID,
-      appwriteKeys.CATEGORIES_COLLECTION_ID
-    );
-  } catch (e) {
-    console.error('[Home] Ошибка загрузки категорий:', e);
-    productsByCategory = [];
+
+  productsByCategory = await fetchDocuments<ICategory>(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.CATEGORIES_COLLECTION_ID
+  );
+  if (!productsByCategory.length) {
+    notFound();
   }
 
   return (

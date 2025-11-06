@@ -1,4 +1,5 @@
 import { databases } from '@/appwrite/config';
+import { emitter } from '@/global/events/event-bus';
 import { ID } from 'appwrite';
 
 export const fetchDocuments = async <T>(
@@ -15,13 +16,10 @@ export const fetchDocuments = async <T>(
     return response.documents as T[];
   } catch (e) {
     console.warn('[fetchDocuments] network/error fallback -> []', e);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('app:error', {
-          detail: 'Не удалось загрузить данные. Проверьте интернет-соединение.',
-        })
-      );
-    }
+    emitter.emit(
+      'app:error',
+      'Не удалось загрузить данные. Проверьте интернет-соединение.'
+    );
     return [] as T[];
   }
 };
@@ -36,13 +34,10 @@ export const getDocumentById = async <T>(
     return response as T;
   } catch (e) {
     console.warn('[getDocumentById] network/error fallback -> null', e);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('app:error', {
-          detail: 'Не удалось загрузить данные. Проверьте интернет-соединение.',
-        })
-      );
-    }
+    emitter.emit(
+      'app:error',
+      'Не удалось загрузить данные. Проверьте интернет-соединение.'
+    );
     return null as unknown as T;
   }
 };
@@ -56,14 +51,10 @@ export const createDocument = async (
     await databases.createDocument(databaseId, collectionId, ID.unique(), data);
   } catch (e) {
     console.error('[createDocument] error', e);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('app:error', {
-          detail:
-            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
-        })
-      );
-    }
+    emitter.emit(
+      'app:error',
+      'Не удалось загрузить данные. Проверьте интернет-соединение.'
+    );
   }
 };
 
@@ -77,14 +68,10 @@ export const updateDocument = async (
     await databases.updateDocument(databaseId, collectionId, id, data);
   } catch (e) {
     console.error('[updateDocument] error', e);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('app:error', {
-          detail:
-            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
-        })
-      );
-    }
+    emitter.emit(
+      'app:error',
+      'Не удалось загрузить данные. Проверьте интернет-соединение.'
+    );
   }
 };
 
@@ -97,13 +84,9 @@ export const deleteDocument = async (
     await databases.deleteDocument(databaseId, collectionId, id);
   } catch (e) {
     console.error('[deleteDocument] error', e);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('app:error', {
-          detail:
-            'Не удалось выполнить операцию. Проверьте интернет-соединение.',
-        })
-      );
-    }
+    emitter.emit(
+      'app:error',
+      'Не удалось загрузить данные. Проверьте интернет-соединение.'
+    );
   }
 };
