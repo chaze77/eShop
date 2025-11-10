@@ -1,7 +1,8 @@
 import type { Config } from 'tailwindcss';
-import { nextui } from '@nextui-org/react';
+const { nextui } = require('@nextui-org/react');
 
 export default {
+  // Для Tailwind v4 content можно опустить, но оставим для совместимости
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -29,3 +30,4 @@ export default {
   darkMode: 'class',
   plugins: [nextui()],
 } satisfies Config;
+

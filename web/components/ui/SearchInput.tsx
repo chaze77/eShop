@@ -10,25 +10,28 @@ export default function SearchInput({ onSearch }: SearchInputProps) {
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    const delay = setTimeout(() => {
+    const id = setTimeout(() => {
       onSearch(value.trim());
-    }, 1000);
-
-    return () => clearTimeout(delay);
+    }, 600);
+    return () => clearTimeout(id);
   }, [value, onSearch]);
 
   return (
-    <div className='w-[240px] px-8 rounded-2xl flex justify-center items-center'>
-      <Input
-        isClearable
-        onChange={(e) => setValue(e.target.value)}
-        classNames={{
-          input: ['bg-transparent', 'text-black/90 dark:text-white/90'],
-          inputWrapper: ['bg-default-200/50', 'cursor-text!'],
-        }}
-        radius='md'
-        startContent={<SearchIcon />}
-      />
-    </div>
+    <Input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      isClearable
+      size='sm'
+      radius='md'
+      variant='bordered'
+      classNames={{
+        base: 'w-64',
+        inputWrapper:
+          'h-9 bg-white/5 dark:bg-white/5 border-white/10 ' +
+          'data-[hover=true]:bg-white/10 data-[focus=true]:bg-white/10',
+        input: 'text-white placeholder:text-white/60',
+      }}
+      startContent={<SearchIcon />}
+    />
   );
 }

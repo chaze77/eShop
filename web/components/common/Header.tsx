@@ -7,26 +7,49 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
+  Button,
 } from '@nextui-org/react';
 import CustomDropdown from '../ui/CustomDropdown';
 import MainLogo from '../icons/MainLogo';
 import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ICategory } from '@/types';
 import { notFound, useRouter } from 'next/navigation';
 import SearchInput from '../ui/SearchInput';
 import CustomAccordion from '../ui/CustomAccordion';
-import { useAppDispatch } from '@/global/store';
+import { useAppDispatch, useAppSelector } from '@/global/store';
 import {
   clearProducts,
   fetchProductsByName,
 } from '@/global/features/products-slice';
 
+import {
+  getCurrentUserThunk,
+  logoutThunk,
+  selectUser,
+} from '@/global/features/auth-slice';
+import UserDropdown from '../user/UserDropdown';
+import { div } from 'framer-motion/client';
+import { logout } from '../../common/lib/auth';
+import LogoutModal from '../user/LogoutModal';
+import LoginIcon from '../icons/LoginIcon';
+
 export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // const [currentUser, setCurrentUser] = useState<any>('');
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const status = useAppSelector((state) => state.auth.status);
+
+  useEffect(() => {
+    async function checkUser() {
+      const res = await dispatch(getCurrentUserThunk());
+    }
+    checkUser();
+  }, []);
 
   const handleSearch = (value: string) => {
     if (!value) return;
@@ -43,9 +66,17 @@ export default function Header({ categories }: { categories: ICategory[] }) {
     router.push('/favorites');
   };
 
+  const handleGoSignIn = () => {
+    router.push('/login/');
+  };
+
   if (!categories.length) {
     return null;
   }
+
+  console.log('currentUser', user);
+
+  if (status === 'pending') return <div>Загрузка</div>;
 
   return (
     <Navbar className='bg-headers'>
@@ -86,8 +117,18 @@ export default function Header({ categories }: { categories: ICategory[] }) {
             className='text-white'
           />
         </NavbarItem>
+
         <NavbarItem>
-          <UserIcon />
+          {user ? (
+            <div>
+              <UserDropdown user={user} />{' '}
+              <span className='text-white'>{user.name}</span>
+            </div>
+          ) : (
+            <div onClick={handleGoSignIn}>
+              <LoginIcon />
+            </div>
+          )}
         </NavbarItem>
         {/* <NavbarItem className='hidden lg:flex'>
           <Link href='#'>Login</Link>

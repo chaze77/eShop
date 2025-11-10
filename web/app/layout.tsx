@@ -27,7 +27,7 @@ export default async function RootLayout({
 
   return (
     <html lang='en'>
-      <body>
+      <body className='bg-background text-foreground antialiased'>
         <ReduxProvider>
           <Header categories={categories} />
           <Provider>

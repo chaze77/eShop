@@ -49,16 +49,23 @@
 }
 
 /* Слой components (для кастомных компонентов) */
+
 @layer components {
   .header-items {
-    @apply text-white bg-transparent hover:underline hover:underline-offset-4 hover:decoration-blue transition-all cursor-pointer;
+    @apply text-white bg-transparent transition-all cursor-pointer;
+  }
+  .header-items:hover {
+    @apply underline underline-offset-4;
   }
 }
 
 /* Слой utilities (кастомные утилиты) */
 @layer utilities {
   .underline-hover {
-    @apply hover:underline hover:underline-offset-4 hover:decoration-blue-500;
+    @apply transition-fast;
+  }
+  .underline-hover:hover {
+    @apply underline underline-offset-4;
   }
 
   .transition-fast {

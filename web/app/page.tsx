@@ -2,9 +2,9 @@ import MainBanner from '@/components/main/banner/MainBanner';
 import About from '@/components/main/about/About';
 import Blog from '@/components/main/blog/Blog';
 import Container from '@/components/ui/Container';
+import HomeClient from './HomeClient';
 import { fetchDocuments } from '@/lib/api';
 import { ICategory } from '@/types';
-import HomeClient from './HomeClient';
 import { appwriteKeys } from '@/appwrite/environment';
 import { notFound } from 'next/navigation';
 
