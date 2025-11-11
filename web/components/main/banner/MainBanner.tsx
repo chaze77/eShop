@@ -14,7 +14,7 @@ const Slider = () => {
       <Swiper
         direction='horizontal'
         pagination={{
-          clickable: true, // Точки пагинации кликабельные
+          clickable: true,
         }}
         navigation={false} // Включены стрелки
         modules={[Navigation, Pagination, Autoplay, Keyboard]}

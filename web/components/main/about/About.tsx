@@ -29,7 +29,6 @@ export default function About() {
         </div>
       </div>
 
-      {/* Advantages Section */}
       <div className='lg:w-2/5 md:w-full flex justify-end'>
         <div className='bg-white p-6 gap-6 flex w-full flex-col md:flex-row md:justify-start lg:w-4/5 lg:flex lg:flex-col'>
           {advantagesItems.map((item) => (

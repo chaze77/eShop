@@ -6,6 +6,8 @@ import Header from '@/components/common/Header';
 import { Provider } from '@/provider/Provider';
 import { ReduxProvider } from '@/global/provider';
 import { appwriteKeys } from '@/appwrite/environment';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const revalidate = 86400;
 
@@ -34,6 +36,7 @@ export default async function RootLayout({
     <html lang='en'>
       <body>
         <ReduxProvider>
+          <ToastContainer />
           <Header categories={categories} />
           <Provider>{children}</Provider>
         </ReduxProvider>

@@ -12,12 +12,14 @@ import CustomDropdown from '../ui/CustomDropdown';
 import MainLogo from '../icons/MainLogo';
 import StarIcon from '../icons/StarIcon';
 import UserIcon from '../icons/UserIcon';
+import UserDropdown from '@/components/user/UserDropdown';
+import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { ICategory } from '@/types';
 import { useRouter } from 'next/navigation';
 import SearchInput from '../ui/SearchInput';
 import CustomAccordion from '../ui/CustomAccordion';
-import { useAppDispatch } from '@/global/store';
+import { useAppDispatch, useAppSelector } from '@/global/store';
 import {
   clearProducts,
   fetchProductsByName,
@@ -27,6 +29,8 @@ export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const handleSearch = (value: string) => {
     if (!value) return;
@@ -70,13 +74,22 @@ export default function Header({ categories }: { categories: ICategory[] }) {
           <SearchInput onSearch={handleSearch} />
         </NavbarItem>
         <NavbarItem>
-          <StarIcon
-            filled={false}
-            className='text-white'
-          />
+          <button
+            aria-label='Избранное'
+            className='p-1 cursor-pointer text-white hover:text-yellow-400 transition-colors'
+            onClick={() => router.push('/favorites')}
+          >
+            <StarIcon filled={false} className='transition-colors' />
+          </button>
         </NavbarItem>
         <NavbarItem>
-          <UserIcon />
+          {isAuthenticated ? (
+            <UserDropdown />
+          ) : (
+            <Button size='sm' variant='flat' onPress={() => router.push('/login')}>
+              Войти
+            </Button>
+          )}
         </NavbarItem>
         {/* <NavbarItem className='hidden lg:flex'>
           <Link href='#'>Login</Link>
