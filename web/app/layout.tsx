@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { fetchDocuments } from '@/lib/api';
+
 import { ICategory } from '@/types';
 import Header from '@/components/common/Header';
 import { Provider } from '@/provider/Provider';
 import { ReduxProvider } from '@/global/provider';
 import { appwriteKeys } from '@/appwrite/environment';
 import { ToastContainer } from 'react-toastify';
+import { fetchDocuments } from '@/lib/apis/api';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const revalidate = 86400;

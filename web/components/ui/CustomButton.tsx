@@ -59,7 +59,7 @@ const CustomButton: React.FC<
       type={htmlType}
       variant={variant}
       radius='sm'
-      disabled={disabled}
+      isDisabled={disabled}
       endContent={<ArrayRight color={iconColor} />}
       {...props}
     >

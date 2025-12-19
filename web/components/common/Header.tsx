@@ -11,7 +11,6 @@ import {
 import CustomDropdown from '../ui/CustomDropdown';
 import MainLogo from '../icons/MainLogo';
 import StarIcon from '../icons/StarIcon';
-import UserIcon from '../icons/UserIcon';
 import UserDropdown from '@/components/user/UserDropdown';
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
@@ -24,6 +23,8 @@ import {
   clearProducts,
   fetchProductsByName,
 } from '@/global/features/products-slice';
+import Link from 'next/link';
+import { CartIcon } from '../icons/CartIcon';
 
 export default function Header({ categories }: { categories: ICategory[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,31 +80,38 @@ export default function Header({ categories }: { categories: ICategory[] }) {
             className='p-1 cursor-pointer text-white hover:text-yellow-400 transition-colors'
             onClick={() => router.push('/favorites')}
           >
-            <StarIcon filled={false} className='transition-colors' />
+            <StarIcon
+              filled={false}
+              className='transition-colors'
+            />
           </button>
         </NavbarItem>
         <NavbarItem>
           {isAuthenticated ? (
             <UserDropdown />
           ) : (
-            <Button size='sm' variant='flat' onPress={() => router.push('/login')}>
+            <Button
+              size='sm'
+              variant='flat'
+              onPress={() => router.push('/login')}
+            >
               Войти
             </Button>
           )}
         </NavbarItem>
-        {/* <NavbarItem className='hidden lg:flex'>
-          <Link href='#'>Login</Link>
+        <NavbarItem className='hidden lg:flex'>
+          <Link href='/cart'>Login</Link>
         </NavbarItem>
         <NavbarItem>
           <Button
             as={Link}
             color='primary'
-            href='#'
+            href='/cart'
             variant='flat'
           >
-            Sign Up
+            <CartIcon />
           </Button>
-        </NavbarItem> */}
+        </NavbarItem>
         <NavbarMenu className='bg-black'>
           {categories.map((item) => (
             <NavbarMenuItem key={item.$id}>

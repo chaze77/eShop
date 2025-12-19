@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthUser } from '@/lib/auth';
-import { getCurrentUser, loginUser, logoutUser, registerUser } from '@/lib/auth';
+import type { AuthUser } from '@/lib/apis/auth';
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+} from '@/lib/apis/auth';
 
 export const fetchCurrentUser = createAsyncThunk<AuthUser | null>(
   'auth/fetchCurrentUser',
@@ -65,7 +70,8 @@ const authSlice = createSlice({
       )
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'Не удалось получить пользователя';
+        state.error =
+          action.error.message ?? 'Не удалось получить пользователя';
         state.user = null;
         state.isAuthenticated = false;
       })
@@ -74,11 +80,14 @@ const authSlice = createSlice({
         state.status = 'pending';
         state.error = null;
       })
-      .addCase(loginThunk.fulfilled, (state, action: PayloadAction<AuthUser>) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-        state.isAuthenticated = true;
-      })
+      .addCase(
+        loginThunk.fulfilled,
+        (state, action: PayloadAction<AuthUser>) => {
+          state.status = 'succeeded';
+          state.user = action.payload;
+          state.isAuthenticated = true;
+        }
+      )
       .addCase(loginThunk.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Ошибка входа';
@@ -120,4 +129,3 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-

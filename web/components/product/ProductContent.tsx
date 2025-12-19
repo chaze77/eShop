@@ -1,26 +1,62 @@
 'use client';
 
-import { Card, CardBody, Image, Tab, Tabs } from '@nextui-org/react';
-import React, { useState } from 'react';
-import { IProduct } from '@/types';
+import { Image } from '@nextui-org/react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { IDirectory, IProduct } from '@/types';
 import Title from '../ui/Title';
 import CustomButton from '../ui/CustomButton';
+import ProductTabs from './product-tabs/ProductTabs';
+import ProductColors from './product-colors/ProductColors';
+import ProductSizes from './product-sizes/ProductSizes';
+import { useAppDispatch } from '@/global/store';
+import { addToCart } from '@/global/features/cart-slice';
 
 interface ProductContentProps {
   product: IProduct;
 }
 
 const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<any | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedSize, setSelectedSize] = useState<string>('');
+  const dispatch = useAppDispatch();
 
-  const availableColors = [
-    ...new Set(product.attributes?.map((attr: any) => attr.colors.name)),
-  ];
-
-  const filteredSizes = product.attributes?.filter(
-    (attr: any) => attr.colors.name === selectedColor
+  const availableColors = Array.from(
+    new Map(
+      product.attributes.map((a) => a.colors).map((c) => [c?.$id, c])
+    ).values()
   );
+
+  const availableSizes = Array.from(
+    new Map(
+      product.attributes.map((a) => a.size).map((c) => [c?.$id, c])
+    ).values()
+  );
+
+  if (!product.attributes) null;
+
+  const availableSizeIds = useMemo(() => {
+    if (!selectedColor) return [];
+
+    return product.attributes
+      .filter((attr) => attr.colors?.$id === selectedColor)
+      .map((attr) => attr.size?.$id)
+      .filter(Boolean);
+  }, [selectedColor]);
+
+  useEffect(() => {
+    setSelectedSize('');
+  }, [selectedColor]);
+
+  const handleSave = () => {
+    dispatch(
+      addToCart({
+        product,
+        selectedColor,
+        selectedSize,
+      })
+    );
+    console.log('22222');
+  };
 
   return (
     <div>
@@ -36,141 +72,31 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
           width={664}
         />
 
-        <div className='flex flex-col w-[500px]'>
+        <div className='flex flex-col gap-4'>
           <Title text={product.name} />
-
-          {/* Выбор цвета */}
-          <p className='uppercase mb-2'>Цвета:</p>
-          <div className='flex gap-2 mb-4'>
-            {availableColors.map((color) => (
-              <button
-                key={color}
-                onClick={() => {
-                  setSelectedColor(color);
-                  setSelectedSize(null);
-                }}
-                className={`w-6 h-6 rounded-full ${
-                  selectedColor === color ? 'ring-2 ring-black' : ''
-                }`}
-                style={{
-                  backgroundColor: color,
-                }}
-                title={color}
-              />
-            ))}
-          </div>
-
-          {/* Размеры */}
+          <ProductColors
+            availableColors={availableColors as IDirectory[]}
+            setSelectedColor={setSelectedColor}
+            selectedColor={selectedColor}
+          />
           {selectedColor && (
-            <>
-              <p className='uppercase mb-2'>EU размеры:</p>
-              <div className='flex flex-wrap gap-2 mb-6'>
-                {filteredSizes?.map((attr: any) => {
-                  const isSelected =
-                    selectedSize?.size?.name === attr.size.name;
-                  return (
-                    <button
-                      key={attr.size.$id}
-                      onClick={() => setSelectedSize(attr)}
-                      className={`px-4 py-2 border rounded text-sm text-center
-                        ${
-                          isSelected
-                            ? 'bg-blue font-semibold text-white'
-                            : 'hover:bg-gray-100'
-                        }`}
-                    >
-                      <div>{attr.size.name}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
+            <ProductSizes
+              availableSizes={availableSizes as IDirectory[]}
+              selectedSize={selectedSize}
+              setSelectedSize={setSelectedSize}
+              availableSizeIds={availableSizeIds as string[]}
+            />
           )}
 
-          {/* Выбранные значения и кнопка */}
-          <div className='flex gap-4'>
-            {(selectedSize || selectedColor) && (
-              <div className='flex flex-col items-start gap-2 mb-4'>
-                {selectedSize && (
-                  <p className='text-lg'>
-                    Размер — <strong>{selectedSize.size.name}</strong>
-                  </p>
-                )}
-                {selectedColor && (
-                  <p className='text-lg'>
-                    Цвет — <strong>{selectedColor}</strong>
-                  </p>
-                )}
-                <p className='text-lg font-semibold'>{product.price} ₽</p>
-              </div>
-            )}
-
-            <CustomButton text='Добавить в корзину' />
-          </div>
+          <CustomButton
+            text='Добавить в корзину'
+            disabled={!selectedColor || !selectedSize}
+            onClick={handleSave}
+          />
         </div>
       </div>
 
-      {/* Таблица с деталями */}
-      <div className='flex w-full flex-col'>
-        <Tabs
-          aria-label='Options'
-          variant='underlined'
-          classNames={{
-            cursor: 'bg-blue',
-            tabContent: 'text-black',
-          }}
-        >
-          <Tab
-            key='details'
-            title='Детали'
-          >
-            <Card>
-              <CardBody>
-                <dl className='space-y-2 text-sm text-black'>
-                  <div className='flex justify-between border-b border-dotted pb-1'>
-                    <dt className='text-gray-500'>Артикул</dt>
-                    <dd className='font-medium'>{product?.$id}</dd>
-                  </div>
-                  <div className='flex justify-between border-b border-dotted pb-1'>
-                    <dt className='text-gray-500'>Категория</dt>
-                    <dd className='font-medium'>
-                      {product.subCategories?.relatedCategory.name}
-                    </dd>
-                  </div>
-                  <div className='flex justify-between border-b border-dotted pb-1'>
-                    <dt className='text-gray-500'>Бренд</dt>
-                    <dd className='font-medium'>{product?.brands?.name}</dd>
-                  </div>
-                </dl>
-              </CardBody>
-            </Card>
-          </Tab>
-          <Tab
-            key='delivery'
-            title='Доставка'
-          >
-            <Card>
-              <CardBody>В разработке</CardBody>
-            </Card>
-          </Tab>
-          <Tab
-            key='payment'
-            title='Оплата'
-          >
-            <Card>
-              <CardBody>В разработке</CardBody>
-            </Card>
-          </Tab>
-          <Tab
-            key='faq'
-            title='FAQ'
-          >
-            <Card>
-              <CardBody>В разработке</CardBody>
-            </Card>
-          </Tab>
-        </Tabs>
-      </div>
+      <ProductTabs product={product} />
     </div>
   );
 };

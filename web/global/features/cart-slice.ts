@@ -4,7 +4,8 @@ import type { RootState } from '@/global/store';
 
 export type CartItem = {
   product: IProduct;
-  qty: number;
+  selectedColor: string;
+  selectedSize: string;
 };
 
 interface CartState {
@@ -22,61 +23,54 @@ const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
     },
-    addToCart: (state, action: PayloadAction<{ product: IProduct; qty?: number }>) => {
-      const { product, qty = 1 } = action.payload;
-      const existing = state.items.find((i) => i.product.$id === product.$id);
-      if (existing) {
-        existing.qty += qty;
-      } else {
-        state.items.push({ product, qty });
+
+    addToCart: (
+      state,
+      action: PayloadAction<{
+        product: IProduct;
+        selectedColor: string;
+        selectedSize: string;
+      }>
+    ) => {
+      const { product, selectedColor, selectedSize } = action.payload;
+
+      const exists = state.items.some(
+        (i) =>
+          i.product.$id === product.$id &&
+          i.selectedColor === selectedColor &&
+          i.selectedSize === selectedSize
+      );
+
+      if (!exists) {
+        state.items.push({ product, selectedColor, selectedSize });
       }
     },
-    removeFromCart: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((i) => i.product.$id !== action.payload);
+
+    removeFromCart: (
+      state,
+      action: PayloadAction<{
+        productId: string;
+        selectedColor: string;
+        selectedSize: string;
+      }>
+    ) => {
+      state.items = state.items.filter(
+        (i) =>
+          !(
+            i.product.$id === action.payload.productId &&
+            i.selectedColor === action.payload.selectedColor &&
+            i.selectedSize === action.payload.selectedSize
+          )
+      );
     },
-    incrementQty: (state, action: PayloadAction<string>) => {
-      const item = state.items.find((i) => i.product.$id === action.payload);
-      if (item) item.qty += 1;
-    },
-    decrementQty: (state, action: PayloadAction<string>) => {
-      const item = state.items.find((i) => i.product.$id === action.payload);
-      if (item) item.qty = Math.max(1, item.qty - 1);
-    },
-    setQty: (state, action: PayloadAction<{ id: string; qty: number }>) => {
-      const item = state.items.find((i) => i.product.$id === action.payload.id);
-      if (item) item.qty = Math.max(1, action.payload.qty);
-    },
+
     clearCart: (state) => {
       state.items = [];
     },
   },
 });
 
-export const {
-  setCart,
-  addToCart,
-  removeFromCart,
-  incrementQty,
-  decrementQty,
-  setQty,
-  clearCart,
-} = cartSlice.actions;
-
-export const selectCartItems = (s: RootState) => s.cart.items;
-
-function toNumberPrice(p: IProduct): number {
-  const n = parseFloat(String(p.price).replace(/[^0-9.,]/g, '').replace(',', '.'));
-  return Number.isFinite(n) ? n : 0;
-}
-
-export const selectCartTotals = createSelector(selectCartItems, (items) => {
-  const subtotal = items.reduce((sum, i) => sum + toNumberPrice(i.product) * i.qty, 0);
-  return {
-    count: items.reduce((c, i) => c + i.qty, 0),
-    subtotal,
-    total: subtotal, // taxes/shipping could be added later
-  };
-});
+export const { setCart, addToCart, removeFromCart, clearCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
-

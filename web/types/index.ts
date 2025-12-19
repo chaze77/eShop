@@ -17,17 +17,17 @@ export interface ISubCategory extends IBaseDocument {
   products: IProduct[];
 }
 
-export interface IDirectory {
+export interface IDirectory extends IBaseDocument {
   $id: string;
   name: string;
 }
 
-export interface IAttributes {
-  $id?: string;
+export interface IAttributes extends IBaseDocument {
+  $id: string;
   quantity: number;
   colors?: IDirectory;
   size?: IDirectory;
-  products?: string;
+  products?: IProduct[];
 }
 
 export interface IProduct extends IBaseDocument {
@@ -36,7 +36,7 @@ export interface IProduct extends IBaseDocument {
   price: string;
   brands?: IDirectory;
   subCategories?: ISubCategory;
-  attributes?: IAttributes[] | string[];
+  attributes: IAttributes[];
   tags?: IDirectory[] | string[];
   image?: string;
 }
