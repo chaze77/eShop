@@ -1,6 +1,6 @@
 import { appwriteKeys } from '@/appwrite/environment';
 import { getDocumentById } from './api';
-import { IProduct } from '@/types';
+import { IProduct } from '@/common/types';
 
 export const getProductById = async (id: string): Promise<IProduct | null> => {
   try {

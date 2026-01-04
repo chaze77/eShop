@@ -1,10 +1,12 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import Products from '@/components/products/Products';
-import ProductCard from '@/components/products/ProductCard';
-import { ICategory } from '@/types';
+import Products from '@/common/components/products/Products';
+import ProductCard from '@/common/components/products/ProductCard';
+import { ICategory } from '@/common/types';
 import { useAppSelector } from '@/global/store';
+import { log } from 'console';
+import { SkeletonProducts } from '@/common/components/ui/SkeletonProducts/SkeletonProducts';
 
 interface HomeClientProps {
   categories: ICategory[];
@@ -16,6 +18,10 @@ export default function HomeClient({ categories }: HomeClientProps) {
   const q = searchParams.get('q') ?? '';
 
   const hasSearch = q.length > 0 || (products && products.length > 0);
+
+  if (status === 'pending') return <SkeletonProducts />;
+
+  console.log(hasSearch, 'hasSearch');
 
   return (
     <>

@@ -1,20 +1,37 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import type { IProduct } from '@/types';
-import type { RootState } from '@/global/store';
+import { addToCartFn } from '@/lib/apis/cart';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '@reduxjs/toolkit/query';
 
 export type CartItem = {
-  product: IProduct;
-  selectedColor: string;
-  selectedSize: string;
+  productId: string;
+  attributeId: string;
 };
 
 interface CartState {
   items: CartItem[];
+  status: 'idle' | 'pending' | 'succeeded' | 'failed';
+  error: string | null;
 }
 
 const initialState: CartState = {
   items: [],
+  status: 'idle',
+  error: null,
 };
+
+export const addToCartThunk = createAsyncThunk<
+  any,
+  { productId: string; attributeId: string },
+  { state: any }
+>('cart/createCart', async ({ productId, attributeId }, { getState }) => {
+  const userId = getState().auth.user.$id;
+
+  return addToCartFn({
+    productId,
+    attributeId,
+    userId,
+  });
+});
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -24,43 +41,12 @@ const cartSlice = createSlice({
       state.items = action.payload;
     },
 
-    addToCart: (
-      state,
-      action: PayloadAction<{
-        product: IProduct;
-        selectedColor: string;
-        selectedSize: string;
-      }>
-    ) => {
-      const { product, selectedColor, selectedSize } = action.payload;
+    removeFromCart: (state, action: PayloadAction<CartItem>) => {
+      const { productId, attributeId } = action.payload;
 
-      const exists = state.items.some(
-        (i) =>
-          i.product.$id === product.$id &&
-          i.selectedColor === selectedColor &&
-          i.selectedSize === selectedSize
-      );
-
-      if (!exists) {
-        state.items.push({ product, selectedColor, selectedSize });
-      }
-    },
-
-    removeFromCart: (
-      state,
-      action: PayloadAction<{
-        productId: string;
-        selectedColor: string;
-        selectedSize: string;
-      }>
-    ) => {
       state.items = state.items.filter(
-        (i) =>
-          !(
-            i.product.$id === action.payload.productId &&
-            i.selectedColor === action.payload.selectedColor &&
-            i.selectedSize === action.payload.selectedSize
-          )
+        (item) =>
+          !(item.productId === productId && item.attributeId === attributeId)
       );
     },
 
@@ -68,9 +54,24 @@ const cartSlice = createSlice({
       state.items = [];
     },
   },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(addToCartThunk.pending, (state) => {
+        state.status = 'pending';
+        state.error = null;
+      })
+      .addCase(addToCartThunk.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items.push(action.payload);
+      })
+      .addCase(addToCartThunk.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message ?? 'Failed to add to cart';
+      });
+  },
 });
 
-export const { setCart, addToCart, removeFromCart, clearCart } =
-  cartSlice.actions;
+export const { setCart, removeFromCart, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

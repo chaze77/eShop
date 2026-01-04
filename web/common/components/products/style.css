@@ -1,0 +1,56 @@
+/* .products-swiper {
+  position: relative;
+  width: 100%;
+}
+
+.products-swiper .swiper {
+  height: 250px;
+}
+
+.products-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: black;
+  opacity: 0.7;
+  margin: 0 5px;
+  border-radius: 50%;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.products-swiper .swiper-pagination-bullet-active {
+  background: #48d0ff;
+  opacity: 1;
+}
+
+
+.products-swiper .swiper-button-prev,
+.products-swiper .swiper-button-next {
+  position: absolute;
+  bottom: 0;
+  top: auto;
+  transform: translateY(0);
+}
+
+.products-swiper .swiper-button-prev {
+  left: 40%;
+}
+.products-swiper .swiper-button-next {
+  right: 40%;
+}
+
+.products-swiper .swiper-button-prev::after,
+.products-swiper .swiper-button-next::after {
+  font-size: 40px;
+}
+
+.products-swiper .swiper-button-prev:hover,
+.products-swiper .swiper-button-next:hover {
+  color: black;
+}
+
+.products-swiper .swiper-pagination {
+  pointer-events: none;
+}
+.products-swiper .swiper-pagination-bullet {
+  pointer-events: auto;
+} */

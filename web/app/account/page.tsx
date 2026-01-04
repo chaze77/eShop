@@ -1,8 +1,8 @@
 'use client';
 
-import LoaderOverlay from '@/components/ui/LoaderOverlay';
+import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { useAppSelector } from '@/global/store';
-import { Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
+import { Card, Divider } from 'antd';
 
 export default function Page() {
   const user = useAppSelector((state) => state.auth.user);
@@ -16,15 +16,15 @@ export default function Page() {
 
   return (
     <Card>
-      <CardHeader>
-        <h2 className='text-xl font-semibold'>Мой аккаунт</h2>
-      </CardHeader>
+      <h2>Мой аккаунт</h2>
+
       <Divider />
-      <CardBody>
-        <p className='text-gray-600 mb-2'>{user.name}</p>
-        <p className='text-gray-600 mb-2'>{user.email}</p>
-        <p className='text-gray-600'>Телефон: {user.phone}</p>
-      </CardBody>
+
+      <div>
+        <p>{user.name}</p>
+        <p>{user.email}</p>
+        <p>Телефон: {user.phone}</p>
+      </div>
     </Card>
   );
 }

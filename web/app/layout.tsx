@@ -1,14 +1,16 @@
 import type { Metadata } from 'next';
-import './globals.css';
-
-import { ICategory } from '@/types';
-import Header from '@/components/common/Header';
-import { Provider } from '@/provider/Provider';
+import 'antd/dist/reset.css';
+import '../app/styles/globals.scss';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { Providers } from '@/provider/AntProvider';
+import { ICategory } from '@/common/types';
 import { ReduxProvider } from '@/global/provider';
 import { appwriteKeys } from '@/appwrite/environment';
 import { ToastContainer } from 'react-toastify';
 import { fetchDocuments } from '@/lib/apis/api';
 import 'react-toastify/dist/ReactToastify.css';
+
+import AntHeader from '@/common/components/header/Header';
 
 export const revalidate = 86400;
 
@@ -37,9 +39,11 @@ export default async function RootLayout({
     <html lang='en'>
       <body>
         <ReduxProvider>
-          <ToastContainer />
-          <Header categories={categories} />
-          <Provider>{children}</Provider>
+          <Providers>
+            <ToastContainer />
+            <AntHeader categories={categories} />
+            {children}
+          </Providers>
         </ReduxProvider>
       </body>
     </html>

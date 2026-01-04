@@ -1,37 +1,67 @@
-"use client";
+'use client';
 
-import { Card, CardBody, CardHeader, Divider, Chip } from '@nextui-org/react';
+import { Card, Divider, Tag, Typography } from 'antd';
+
+const { Title, Text } = Typography;
 
 const mockOrders = [
-  { id: '4353', date: '27 Июня, 12:34', status: 'Отправлен', total: '14 798 ₽', items: 6 },
-  { id: '4120', date: '01 Июня, 10:15', status: 'Доставлен', total: '7 990 ₽', items: 2 },
+  {
+    id: '4353',
+    date: '27 Июня, 12:34',
+    status: 'Отправлен',
+    total: '14 798 ₽',
+    items: 6,
+  },
+  {
+    id: '4120',
+    date: '01 Июня, 10:15',
+    status: 'Доставлен',
+    total: '7 990 ₽',
+    items: 2,
+  },
 ];
 
 export default function Page() {
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Мои заказы</h2>
+    <div>
+      <Title level={3}>Мои заказы</Title>
+
       {mockOrders.map((o) => (
-        <Card key={o.id}>
-          <CardHeader className="flex justify-between items-center">
+        <Card
+          key={o.id}
+          style={{ marginBottom: 16 }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <div>
-              <div className="font-semibold">Заказ #{o.id}</div>
-              <div className="text-sm text-gray-500">Оформлен {o.date}</div>
+              <Text strong>Заказ #{o.id}</Text>
+              <br />
+              <Text type='secondary'>Оформлен {o.date}</Text>
             </div>
-            <Chip color="success" variant="flat">
-              {o.status}
-            </Chip>
-          </CardHeader>
+
+            <Tag color='green'>{o.status}</Tag>
+          </div>
+
           <Divider />
-          <CardBody>
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Позиций: {o.items}</span>
-              <span className="font-semibold">Итого: {o.total}</span>
-            </div>
-          </CardBody>
+
+          {/* Body */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text type='secondary'>Позиций: {o.items}</Text>
+            <Text strong>Итого: {o.total}</Text>
+          </div>
         </Card>
       ))}
     </div>
   );
 }
-

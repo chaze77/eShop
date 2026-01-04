@@ -1,0 +1,19 @@
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  max-width: 1500px; // desktop
+
+  //   @media (max-width: 1024px) {
+  //     max-width: 960px;
+  //   }
+
+  //   @media (max-width: 768px) {
+  //     max-width: 100%;
+  //     padding-left: 12px;
+  //     padding-right: 12px;
+  //   }
+}

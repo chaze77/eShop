@@ -1,6 +1,6 @@
 'use client';
 
-import LoaderOverlay from '@/components/ui/LoaderOverlay';
+import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import {
   Button,

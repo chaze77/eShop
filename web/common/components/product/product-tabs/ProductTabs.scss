@@ -1,0 +1,29 @@
+.product-tabs {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.product-tabs__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #121214;
+}
+
+.product-tabs__row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #d1d5db;
+  padding-bottom: 6px;
+}
+
+.product-tabs__label {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.product-tabs__value {
+  font-weight: 600;
+  font-size: 14px;
+}

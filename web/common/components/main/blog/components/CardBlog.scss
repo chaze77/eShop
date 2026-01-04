@@ -1,0 +1,20 @@
+.card-blog {
+  max-width: 500px;
+  margin-right: 10px;
+}
+
+.card-blog__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-blog__title {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.card-blog__text {
+  color: #6b7280;
+}

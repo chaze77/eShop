@@ -1,57 +1,100 @@
 'use client';
 
-import Container from '@/components/ui/Container';
-import CartList from '@/components/cart/CartList';
-import EmptyState from '@/components/common/EmtyState';
-import { useAppSelector } from '@/global/store';
-import { Button, Card, CardBody } from '@nextui-org/react';
+import Container from '@/common/components/ui/Container/Container';
+import CartList from '@/common/components/cart/CartList';
+import EmptyState from '@/common/components/ui/EmtyState';
+import { Button, Card, Space, Typography } from 'antd';
+import './cart.scss';
+import { useEffect, useMemo, useState } from 'react';
+
+import { getMyCartItems } from '@/lib/apis/cart';
+import { getProductsByIds } from '@/lib/apis/products';
+import type { ICartItem } from '@/common/types';
+
+const { Title, Text } = Typography;
+
+type EnrichedCartItem = ICartItem & {
+  product: any;
+  attribute: any;
+  color?: any;
+  size?: any;
+  availableQty?: any;
+};
 
 export default function Page() {
-  const items = useAppSelector((state) => state.cart.items);
+  const [items, setItems] = useState<EnrichedCartItem[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadCart = async () => {
+      setLoading(true);
+      try {
+        // 1) cart_items
+        const cartItems = (await getMyCartItems()) as ICartItem[];
+
+        if (!cartItems.length) {
+          setItems([]);
+          return;
+        }
+
+        // 2) уникальные productId
+        const productIds = Array.from(
+          new Set(cartItems.map((c) => c.productId))
+        );
+
+        // 3) получаем продукты (внутри уже есть attributes)
+        const products = await getProductsByIds(productIds);
+
+        // 4) объединяем cartItem + product + attribute
+        const enrichedItems = cartItems
+          .map((cartItem) => {
+            const product = products.find(
+              (p: any) => p.$id === cartItem.productId
+            );
+            if (!product) return null;
+
+            const attribute = product.attributes?.find(
+              (a: any) => a.$id === cartItem.attributeId
+            );
+            if (!attribute) return null;
+
+            return {
+              ...cartItem,
+              product,
+              color: attribute.colors,
+              size: attribute.size,
+              availableQty: attribute.quantity,
+            } as EnrichedCartItem;
+          })
+          .filter(Boolean) as EnrichedCartItem[];
+
+        setItems(enrichedItems);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCart();
+  }, []);
 
   console.log(items, 'items');
 
   return (
-    <Container className='max-w-[1100px] w-full mx-auto p-6'>
-      <h1 className='text-2xl font-bold mb-6'>Корзина</h1>
-      {items.length === 0 ? (
-        <EmptyState
-          title='Корзина пуста'
-          description='Добавляйте товары в корзину на страницах каталога и товара.'
-        />
-      ) : (
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-          <div className='lg:col-span-2'>
-            <CartList items={items} />
-          </div>
-          <div>
-            <Card>
-              <CardBody>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='text-sm text-gray-500'>Товары</span>
-                  <span className='font-medium'>{'totals.count'}</span>
-                </div>
-                <div className='flex items-center justify-between mb-4'>
-                  <span className='text-sm text-gray-500'>Сумма</span>
-                  <span className='font-semibold'>
-                    {'totals.subtotal.toFixed(2)'} ₽
-                  </span>
-                </div>
-                <Button
-                  color='primary'
-                  className='w-full'
-                  isDisabled
-                >
-                  Оформить заказ
-                </Button>
-                <p className='text-xs text-gray-400 mt-2'>
-                  Оформление будет добавлено позже.
-                </p>
-              </CardBody>
-            </Card>
-          </div>
+    <Container className='cart-page'>
+      {items.map((i) => (
+        <div key={i.$id}>
+          <Space align='center'>
+            <p>{i.product.name}</p>
+            <img
+              src={i.product.image}
+              style={{ height: '90px', width: '90px' }}
+            />
+            <p>{i.color.name}</p>
+            <p>{i.size.name}</p>
+            <p>{i.qty}</p>
+          </Space>
         </div>
-      )}
+      ))}
     </Container>
   );
 }

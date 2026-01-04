@@ -1,7 +1,7 @@
-import ProductContent from '@/components/product/ProductContent';
-import Container from '@/components/ui/Container';
+import ProductContent from '@/common/components/product/ProductContent';
+import Container from '@/common/components/ui/Container/Container';
 import { getProductById } from '@/lib/apis/product';
-import { IProduct } from '@/types';
+import { IProduct } from '@/common/types';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({
@@ -15,7 +15,7 @@ export default async function ProductPage({
   console.log(product, 'product');
 
   return (
-    <Container className='max-w-[1500px] w-full border border-red-600 mx-auto py-4'>
+    <Container>
       <ProductContent product={product} />
     </Container>
   );
