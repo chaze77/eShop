@@ -1,0 +1,37 @@
+.custom-accordion {
+  width: 100%;
+  background: transparent;
+  color: #ffffff;
+
+  .ant-collapse-item {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .ant-collapse-header {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .ant-collapse-expand-icon {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.custom-accordion__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-accordion__item {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+  }
+}

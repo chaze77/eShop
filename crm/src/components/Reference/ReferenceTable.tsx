@@ -4,14 +4,8 @@ import { Input, Space, Table } from 'antd';
 import EditModal from '@/components/ui/Modal/EditModal';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
-import { IDirectory, Store } from '@/types';
+import { IBlog, IDirectory, Store } from '@/types';
 import Title from '../ui/Title/Ttitle';
-import useLoaderStore from '@/store/useLoaderStore';
-
-// interface SelectOption {
-//   label: string;
-//   value: string;
-// }
 
 interface ReferenceTableProps {
   store: () => Store<IDirectory>;
@@ -26,21 +20,25 @@ interface DataSource {
 const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
   const { fetchItems, items, deleteItem, getById, item, update, create } =
     store();
-  const setLoading = useLoaderStore((state) => state.setLoading);
+  const [isLoading, setLoading] = useState(false);
   const [formState, setFormState] = useState({ name: '' });
   const [editOpen, setEditOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Загрузка элементов при монтировании компонента
   useEffect(() => {
-    if (items.length === 0) {
-      (async () => {
-        setLoading(true);
-        await fetchItems();
-        setLoading(false);
-      })();
-    }
-  }, [items.length, fetchItems, setLoading]);
+    const load = async () => {
+      setLoading(true);
+      await fetchItems();
+      setLoading(false);
+    };
+
+    if (!items.length) load();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('MOUNT ReferenceTable');
+  //   return () => console.log('UNMOUNT ReferenceTable');
+  // }, []);
 
   const dataSource = items.map((item: IDirectory) => ({
     key: item.$id,
@@ -103,6 +101,7 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
       dataIndex: 'name',
       key: 'name',
     },
+
     {
       title: 'Действие',
       key: 'actions',
@@ -137,6 +136,7 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
       </Space>
       <Table
         dataSource={dataSource}
+        loading={isLoading}
         columns={columns}
         rowClassName='category-item'
         pagination={{

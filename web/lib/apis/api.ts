@@ -1,5 +1,5 @@
 import { databases } from '@/appwrite/config';
-import { ID } from 'appwrite';
+import { ID, Models } from 'appwrite';
 
 export const fetchDocuments = async <T>(
   databaseId: string,
@@ -26,9 +26,16 @@ export const getDocumentById = async <T>(
 export const createDocument = async (
   databaseId: string,
   collectionId: string,
-  data: Record<string, any>
-): Promise<void> => {
-  await databases.createDocument(databaseId, collectionId, ID.unique(), data);
+  data: Record<string, any>,
+  permissions?: string[]
+): Promise<Models.Document> => {
+  return await databases.createDocument(
+    databaseId,
+    collectionId,
+    ID.unique(),
+    data,
+    permissions
+  );
 };
 
 export const updateDocument = async (

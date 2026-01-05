@@ -8,17 +8,18 @@ import {
   useRouter,
 } from 'next/navigation';
 
-import CategoryProducts from '@/components/products/CategoryProducts';
-import FilterSidebar from '@/components/products/FilterSidebar';
-import { ICategory, IDirectory, IProduct, ISubCategory } from '@/types';
-import Container from '@/components/ui/Container';
-import EmptyState from '@/components/common/EmtyState';
+import CategoryProducts from '@/common/components/products/CategoryProducts';
+import FilterSidebar from '@/common/components/products/FilterSidebar';
+import { ICategory, IDirectory, IProduct, ISubCategory } from '@/common/types';
+import Container from '@/common/components/ui/Container/Container';
+import EmptyState from '@/common/components/ui/EmtyState';
 import { getProductsByFilters, getProductsBySubIds } from '@/lib/apis/products';
 import { getSubCategoriesByCategoryId } from '@/lib/apis/subCategories';
 import { getCategoryById } from '@/lib/apis/categories';
 import { collectUniqueItemToMap } from '@/helpers';
 import { FilterKey, Selected } from '../types';
-import LoaderOverlay from '@/components/ui/LoaderOverlay';
+import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
+import { Flex } from 'antd';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -138,8 +139,8 @@ export default function Page() {
   };
 
   return (
-    <Container className='max-w-[1500px] w-full'>
-      <div className='flex gap-8 p-8'>
+    <Container>
+      <Flex gap='large'>
         <FilterSidebar
           subCategories={filtersOptions.subCategories}
           sizes={filtersOptions.sizes}
@@ -153,17 +154,15 @@ export default function Page() {
             subCategories: searchParams.getAll('subCategories'),
           }}
         />
-        <div className='flex-1'>
-          <h1 className='text-2xl font-bold mb-4'>
-            {categoryName.toUpperCase()}
-          </h1>
+        <div>
+          <h1>{categoryName.toUpperCase()}</h1>
           {products.length > 0 ? (
             <CategoryProducts products={products} />
           ) : (
-            <EmptyState />
+            !loadingOptions && !loadingProducts && <EmptyState />
           )}
         </div>
-      </div>
+      </Flex>
       <LoaderOverlay show={loadingOptions || loadingProducts} />
     </Container>
   );

@@ -1,0 +1,19 @@
+.ant-carousel .slick-prev,
+.ant-carousel .slick-prev:focus,
+.ant-carousel .slick-prev:hover {
+  left: 10px;
+  z-index: 2;
+  color: blue;
+}
+
+.ant-carousel .slick-next,
+.ant-carousel .slick-next:focus,
+.ant-carousel .slick-next:hover {
+  right: 10px;
+  z-index: 2;
+  color: blue;
+}
+
+.main-banner {
+  margin-bottom: 16px;
+}

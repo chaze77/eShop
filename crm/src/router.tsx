@@ -10,6 +10,8 @@ import Tags from './pages/reference/tags';
 import Brands from './pages/reference/brands';
 import Products from './pages/products/Products';
 import ProductDetails from './pages/product-details.tsx/ProductDetails';
+import Blogs from './pages/blogs/Blogs';
+import BlogDetails from './pages/blog-details/BlogDetail';
 
 const routes: RouteObject[] = [
   {
@@ -25,6 +27,11 @@ const routes: RouteObject[] = [
           {
             path: 'sub-categories-details/:id?',
             element: <SubCategoryDetails />,
+          },
+          { path: 'blogs', element: <Blogs /> },
+          {
+            path: 'blog-detail/:id?',
+            element: <BlogDetails />,
           },
           { path: 'reference/sizes', element: <Sizes /> },
           { path: 'reference/colors', element: <Colors /> },

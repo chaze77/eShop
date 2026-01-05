@@ -21,15 +21,17 @@
     "baseUrl": ".", // Указывает корень проекта
     "paths": {
       "@/*": ["./*"], // Алиас для корня проекта
-      "@/components/*": ["components/*"] // Алиас для папки components
+      "@/components/*": ["common/components/*"] // Алиас для папки components
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "components/**/*.tsx",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    "**/*.d.ts",
+    ".next/types/**/*.ts",
+    "common/components/**/*.tsx",
+    "next-env.d.ts",
+    "dist/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

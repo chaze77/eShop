@@ -5,7 +5,7 @@ import store from './store';
 import { useEffect } from 'react';
 import { setFavorites } from './features/favorites-slice';
 import { setCart } from './features/cart-slice';
-import type { IProduct } from '@/types';
+import type { IProduct } from '@/common/types';
 import { fetchCurrentUser } from './features/auth-slice';
 
 function FavoritesPersistence() {

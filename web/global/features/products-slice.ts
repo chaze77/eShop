@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { IProduct } from '@/types';
+import { IProduct } from '@/common/types';
 import { getProductsByName } from '@/lib/apis/products';
 
 export const fetchProductsByName = createAsyncThunk<IProduct[], string>(

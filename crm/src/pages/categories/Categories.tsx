@@ -4,6 +4,7 @@ import useCategoryStore from '@/store/useCategoryStore';
 const Categories = () => {
   return (
     <ReferenceTable
+      key={'Категории'}
       store={useCategoryStore}
       title='Категории'
     />

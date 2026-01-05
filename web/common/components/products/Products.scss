@@ -1,0 +1,19 @@
+.products {
+  margin-bottom: 16px;
+}
+
+.products-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ant-carousel .slick-dots li button {
+  background: $primary-color;
+  opacity: 0.4;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+  opacity: 1;
+  background: $primary-color;
+}

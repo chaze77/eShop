@@ -1,6 +1,6 @@
 import { Query } from 'appwrite';
 import { databases } from '@/appwrite/config';
-import { IProduct } from '@/types';
+import { IProduct } from '@/common/types';
 import { fetchDocuments } from './api';
 import { appwriteKeys } from '@/appwrite/environment';
 
@@ -105,4 +105,18 @@ export const getProductsBySubIds = async (
     console.error(e);
     return [];
   }
+};
+
+export const getProductsByIds = async (ids: string[]): Promise<IProduct[]> => {
+  if (!ids.length) return [];
+
+  const queries = [Query.equal('$id', ids)];
+
+  const response = await fetchDocuments<IProduct>(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.PRODUCTS_COLLECTION_ID,
+    queries
+  );
+
+  return response;
 };

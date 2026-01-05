@@ -1,0 +1,16 @@
+.user-dropdown__trigger {
+  padding: 4px;
+  cursor: pointer;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #38bdf8;
+  }
+}
+
+.user-dropdown__name {
+  opacity: 0.7;
+}

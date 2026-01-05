@@ -1,6 +1,6 @@
-import Box from '@/components/icons/Box';
-import Orders from '@/components/icons/Orders';
-import Users from '@/components/icons/Users';
+import Box from '@/common/components/icons/Box';
+import Orders from '@/common/components/icons/Orders';
+import Users from '@/common/components/icons/Users';
 
 export const advantagesItems = [
   {

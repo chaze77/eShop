@@ -1,4 +1,4 @@
-import type { IDirectory } from '@/types';
+import type { IDirectory } from '@/common/types';
 
 export function collectUniqueItemToMap(
   map: Map<string, IDirectory>,

@@ -1,0 +1,17 @@
+{
+  "files.associations": {
+    "*.scss": "scss"
+  },
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestSelection": "first",
+  "css.validate": true,
+  "scss.validate": true,
+  "css.completion.triggerPropertyValueCompletion": true,
+  "scss.completion.triggerPropertyValueCompletion": true,
+  "css.completion.completePropertyWithSemicolon": true,
+  "scss.completion.completePropertyWithSemicolon": true
+}

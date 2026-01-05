@@ -5,82 +5,89 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import { loginThunk } from '@/global/features/auth-slice';
 import Link from 'next/link';
-import { Button, Form, Input } from '@nextui-org/react';
+import { Button, Form, Input } from 'antd';
 import { validateLogin } from '@/lib/validation/login';
 import { showToast } from '@/helpers/showMessage';
+import './login.scss';
 
 export default function Page() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { status } = useAppSelector((s) => s.auth);
-  const [errors, setErrors] = useState({});
+  const [form] = Form.useForm();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (values: Record<string, string>) => {
+    const validation = validateLogin(values);
 
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    const errors = validateLogin(data);
-
-    if (Object.keys(errors).length > 0) {
-      return setErrors(errors);
+    if (Object.keys(validation).length > 0) {
+      setErrors(validation);
+      form.setFields(
+        Object.entries(validation).map(([name, error]) => ({
+          name,
+          errors: [error],
+        }))
+      );
+      return;
     }
 
     try {
       await dispatch(
         loginThunk({
-          email: String(data.email),
-          password: String(data.password),
+          email: String(values.email),
+          password: String(values.password),
         })
       ).unwrap();
       router.push('/');
-      showToast('success', 'Вы успешно авторизовались');
+      showToast('success', "D'¥< ¥Ÿ¥?D¨Dæ¥^D«D_ DøDý¥,D_¥?D,DúD_DýDøD¯D,¥?¥O");
     } catch (e) {
-      setErrors({ email: String((e as any)?.message ?? e) });
+      const message = String((e as any)?.message ?? e);
+      setErrors({ email: message });
+      form.setFields([{ name: 'email', errors: [message] }]);
     }
   };
 
   return (
-    <div className='max-w-md mx-auto p-6'>
-      <h1 className='text-2xl font-semibold mb-4'>Вход</h1>
+    <div className='auth-page'>
+      <h1 className='auth-page__title'>D'¥.D_D'</h1>
       <Form
-        onSubmit={onSubmit}
-        className='space-y-4'
-        validationErrors={errors}
+        form={form}
+        layout='vertical'
+        onFinish={onSubmit}
+        className='auth-page__form'
       >
-        <Input
-          type='email'
+        <Form.Item
+          label='DYD_¥Ø¥,Dø'
           name='email'
-          isRequired
-          label='Почта'
-          labelPlacement='outside'
-          variant='bordered'
-          radius='sm'
-        />
-        <Input
-          type='password'
-          name='password'
-          isRequired
-          label='Пароль'
-          labelPlacement='outside'
-          variant='bordered'
-          radius='sm'
-        />
-        <Button
-          type='submit'
-          disabled={status === 'pending'}
-          className='w-full bg-black text-white py-2 rounded disabled:opacity-60'
+          rules={[{ required: true, message: errors.email }]}
         >
-          {status === 'pending' ? 'Входим…' : 'Войти'}
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label='DYDø¥?D_D¯¥O'
+          name='password'
+          rules={[{ required: true, message: errors.password }]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Button
+          type='primary'
+          htmlType='submit'
+          block
+          disabled={status === 'pending'}
+        >
+          {status === 'pending' ? "D'¥.D_D'D,D¬ƒ?Ý" : "D'D_D1¥,D,"}
         </Button>
       </Form>
-      <p className='mt-4 text-sm text-center text-gray-600'>
-        Нет аккаунта?{' '}
+      <p className='auth-page__footer'>
+        D?Dæ¥, DøD§D§Dø¥ŸD«¥,Dø?{' '}
         <Link
           href='/register'
-          className='text-sky-600 hover:text-sky-700 underline'
+          className='auth-page__link'
         >
-          Зарегистрироваться
+          D-Dø¥?DæD3D,¥?¥,¥?D,¥?D_DýDø¥,¥O¥?¥?
         </Link>
       </p>
     </div>

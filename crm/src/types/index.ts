@@ -40,3 +40,9 @@ export interface Store<T> {
   update: (id: string, formState: Partial<T>) => Promise<void>;
   deleteItem: (id: string) => Promise<void>;
 }
+
+export interface IBlog extends Models.Document {
+  image: string;
+  title: string;
+  content: string;
+}
