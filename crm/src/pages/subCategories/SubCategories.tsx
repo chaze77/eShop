@@ -40,7 +40,7 @@ const SubCategories: React.FC = () => {
   const dataSource = subCategories.map((subCategory) => ({
     key: subCategory.$id,
     name: subCategory.name,
-    categoryName: subCategory.relatedCategory?.name || 'No Category', // Извлекаем имя категории
+    categoryName: subCategory.relatedCategory?.name || 'No Category',
   }));
 
   const columns = [

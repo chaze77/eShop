@@ -8,6 +8,7 @@ import {
   TagsOutlined,
   FormatPainterOutlined,
   ColumnWidthOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
 import { Button, Flex, Layout, Menu, Space, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -73,6 +74,12 @@ const MainLayout: React.FC = () => {
       icon: <OneToOneOutlined />,
       label: 'Products',
       onClick: () => navigate('/products'),
+    },
+    {
+      key: 'blogs',
+      icon: <CommentOutlined />,
+      label: 'Blogs',
+      onClick: () => navigate('/blogs'),
     },
     {
       key: 'references',
