@@ -38,3 +38,9 @@ export interface ICartItem extends Models.Document {
   productId: string;
   attributeId: string;
 }
+
+export interface IBlog extends Models.Document {
+  image: string;
+  title: string;
+  content: string;
+}
