@@ -9,10 +9,11 @@ export default async function ProductPage({
 }: {
   params: { id: string };
 }) {
-  const product: IProduct | null = await getProductById(params.id);
+  const { id } = await params;
+  const product: IProduct | null = await getProductById(id);
 
   if (!product) return notFound();
-  console.log(product, 'product');
+  // console.log(product, 'product');
 
   return (
     <Container>

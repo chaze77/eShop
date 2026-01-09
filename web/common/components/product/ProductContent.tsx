@@ -21,8 +21,6 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>('');
   const dispatch = useAppDispatch();
 
-  console.log(product, 'EEEEE');
-
   const availableColors = Array.from(
     new Map(
       product.attributes.map((a) => a.colors).map((c) => [c?.$id, c])
@@ -66,7 +64,6 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
         attributeId,
       })
     );
-    console.log('22222');
   };
 
   return (

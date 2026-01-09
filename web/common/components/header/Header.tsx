@@ -16,6 +16,7 @@ import {
   fetchProductsByName,
 } from '@/global/features/products-slice';
 import './Header.scss';
+import { PageConfig } from '@/constants/pageConfig';
 
 const { Header } = Layout;
 const { Search } = Input;
@@ -37,13 +38,13 @@ export default function AntHeader({ categories }: Props) {
   };
 
   const clearSearch = () => {
-    router.replace('/');
+    router.replace(PageConfig.HOME);
     dispatch(clearProducts());
   };
 
   const handleBackToMain = () => {
     dispatch(clearProducts());
-    router.push('/');
+    router.push(PageConfig.HOME);
   };
 
   const searchParams = useSearchParams();
@@ -93,7 +94,7 @@ export default function AntHeader({ categories }: Props) {
             type='text'
             icon={<StarOutlined />}
             className='header__icon-button'
-            onClick={() => router.push('/favorites')}
+            onClick={() => router.push(PageConfig.FAVORITE)}
           />
 
           {isAuthenticated ? (
@@ -101,7 +102,7 @@ export default function AntHeader({ categories }: Props) {
           ) : (
             <Button
               type='primary'
-              onClick={() => router.push('/login')}
+              onClick={() => router.push(PageConfig.LOGIN)}
             >
               Login
             </Button>
@@ -111,7 +112,7 @@ export default function AntHeader({ categories }: Props) {
             type='text'
             icon={<ShoppingCartOutlined />}
             className='header__icon-button'
-            onClick={() => router.push('/cart')}
+            onClick={() => router.push(PageConfig.CART)}
           />
         </Space>
       </Flex>

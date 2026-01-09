@@ -17,8 +17,6 @@ const ProductColors: React.FC<ProductColorsProps> = ({
   setSelectedColor,
   selectedColor,
 }) => {
-  console.log(availableColors, 'availableColors');
-
   return (
     <div>
       <Text strong>Цвета:</Text>
@@ -44,7 +42,7 @@ const ProductColors: React.FC<ProductColorsProps> = ({
                 width: 32,
                 height: 32,
                 padding: 0,
-                backgroundColor: color.name, // если name = hex / css-color
+                backgroundColor: color.name,
                 border: '1px solid #d9d9d9',
                 boxShadow: isActive ? '0 0 0 2px #000' : 'none',
                 transform: isActive ? 'scale(1.1)' : 'scale(1)',

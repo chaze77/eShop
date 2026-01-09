@@ -41,6 +41,7 @@ export default function Page() {
   }>({ subCategories: [], sizes: [], brands: [], colors: [] });
 
   const categoryId = decodeURIComponent(id as string);
+  const queryString = searchParams.toString();
 
   useEffect(() => {
     async function loadCategory() {
@@ -99,18 +100,19 @@ export default function Page() {
       if (subCategoryIds.length === 0) {
         return;
       }
-      const selectedFromURL: Selected = {
-        sizes: searchParams.getAll('sizes'),
-        brands: searchParams.getAll('brands'),
-        colors: searchParams.getAll('colors'),
-        subCategories: searchParams.getAll('subCategories'),
-      };
+      const sp = new URLSearchParams(queryString);
+      // const selectedFromURL: Selected = {
+      //   sizes: searchParams.getAll('sizes'),
+      //   brands: searchParams.getAll('brands'),
+      //   colors: searchParams.getAll('colors'),
+      //   subCategories: searchParams.getAll('subCategories'),
+      // };
 
       const res = await getProductsByFilters({
         subCategories: subCategoryIds,
-        sizes: selectedFromURL.sizes,
-        brands: selectedFromURL.brands,
-        colors: selectedFromURL.colors,
+        sizes: sp.getAll('sizes'),
+        brands: sp.getAll('brands'),
+        colors: sp.getAll('colors'),
       });
 
       setProducts(res);
@@ -119,7 +121,7 @@ export default function Page() {
     loadProducts()
       .catch((e) => console.error('[loadProducts] error', e))
       .finally(() => setLoadingProducts(false));
-  }, [searchParams, subCategoryIds]);
+  }, [queryString, subCategoryIds]);
 
   const setFilter = (key: FilterKey, value: string) => {
     const next = new URLSearchParams(searchParams);

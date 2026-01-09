@@ -2,6 +2,10 @@ import Container from '@/common/components/ui/Container/Container';
 import Title from '@/common/components/ui/Title/Title';
 import { getBlogById } from '@/lib/apis/blogs';
 import { Flex, Image } from 'antd';
+import { notFound } from 'next/navigation';
+import './blog.scss';
+import PageLayout from '@/common/components/layouts/PageLayout';
+import { PageConfig } from '@/constants/pageConfig';
 
 type PageProps = {
   params: {
@@ -10,53 +14,46 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  const blog = await getBlogById(params.id);
+  const { id } = await params;
+  const blog = await getBlogById(id);
 
   if (!blog) {
-    return <p>Блог не найден</p>;
+    return notFound();
   }
 
+  const breadCrumbsRoutes = [
+    { label: 'Главная', href: PageConfig.HOME },
+    { label: blog.title, href: `${PageConfig.BLOG}/${blog.$id}` },
+  ];
+
   return (
-    <article>
-      <Container>
-        <Flex
-          vertical
-          gap={24}
-          style={{
-            maxWidth: 900,
-            margin: '0 auto',
-            padding: '40px 0',
-          }}
-        >
-          <Title text={blog.title} />
+    <PageLayout breadcrumbs={breadCrumbsRoutes}>
+      <Flex
+        vertical
+        gap={24}
+        style={{
+          maxWidth: 900,
+          margin: '0 auto',
+          padding: '40px 0',
+        }}
+      >
+        <Title text={blog.title} />
 
-          {/* Обложка */}
-          <div style={{ borderRadius: 16, overflow: 'hidden' }}>
-            <Image
-              src={blog.image}
-              alt={blog.title}
-              preview={false}
-              width='100%'
-              height={420}
-              style={{
-                objectFit: 'cover',
-              }}
-            />
-          </div>
-
-          {/* Контент */}
-          <p
+        <div className='image-container'>
+          <Image
+            src={blog.image}
+            alt={blog.title}
+            preview={false}
+            width='100%'
+            height={420}
             style={{
-              fontSize: 16,
-              lineHeight: 1.75,
-              color: '#444',
-              maxWidth: 760,
+              objectFit: 'cover',
             }}
-          >
-            {blog.content}
-          </p>
-        </Flex>
-      </Container>
-    </article>
+          />
+        </div>
+
+        <p className='blog-content'>{blog.content}</p>
+      </Flex>
+    </PageLayout>
   );
 }
