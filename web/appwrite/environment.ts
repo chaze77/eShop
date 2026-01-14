@@ -10,4 +10,5 @@ export const appwriteKeys = {
   CART_ID: process.env.NEXT_PUBCLIC_CART_COLLECTION_ID!,
   CART_ITEM_ID: process.env.NEXT_PUBLIC_CART_ITEM_COLLECTION_ID!,
   BLOG_ID: process.env.NEXT_PUBLIC_BLOG_COLLECTION_ID!,
+  FAVORITES_ID: process.env.NEXT_PUBLIC_FAVORITES_COLLECTION_ID!,
 } as const;

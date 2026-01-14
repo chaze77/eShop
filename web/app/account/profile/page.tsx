@@ -1,37 +1,34 @@
 'use client';
 
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
-import { useAppDispatch, useAppSelector } from '@/global/store';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Form,
-  Input,
-} from '@nextui-org/react';
+import { useAppSelector } from '@/global/store';
+import { Button, Card, Divider, Form, Input, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const status = useAppSelector((state) => state.auth.status);
+
   const [nameUser, setNameUser] = useState('');
   const [phoneUser, setPhoneUser] = useState('');
+  const [form] = Form.useForm();
 
-  console.log(user, 'user');
+  const { Title } = Typography;
 
   useEffect(() => {
     if (user) {
       setNameUser(user?.name);
       setPhoneUser(user?.phone);
-      console.log('12121212');
+      form.setFieldsValue({
+        name: user?.name,
+        email: user?.email,
+        phone: user?.phone,
+      });
     }
-  }, [user?.$id]);
+  }, [user?.$id, form, user?.email, user?.name, user?.phone]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onFinish = (values: { name: string; email?: string; phone?: string }) => {
+    console.log('submit profile form', values);
   };
 
   const shouldShowLoader = !user || status === 'pending' || status === 'idle';
@@ -42,60 +39,71 @@ export default function Page() {
 
   return (
     <Card>
-      <CardHeader>
-        <h2 className='text-xl font-semibold'>Редактировать профиль</h2>
-      </CardHeader>
+      <Title
+        level={4}
+        style={{ marginBottom: 0 }}
+      >
+        Профиль пользователя
+      </Title>
       <Divider />
-      <CardBody>
-        <Form onSubmit={onSubmit}>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <Form
+        form={form}
+        layout='vertical'
+        onFinish={onFinish}
+      >
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <Form.Item
+            name='name'
+            label='Имя'
+            rules={[
+              { required: true, message: 'Введите имя' },
+              { min: 3, message: 'Имя должно быть не короче 3 символов' },
+            ]}
+          >
             <Input
-              isRequired
-              name='name'
-              label='Имя'
-              placeholder='Иван Иванов'
-              errorMessage='имя не должно быть пустым'
-              validate={(value) => {
-                if (value.length < 3) {
-                  return 'Username must be at least 3 characters long';
-                }
-              }}
-              variant='bordered'
+              placeholder='Ваше имя'
               value={nameUser}
               onChange={(e) => {
                 setNameUser(e.target.value);
+                form.setFieldValue('name', e.target.value);
               }}
             />
+          </Form.Item>
+
+          <Form.Item
+            name='email'
+            label='Email'
+          >
             <Input
-              name='email'
-              label='Email'
-              type='email'
               placeholder='ivan@example.com'
-              variant='bordered'
-              value={user?.email}
-              isDisabled
+              disabled
             />
+          </Form.Item>
+
+          <Form.Item
+            name='phone'
+            label='Телефон'
+          >
             <Input
-              name='phone'
-              label='Телефон'
               placeholder='+996 550 555 555'
-              variant='bordered'
               value={phoneUser}
               onChange={(e) => {
                 setPhoneUser(e.target.value);
+                form.setFieldValue('phone', e.target.value);
               }}
             />
-          </div>
-          <div className='mt-6'>
-            <Button
-              color='primary'
-              type='submit'
-            >
-              Сохранить
-            </Button>
-          </div>
-        </Form>
-      </CardBody>
+          </Form.Item>
+        </div>
+
+        <div className='mt-6'>
+          <Button
+            type='primary'
+            htmlType='submit'
+          >
+            Сохранить
+          </Button>
+        </div>
+      </Form>
     </Card>
   );
 }

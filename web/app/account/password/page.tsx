@@ -1,28 +1,81 @@
-"use client";
+'use client';
 
-import { Button, Card, CardBody, CardHeader, Divider, Input } from '@nextui-org/react';
+import { Button, Card, Divider, Form, Input, Typography } from 'antd';
 
 export default function Page() {
+  const [form] = Form.useForm();
+  const { Title } = Typography;
+
+  const onFinish = (values: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    console.log('change password', values);
+  };
+
   return (
     <Card>
-      <CardHeader>
-        <h2 className="text-xl font-semibold">Пароль</h2>
-      </CardHeader>
+      <Title
+        level={4}
+        style={{ marginBottom: 0 }}
+      >
+        Смена пароля
+      </Title>
       <Divider />
-      <CardBody>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input label="Текущий пароль" type="password" variant="bordered" />
+      <Form
+        form={form}
+        layout='vertical'
+        onFinish={onFinish}
+      >
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <Form.Item
+            name='currentPassword'
+            label='Текущий пароль'
+            rules={[{ required: true, message: 'Введите текущий пароль' }]}
+          >
+            <Input.Password placeholder='Введите текущий пароль' />
+          </Form.Item>
+
           <div />
-          <Input label="Новый пароль" type="password" variant="bordered" />
-          <Input label="Повторите новый пароль" type="password" variant="bordered" />
+
+          <Form.Item
+            name='newPassword'
+            label='Новый пароль'
+            rules={[{ required: true, message: 'Введите новый пароль' }]}
+          >
+            <Input.Password placeholder='Введите новый пароль' />
+          </Form.Item>
+
+          <Form.Item
+            name='confirmPassword'
+            label='Подтвердите новый пароль'
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: 'Повторите новый пароль' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Пароли не совпадают'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder='Введите новый пароль повторно' />
+          </Form.Item>
         </div>
-        <div className="mt-6">
-          <Button color="primary" isDisabled>
-            Обновить пароль (скоро)
+
+        <div className='mt-6'>
+          <Button
+            type='primary'
+            htmlType='submit'
+          >
+            Сохранить пароль
           </Button>
         </div>
-      </CardBody>
+      </Form>
     </Card>
   );
 }
-

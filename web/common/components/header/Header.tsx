@@ -3,7 +3,7 @@
 import { Layout, Menu, Button, Input, Space, Flex } from 'antd';
 import { StarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 
 import MainLogo from '@/common/components/icons/MainLogo';
 import CustomDropdown from '@/common/components/ui/CustomDropdown/CustomDropdown';
@@ -17,6 +17,7 @@ import {
 } from '@/global/features/products-slice';
 import './Header.scss';
 import { PageConfig } from '@/constants/pageConfig';
+import { fetchCurrentUser } from '@/global/features/auth-slice';
 
 const { Header } = Layout;
 const { Search } = Input;
@@ -29,7 +30,13 @@ export default function AntHeader({ categories }: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, []);
+
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  console.log(isAuthenticated, 'isAuthenticated in Header');
 
   const handleSearch = (value: string) => {
     if (!value) return;
@@ -90,12 +97,14 @@ export default function AntHeader({ categories }: Props) {
             className='header__search'
           />
 
-          <Button
-            type='text'
-            icon={<StarOutlined />}
-            className='header__icon-button'
-            onClick={() => router.push(PageConfig.FAVORITE)}
-          />
+          {isAuthenticated && (
+            <Button
+              type='text'
+              icon={<StarOutlined />}
+              className='header__icon-button'
+              onClick={() => router.push(PageConfig.FAVORITE)}
+            />
+          )}
 
           {isAuthenticated ? (
             <UserDropdown />
@@ -108,12 +117,14 @@ export default function AntHeader({ categories }: Props) {
             </Button>
           )}
 
-          <Button
-            type='text'
-            icon={<ShoppingCartOutlined />}
-            className='header__icon-button'
-            onClick={() => router.push(PageConfig.CART)}
-          />
+          {isAuthenticated && (
+            <Button
+              type='text'
+              icon={<ShoppingCartOutlined />}
+              className='header__icon-button'
+              onClick={() => router.push(PageConfig.CART)}
+            />
+          )}
         </Space>
       </Flex>
     </Header>

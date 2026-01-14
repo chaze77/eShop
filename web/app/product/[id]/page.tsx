@@ -3,6 +3,7 @@ import Container from '@/common/components/ui/Container/Container';
 import { getProductById } from '@/lib/apis/product';
 import { IProduct } from '@/common/types';
 import { notFound } from 'next/navigation';
+import PageLayout from '@/common/components/layouts/PageLayout';
 
 export default async function ProductPage({
   params,
@@ -16,8 +17,8 @@ export default async function ProductPage({
   // console.log(product, 'product');
 
   return (
-    <Container>
+    <PageLayout>
       <ProductContent product={product} />
-    </Container>
+    </PageLayout>
   );
 }

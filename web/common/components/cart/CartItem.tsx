@@ -1,90 +1,113 @@
 'use client';
 
-import { Image, Button, Typography } from 'antd';
-import { useAppDispatch } from '@/global/store';
-import { removeFromCart, type CartItem } from '@/global/features/cart-slice';
-import './CartItem.scss';
+import { EnrichedCartItem } from './types';
+import QuantityButtons from './QuantityButtons';
+import { Button, Divider, Flex, Image, Typography } from 'antd';
 
 const { Text } = Typography;
 
-export default function CartItemView({ item }: { item: CartItem }) {
-  const dispatch = useAppDispatch();
-  const { product, qty = 1 } = item;
+interface CartItemProps {
+  item: EnrichedCartItem;
+  formatMoney: (n: number) => string;
+  onQtyChange: (nextQty: number) => void;
+  onRemove: () => void;
+}
 
-  const price =
-    Number(
-      String(product.price)
-        .replace(/[^0-9.,]/g, '')
-        .replace(',', '.')
-    ) || 0;
+const getPrice = (price?: string | number) => {
+  const p = Number(price);
+  return Number.isFinite(p) ? p : 0;
+};
 
-  const lineTotal = price * qty;
+const CartItem = ({
+  item,
+  formatMoney,
+  onQtyChange,
+  onRemove,
+}: CartItemProps) => {
+  const unitPrice = getPrice(item.product?.price);
+  const rowTotal = unitPrice * item.qty;
 
   return (
-    <div className='cart-item'>
-      {/* Image */}
-      <div className='cart-item__image'>
-        {product.image ? (
-          <Image
-            alt={product.name}
-            src={product.image}
-            width={96}
-            height={96}
-            preview={false}
+    <div className='cartItem'>
+      <Flex
+        justify='space-between'
+        align='flex-start'
+        gap={16}
+      >
+        {/* left */}
+        <Flex
+          gap={16}
+          align='flex-start'
+          className='cartItem__left'
+        >
+          <div className='cartItem__imgBox'>
+            <Image
+              src={item.product.image}
+              alt={item.product.name}
+              width={90}
+              height={90}
+              preview={false}
+            />
+          </div>
+
+          <div className='cartItem__info'>
+            <div className='cartItem__brand'>
+              {item.product.brand?.name ?? item.product.brand ?? ''}
+            </div>
+
+            <div className='cartItem__name'>{item.product.name}</div>
+
+            <div className='cartItem__meta'>
+              <div>
+                <Text strong>Color:</Text>{' '}
+                <span>{item.color?.name ?? '-'}</span>
+              </div>
+              <div>
+                <Text strong>Size:</Text> <span>{item.size?.name ?? '-'}</span>
+              </div>
+            </div>
+
+            <Button
+              type='link'
+              className='cartItem__link'
+              onClick={onRemove}
+            >
+              Удалить
+            </Button>
+          </div>
+        </Flex>
+
+        {/* right */}
+        <div className='cartItem__right'>
+          <div className='cartItem__price'>
+            <Text className='cartItem__priceNow'>
+              {formatMoney(unitPrice)} сом
+            </Text>
+            <Text
+              type='secondary'
+              className='cartItem__priceSub'
+            >
+              {formatMoney(rowTotal)} сом
+            </Text>
+          </div>
+
+          <QuantityButtons
+            value={item.qty}
+            availableQty={item.availableQty}
+            onChange={onQtyChange}
           />
-        ) : (
-          <div className='cart-item__placeholder'>Нет изображения</div>
-        )}
-      </div>
 
-      {/* Info */}
-      <div className='cart-item__info'>
-        <Text
-          strong
-          className='cart-item__title'
-        >
-          {product.name}
-        </Text>
-        <Text
-          type='secondary'
-          className='cart-item__price'
-        >
-          {price.toFixed(2)} ₽
-        </Text>
-      </div>
+          {!!item.availableQty && item.availableQty <= 3 && (
+            <div className='cartItem__stock'>
+              <Text type='danger'>{item.availableQty} left</Text>
+            </div>
+          )}
+        </div>
+      </Flex>
 
-      {/* Quantity */}
-      <div className='cart-item__qty'>
-        <Button
-          size='small'
-          disabled
-        >
-          −
-        </Button>
-        <div className='cart-item__qty-value'>{qty}</div>
-        <Button
-          size='small'
-          disabled
-        >
-          +
-        </Button>
-      </div>
-
-      {/* Total */}
-      <div className='cart-item__total'>
-        <Text strong>{lineTotal.toFixed(2)} ₽</Text>
-      </div>
-
-      {/* Actions */}
-      <div className='cart-item__actions'>
-        <Button
-          danger
-          type='text'
-          onClick={() => dispatch(removeFromCart(product.$id))}
-        >
-          Удалить
-        </Button>
-      </div>
+      <Divider className='cartItem__divider' />
     </div>
   );
-}
+};
+
+export default CartItem;

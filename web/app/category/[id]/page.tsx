@@ -11,15 +11,15 @@ import {
 import CategoryProducts from '@/common/components/products/CategoryProducts';
 import FilterSidebar from '@/common/components/products/FilterSidebar';
 import { ICategory, IDirectory, IProduct, ISubCategory } from '@/common/types';
-import Container from '@/common/components/ui/Container/Container';
 import EmptyState from '@/common/components/ui/EmtyState';
 import { getProductsByFilters, getProductsBySubIds } from '@/lib/apis/products';
 import { getSubCategoriesByCategoryId } from '@/lib/apis/subCategories';
 import { getCategoryById } from '@/lib/apis/categories';
 import { collectUniqueItemToMap } from '@/helpers';
-import { FilterKey, Selected } from '../types';
+import { FilterKey } from '../types';
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { Flex } from 'antd';
+import PageLayout from '@/common/components/layouts/PageLayout';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -93,7 +93,7 @@ export default function Page() {
     loadCategory()
       .catch((e) => console.error('[loadCategory] error', e))
       .finally(() => setLoadingOptions(false));
-  }, [categoryId]);
+  }, [categoryId, searchParams]);
 
   useEffect(() => {
     async function loadProducts() {
@@ -101,12 +101,6 @@ export default function Page() {
         return;
       }
       const sp = new URLSearchParams(queryString);
-      // const selectedFromURL: Selected = {
-      //   sizes: searchParams.getAll('sizes'),
-      //   brands: searchParams.getAll('brands'),
-      //   colors: searchParams.getAll('colors'),
-      //   subCategories: searchParams.getAll('subCategories'),
-      // };
 
       const res = await getProductsByFilters({
         subCategories: subCategoryIds,
@@ -141,7 +135,7 @@ export default function Page() {
   };
 
   return (
-    <Container>
+    <PageLayout>
       <Flex gap='large'>
         <FilterSidebar
           subCategories={filtersOptions.subCategories}
@@ -166,6 +160,6 @@ export default function Page() {
         </div>
       </Flex>
       <LoaderOverlay show={loadingOptions || loadingProducts} />
-    </Container>
+    </PageLayout>
   );
 }

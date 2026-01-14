@@ -39,8 +39,19 @@ export interface ICartItem extends Models.Document {
   attributeId: string;
 }
 
+export interface IFavorite extends Models.Document {
+  productId: string;
+  userId: string;
+}
+
 export interface IBlog extends Models.Document {
   image: string;
   title: string;
   content: string;
+}
+
+export interface FavoriteItem {
+  $id: string;
+  productId: string;
+  userId: null;
 }

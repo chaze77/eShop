@@ -1,80 +1,103 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import { registerThunk } from '@/global/features/auth-slice';
 import Link from 'next/link';
+import { Button, Form, Input } from 'antd';
+import { showToast } from '@/helpers/showMessage';
+import Container from '@/common/components/ui/Container/Container';
+import { ToastTypes } from '@/constants/toastTypes';
 
 export default function Page() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { status, error } = useAppSelector((s) => s.auth);
+  const [form] = Form.useForm();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     try {
-      await dispatch(registerThunk({ email, password, name })).unwrap();
+      await dispatch(
+        registerThunk({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        })
+      ).unwrap();
+
+      showToast(ToastTypes.SUCCESS, 'Your account has been created');
       router.push('/');
-    } catch (err) {
-      console.error('[register] failed', err);
+    } catch (e) {
+      const message = String((e as any)?.message ?? e);
+      form.setFields([{ name: 'email', errors: [message] }]);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">Регистрация</h1>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm mb-1">Имя</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm mb-1">Пароль</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        {error && (
-          <p className="text-red-600 text-sm">{error}</p>
-        )}
-        <button
-          type="submit"
-          disabled={status === 'pending'}
-          className="w-full bg-black text-white py-2 rounded disabled:opacity-60"
+    <Container>
+      <h1 className='auth-page__title'>Create Account</h1>
+
+      <Form
+        form={form}
+        layout='vertical'
+        onFinish={onSubmit}
+        className='auth-page__form'
+      >
+        <Form.Item
+          label='Name'
+          name='name'
+          rules={[{ required: true, message: 'Please enter your name' }]}
         >
-          {status === 'pending' ? 'Регистрируем…' : 'Зарегистрироваться'}
-        </button>
-      </form>
-      <p className="mt-4 text-sm text-center text-gray-600">
-        Уже есть аккаунт?{' '}
-        <Link href="/login" className="text-sky-600 hover:text-sky-700 underline">
-          Войти
+          <Input placeholder='Your name' />
+        </Form.Item>
+
+        <Form.Item
+          label='Email'
+          name='email'
+          rules={[
+            { required: true, message: 'Please enter your email' },
+            { type: 'email', message: 'Invalid email address' },
+          ]}
+        >
+          <Input placeholder='Enter your email' />
+        </Form.Item>
+
+        <Form.Item
+          label='Password'
+          name='password'
+          rules={[
+            { required: true, message: 'Please enter your password' },
+            { min: 6, message: 'Password must be at least 6 characters' },
+          ]}
+        >
+          <Input.Password placeholder='Create a password' />
+        </Form.Item>
+
+        {error && <div className='auth-page__error'>{error}</div>}
+
+        <Button
+          type='primary'
+          htmlType='submit'
+          block
+          disabled={status === 'pending'}
+        >
+          {status === 'pending' ? 'Creating account…' : 'Sign Up'}
+        </Button>
+      </Form>
+
+      <p className='auth-page__footer'>
+        Already have an account?{' '}
+        <Link
+          href='/login'
+          className='auth-page__link'
+        >
+          Sign in
         </Link>
       </p>
-    </div>
+    </Container>
   );
 }
