@@ -1,35 +1,49 @@
 'use client';
 
 import Container from '@/common/components/ui/Container/Container';
-import CartList from '@/common/components/cart/CartList';
 import EmptyState from '@/common/components/ui/EmtyState';
-import { Button, Card, Space, Typography } from 'antd';
-import './cart.scss';
+import { Flex, Modal, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getMyCartItems } from '@/lib/apis/cart';
+import {
+  deleteCartItem,
+  getMyCartItems,
+  updateCartItemQty,
+} from '@/lib/apis/cart';
 import { getProductsByIds } from '@/lib/apis/products';
-import type { ICartItem } from '@/common/types';
 
-const { Title, Text } = Typography;
+import type { ICartItem, IProduct } from '@/common/types';
 
-type EnrichedCartItem = ICartItem & {
-  product: any;
-  attribute: any;
-  color?: any;
-  size?: any;
-  availableQty?: any;
-};
+import './cart.scss';
+import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
+import { showToast } from '@/helpers/showMessage';
+import CartItem from '@/common/components/cart/CartItem';
+import CartFooter from '@/common/components/cart/CartFooter';
+import { EnrichedCartItem } from '@/common/components/cart/types';
+import { ToastTypes } from '@/constants/toastTypes';
+
+const { Text } = Typography;
 
 export default function Page() {
   const [items, setItems] = useState<EnrichedCartItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+
+  /* ---------------- helpers ---------------- */
+
+  const getPrice = (product?: IProduct) => {
+    const p = Number(product?.price);
+    return Number.isFinite(p) ? p : 0;
+  };
+
+  const formatMoney = (n: number) => new Intl.NumberFormat('ru-RU').format(n);
+
+  /* ---------------- load cart ---------------- */
 
   useEffect(() => {
     const loadCart = async () => {
       setLoading(true);
       try {
-        // 1) cart_items
         const cartItems = (await getMyCartItems()) as ICartItem[];
 
         if (!cartItems.length) {
@@ -37,15 +51,12 @@ export default function Page() {
           return;
         }
 
-        // 2) уникальные productId
         const productIds = Array.from(
           new Set(cartItems.map((c) => c.productId))
         );
 
-        // 3) получаем продукты (внутри уже есть attributes)
         const products = await getProductsByIds(productIds);
 
-        // 4) объединяем cartItem + product + attribute
         const enrichedItems = cartItems
           .map((cartItem) => {
             const product = products.find(
@@ -77,24 +88,116 @@ export default function Page() {
     loadCart();
   }, []);
 
-  console.log(items, 'items');
+  /* ---------------- qty change ---------------- */
+
+  const handleQtyChange = async (cartItemId: string, nextQty: number) => {
+    const prev = items;
+
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.$id === cartItemId ? { ...item, qty: nextQty } : item
+      )
+    );
+
+    try {
+      setLoading(true);
+      await updateCartItemQty(cartItemId, nextQty);
+    } catch (e) {
+      showToast(ToastTypes.ERROR, 'Не удалось обновить количество товара');
+      setItems(prev);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ---------------- remove item ---------------- */
+
+  const handleRemoveItem = async (cartItemId: string) => {
+    const prev = items;
+
+    setItems((p) => p.filter((x) => x.$id !== cartItemId));
+
+    try {
+      setLoading(true);
+      await deleteCartItem(cartItemId);
+      showToast(ToastTypes.SUCCESS, 'Товар удалён из корзины');
+    } catch (e) {
+      showToast(ToastTypes.ERROR, 'Не удалось удалить товар из корзины');
+      setItems(prev);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ---------------- total ---------------- */
+
+  const total = useMemo(() => {
+    return items.reduce((sum, item) => {
+      return sum + getPrice(item.product) * item.qty;
+    }, 0);
+  }, [items]);
+
+  /* ---------------- empty / loading ---------------- */
+
+  if (!loading && items.length === 0) {
+    return (
+      <Container className='cart-page'>
+        <EmptyState />
+      </Container>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Container className='cart-page'>
+        <LoaderOverlay show />
+      </Container>
+    );
+  }
+
+  /* ---------------- render ---------------- */
 
   return (
     <Container className='cart-page'>
-      {items.map((i) => (
-        <div key={i.$id}>
-          <Space align='center'>
-            <p>{i.product.name}</p>
-            <img
-              src={i.product.image}
-              style={{ height: '90px', width: '90px' }}
+      <div className='cart'>
+        <Flex
+          className='cart__head'
+          justify='space-between'
+          align='center'
+        >
+          <Text className='cart__headText'>Элементы</Text>
+          <Text className='cart__headText'>Цена / Количество</Text>
+        </Flex>
+
+        <div className='cart__body'>
+          {items.map((i) => (
+            <CartItem
+              key={i.$id}
+              item={i}
+              formatMoney={formatMoney}
+              onQtyChange={(nextQty) => handleQtyChange(i.$id, nextQty)}
+              onRemove={() => handleRemoveItem(i.$id)}
             />
-            <p>{i.color.name}</p>
-            <p>{i.size.name}</p>
-            <p>{i.qty}</p>
-          </Space>
+          ))}
         </div>
-      ))}
+      </div>
+
+      {/* footer */}
+      <CartFooter
+        total={total}
+        formatMoney={formatMoney}
+        onCheckout={() => setCheckoutModalOpen(true)}
+      />
+      <Modal
+        open={checkoutModalOpen}
+        onCancel={() => setCheckoutModalOpen(false)}
+        onOk={() => setCheckoutModalOpen(false)}
+        okText='Ок'
+        cancelText='Закрыть'
+        title='Checkout'
+      >
+        <p>Checkout MVP в разработке. Здесь будет оформление заказа.</p>
+      </Modal>
     </Container>
   );
 }

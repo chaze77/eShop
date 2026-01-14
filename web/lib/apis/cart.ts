@@ -1,5 +1,10 @@
 import { appwriteKeys } from '@/appwrite/environment';
-import { createDocument, fetchDocuments, updateDocument } from './api';
+import {
+  createDocument,
+  deleteDocument,
+  fetchDocuments,
+  updateDocument,
+} from './api';
 import { Permission, Query, Role } from 'appwrite';
 
 export const addToCartFn = async ({
@@ -17,8 +22,6 @@ export const addToCartFn = async ({
     Permission.delete(Role.user(userId)),
   ];
 
-  // 1) ищем существующий cart_item (для текущего пользователя это и так "мои",
-  // если ты используешь permissions; если добавишь userId поле — добавь Query.equal('userId', userId))
   const existing = await fetchDocuments<any>(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.CART_ITEM_ID,
@@ -31,7 +34,6 @@ export const addToCartFn = async ({
 
   const doc = existing?.[0];
 
-  // 2) если найден — увеличиваем qty
   if (doc) {
     const nextQty = (doc.qty ?? 1) + 1;
 
@@ -65,4 +67,20 @@ export const getMyCartItems = async (): Promise<any[]> => {
     console.error(e);
     return [];
   }
+};
+
+export const updateCartItemQty = async (cartItemId: string, qty: number) => {
+  await updateDocument(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.CART_ITEM_ID,
+    cartItemId,
+    { qty }
+  );
+};
+export const deleteCartItem = async (cartItemId: string) => {
+  await deleteDocument(
+    appwriteKeys.DATABASE_ID,
+    appwriteKeys.CART_ITEM_ID,
+    cartItemId
+  );
 };

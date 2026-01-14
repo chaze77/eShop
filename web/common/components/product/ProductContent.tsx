@@ -8,9 +8,14 @@ import CustomButton from '../ui/CustomButton';
 import ProductTabs from './product-tabs/ProductTabs';
 import ProductColors from './product-colors/ProductColors';
 import ProductSizes from './product-sizes/ProductSizes';
-import { useAppDispatch } from '@/global/store';
-import { addToCartThunk } from '@/global/features/cart-slice';
+import { useAppSelector } from '@/global/store';
 import './ProductContent.scss';
+import { showToast } from '@/helpers/showMessage';
+import { useRouter } from 'next/navigation';
+import { PageConfig } from '@/constants/pageConfig';
+import { addToCartFn } from '@/lib/apis/cart';
+import AuthRequiredModal from '../ui/AuthRequiredModal/AuthRequiredModal';
+import { ToastTypes } from '@/constants/toastTypes';
 
 interface ProductContentProps {
   product: IProduct;
@@ -19,9 +24,11 @@ interface ProductContentProps {
 const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
-  const dispatch = useAppDispatch();
+  const [openModal, setOpenModal] = useState(false);
 
-  console.log(product, 'EEEEE');
+  const user = useAppSelector((state) => state.auth.user);
+  const isAuthinticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const router = useRouter();
 
   const availableColors = Array.from(
     new Map(
@@ -57,16 +64,25 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
   const attributeId = selectedAttribute?.$id ?? '';
   const productId = product.$id;
 
-  console.log(selectedAttribute, 'selectedAttributeId');
+  const handleSave = async () => {
+    if (!isAuthinticated) {
+      setOpenModal(true);
+      return;
+    } else {
+      try {
+        await addToCartFn({
+          productId: productId,
+          attributeId: attributeId,
+          userId: user?.$id || '',
+        });
 
-  const handleSave = () => {
-    dispatch(
-      addToCartThunk({
-        productId,
-        attributeId,
-      })
-    );
-    console.log('22222');
+        showToast(ToastTypes.SUCCESS, 'Added to cart');
+        router.push(PageConfig.CART);
+      } catch (e) {
+        showToast(ToastTypes.ERROR, 'Failed to add item to cart');
+        console.error(e);
+      }
+    }
   };
 
   return (
@@ -111,6 +127,10 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
       </div>
 
       <ProductTabs product={product} />
+      <AuthRequiredModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      />
     </div>
   );
 };

@@ -5,10 +5,9 @@ import { Carousel, Space } from 'antd';
 import CustomButton from '../../ui/CustomButton';
 import Title from '../../ui/Title/Title';
 import CardBlog from './components/CardBlog';
-import { blogItems } from '@/constants/blogItems';
 import { getBlogs } from '@/lib/apis/blogs';
-import './Blog.scss';
 import { IBlog } from '@/common/types';
+import './Blog.scss';
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<IBlog[] | null>([]);
@@ -30,10 +29,6 @@ export default function Blog() {
     <div className='blog'>
       <div className='blog__header'>
         <Title text='Наш блог' />
-        <CustomButton
-          action='second'
-          text='Больше статей'
-        />
       </div>
 
       <Carousel
@@ -43,10 +38,6 @@ export default function Blog() {
         autoplay
         slidesToShow={3}
       >
-        {/* <Space
-          size='middle'
-          orientation='horizontal'
-        > */}
         {blogs?.map((item) => (
           <CardBlog
             key={item.$id}
@@ -56,7 +47,6 @@ export default function Blog() {
             text={item.content}
           />
         ))}
-        {/* </Space> */}
       </Carousel>
     </div>
   );

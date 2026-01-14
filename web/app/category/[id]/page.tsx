@@ -11,15 +11,15 @@ import {
 import CategoryProducts from '@/common/components/products/CategoryProducts';
 import FilterSidebar from '@/common/components/products/FilterSidebar';
 import { ICategory, IDirectory, IProduct, ISubCategory } from '@/common/types';
-import Container from '@/common/components/ui/Container/Container';
 import EmptyState from '@/common/components/ui/EmtyState';
 import { getProductsByFilters, getProductsBySubIds } from '@/lib/apis/products';
 import { getSubCategoriesByCategoryId } from '@/lib/apis/subCategories';
 import { getCategoryById } from '@/lib/apis/categories';
 import { collectUniqueItemToMap } from '@/helpers';
-import { FilterKey, Selected } from '../types';
+import { FilterKey } from '../types';
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { Flex } from 'antd';
+import PageLayout from '@/common/components/layouts/PageLayout';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -41,6 +41,7 @@ export default function Page() {
   }>({ subCategories: [], sizes: [], brands: [], colors: [] });
 
   const categoryId = decodeURIComponent(id as string);
+  const queryString = searchParams.toString();
 
   useEffect(() => {
     async function loadCategory() {
@@ -92,25 +93,20 @@ export default function Page() {
     loadCategory()
       .catch((e) => console.error('[loadCategory] error', e))
       .finally(() => setLoadingOptions(false));
-  }, [categoryId]);
+  }, [categoryId, searchParams]);
 
   useEffect(() => {
     async function loadProducts() {
       if (subCategoryIds.length === 0) {
         return;
       }
-      const selectedFromURL: Selected = {
-        sizes: searchParams.getAll('sizes'),
-        brands: searchParams.getAll('brands'),
-        colors: searchParams.getAll('colors'),
-        subCategories: searchParams.getAll('subCategories'),
-      };
+      const sp = new URLSearchParams(queryString);
 
       const res = await getProductsByFilters({
         subCategories: subCategoryIds,
-        sizes: selectedFromURL.sizes,
-        brands: selectedFromURL.brands,
-        colors: selectedFromURL.colors,
+        sizes: sp.getAll('sizes'),
+        brands: sp.getAll('brands'),
+        colors: sp.getAll('colors'),
       });
 
       setProducts(res);
@@ -119,7 +115,7 @@ export default function Page() {
     loadProducts()
       .catch((e) => console.error('[loadProducts] error', e))
       .finally(() => setLoadingProducts(false));
-  }, [searchParams, subCategoryIds]);
+  }, [queryString, subCategoryIds]);
 
   const setFilter = (key: FilterKey, value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -139,7 +135,7 @@ export default function Page() {
   };
 
   return (
-    <Container>
+    <PageLayout>
       <Flex gap='large'>
         <FilterSidebar
           subCategories={filtersOptions.subCategories}
@@ -164,6 +160,6 @@ export default function Page() {
         </div>
       </Flex>
       <LoaderOverlay show={loadingOptions || loadingProducts} />
-    </Container>
+    </PageLayout>
   );
 }

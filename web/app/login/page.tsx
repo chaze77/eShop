@@ -9,6 +9,7 @@ import { Button, Form, Input } from 'antd';
 import { validateLogin } from '@/lib/validation/login';
 import { showToast } from '@/helpers/showMessage';
 import './login.scss';
+import { ToastTypes } from '@/constants/toastTypes';
 
 export default function Page() {
   const dispatch = useAppDispatch();
@@ -38,8 +39,9 @@ export default function Page() {
           password: String(values.password),
         })
       ).unwrap();
+
       router.push('/');
-      showToast('success', "D'¥< ¥Ÿ¥?D¨Dæ¥^D«D_ DøDý¥,D_¥?D,DúD_DýDøD¯D,¥?¥O");
+      showToast(ToastTypes.SUCCESS, 'You have successfully signed in');
     } catch (e) {
       const message = String((e as any)?.message ?? e);
       setErrors({ email: message });
@@ -49,7 +51,8 @@ export default function Page() {
 
   return (
     <div className='auth-page'>
-      <h1 className='auth-page__title'>D'¥.D_D'</h1>
+      <h1 className='auth-page__title'>Sign In</h1>
+
       <Form
         form={form}
         layout='vertical'
@@ -57,19 +60,19 @@ export default function Page() {
         className='auth-page__form'
       >
         <Form.Item
-          label='DYD_¥Ø¥,Dø'
+          label='Email'
           name='email'
           rules={[{ required: true, message: errors.email }]}
         >
-          <Input />
+          <Input placeholder='Enter your email' />
         </Form.Item>
 
         <Form.Item
-          label='DYDø¥?D_D¯¥O'
+          label='Password'
           name='password'
           rules={[{ required: true, message: errors.password }]}
         >
-          <Input.Password />
+          <Input.Password placeholder='Enter your password' />
         </Form.Item>
 
         <Button
@@ -78,16 +81,17 @@ export default function Page() {
           block
           disabled={status === 'pending'}
         >
-          {status === 'pending' ? "D'¥.D_D'D,D¬ƒ?Ý" : "D'D_D1¥,D,"}
+          {status === 'pending' ? 'Signing in…' : 'Sign In'}
         </Button>
       </Form>
+
       <p className='auth-page__footer'>
-        D?Dæ¥, DøD§D§Dø¥ŸD«¥,Dø?{' '}
+        Don’t have an account?{' '}
         <Link
           href='/register'
           className='auth-page__link'
         >
-          D-Dø¥?DæD3D,¥?¥,¥?D,¥?D_DýDø¥,¥O¥?¥?
+          Create one
         </Link>
       </p>
     </div>

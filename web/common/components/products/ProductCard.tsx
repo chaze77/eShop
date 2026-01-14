@@ -1,40 +1,39 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React from 'react';
 import { Card } from 'antd';
-import { useAppDispatch, useAppSelector } from '@/global/store';
-import {
-  addFavorite,
-  removeFavorite,
-  selectIsFavorite,
-} from '@/global/features/favorites-slice';
 import { IProduct } from '@/common/types';
 import StarIcon from '../icons/StarIcon';
 import './ProductCard.scss';
+import { PageConfig } from '@/constants/pageConfig';
 
 interface ProductCardProps {
   product: IProduct;
+  isFav?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  isFav = false,
+  onToggleFavorite,
+}) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-
-  const isFav = useAppSelector(selectIsFavorite(product.$id));
 
   const handleClick = () => {
-    router.push(`/product/${product.$id}`);
+    router.push(PageConfig.PRODUCT(product.$id));
   };
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isFav) {
-      dispatch(removeFavorite(product.$id));
-    } else {
-      dispatch(addFavorite(product));
-    }
+    console.log('click star', {
+      hasHandler: typeof onToggleFavorite,
+      productId: product.$id,
+    });
+
+    onToggleFavorite?.();
   };
+
   const { Meta } = Card;
 
   return (
@@ -54,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       extra={
         <span
           className={`product-card__fav ${isFav ? 'active' : ''}`}
-          onClick={toggleFavorite}
+          onClick={handleToggleFavorite}
         >
           <StarIcon filled={isFav ? true : false} />
         </span>

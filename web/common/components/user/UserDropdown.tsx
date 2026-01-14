@@ -86,11 +86,11 @@ export default function UserDropdown() {
         open={confirmVisible}
         onCancel={() => setConfirmVisible(false)}
         onOk={handleLogout}
-        okText='TEST'
-        cancelText='TEST'
+        okText='Ok'
+        cancelText='Cancel'
         title='title'
       >
-        <p>TEST</p>
+        <p>Are you sure you want to log out?</p>
       </Modal>
     </>
   );

@@ -3,20 +3,22 @@ import Container from '@/common/components/ui/Container/Container';
 import { getProductById } from '@/lib/apis/product';
 import { IProduct } from '@/common/types';
 import { notFound } from 'next/navigation';
+import PageLayout from '@/common/components/layouts/PageLayout';
 
 export default async function ProductPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const product: IProduct | null = await getProductById(params.id);
+  const { id } = await params;
+  const product: IProduct | null = await getProductById(id);
 
   if (!product) return notFound();
-  console.log(product, 'product');
+  // console.log(product, 'product');
 
   return (
-    <Container>
+    <PageLayout>
       <ProductContent product={product} />
-    </Container>
+    </PageLayout>
   );
 }

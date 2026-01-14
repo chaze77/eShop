@@ -10,7 +10,7 @@ const { Title } = Typography;
 const nav = [
   { key: '/account', label: 'my account' },
   { key: '/account/profile', label: 'edit profile' },
-  { key: '/account/orders', label: 'my orders' },
+
   { key: '/account/password', label: 'password' },
   { key: '/login', label: 'Выход' },
 ];
