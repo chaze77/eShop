@@ -1,65 +1,60 @@
 import React from 'react';
-import { Button } from 'antd';
-import ArrayRight from '../../icons/ArrayRight';
-import './CustomButton.scss';
+import './custom-button.css';
+import { RightOutlined, LeftOutlined } from '@ant-design/icons';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface CustomButtonProps {
-  action?: 'first' | 'second';
-  onClick?: () => void;
-  htmlType?: 'button' | 'submit' | 'reset';
+  variant?: 'first' | 'second' | 'third';
+  onClick?: () => void | AppRouterInstance | Promise<void>;
+  type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  text: string;
+  text?: string;
 }
 
-const CustomButton: React.FC<
-  CustomButtonProps & React.ComponentProps<typeof Button>
-> = ({
-  action = 'first',
+const CustomButton: React.FC<CustomButtonProps> = ({
+  variant = 'first',
   onClick,
-  htmlType = 'button',
+  type = 'button',
   disabled = false,
   text,
   ...props
 }) => {
-  const actionConfig: Record<
-    string,
-    {
-      className: string;
-      styleType: 'primary' | 'text' | 'default';
-      iconColor: string;
-    }
-  > = {
-    first: {
-      className: 'custom-button custom-button--first',
-      styleType: 'default',
-      iconColor: 'white',
-    },
-    second: {
-      className: 'custom-button custom-button--second',
-      styleType: 'text',
-      iconColor: 'black',
-    },
-  };
+  let className = 'custom-button';
 
-  const { className, styleType, iconColor } = actionConfig[action] || {
-    className: 'custom-button',
-    styleType: 'default',
-    iconColor: 'black',
-  };
+  switch (variant) {
+    case 'first':
+      className = 'custom-button custom-button-first';
+      break;
+
+    case 'second':
+      className = 'custom-button custom-button-second';
+      break;
+
+    case 'third':
+      className = 'custom-button custom-button-third';
+      break;
+
+    default:
+      className = 'custom-button custom-button-first';
+  }
 
   return (
-    <Button
+    <button
+      type={type}
       className={className}
       onClick={onClick}
-      htmlType={htmlType}
-      type={styleType}
       disabled={disabled}
-      icon={<ArrayRight color={iconColor} />}
-      iconPlacement='end'
+      aria-label={variant === 'third' ? 'Back' : undefined}
       {...props}
     >
-      {text}
-    </Button>
+      {variant !== 'third' && (
+        <span className='custom-button-text'>{text}</span>
+      )}
+
+      <span className='custom-button-icon'>
+        {variant === 'third' ? <LeftOutlined /> : <RightOutlined />}
+      </span>
+    </button>
   );
 };
 

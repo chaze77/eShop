@@ -1,26 +1,34 @@
 'use client';
 
-import { Layout, Menu, Button, Input, Space, Flex } from 'antd';
-import { StarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { use, useEffect } from 'react';
 
+import { Button, Input, Space } from 'antd';
+import {
+  MenuOutlined,
+  ShoppingCartOutlined,
+  StarOutlined,
+} from '@ant-design/icons';
+
+import { useAppDispatch, useAppSelector } from '@/global/store';
 import MainLogo from '@/common/components/icons/MainLogo';
+import Container from '@/common/components/ui/Container/Container';
 import CustomDropdown from '@/common/components/ui/CustomDropdown/CustomDropdown';
 import UserDropdown from '@/common/components/user/UserDropdown';
-
-import { ICategory } from '@/common/types';
-import { useAppDispatch, useAppSelector } from '@/global/store';
+import { ButtonLink } from './button-link/ButtonLink';
+import MobileMenuDrawer from './menu-drawer/MobileMenuDrawer';
+import { labels } from '@/constants/labels';
+import { PageConfig } from '@/constants/pageConfig';
+import { fetchCurrentUser } from '@/global/features/auth-slice';
 import {
   clearProducts,
   fetchProductsByName,
 } from '@/global/features/products-slice';
-import './Header.scss';
-import { PageConfig } from '@/constants/pageConfig';
-import { fetchCurrentUser } from '@/global/features/auth-slice';
 
-const { Header } = Layout;
-const { Search } = Input;
+import type { ICategory } from '@/common/types';
+
+import './header.css';
 
 interface Props {
   categories: ICategory[];
@@ -29,104 +37,137 @@ interface Props {
 export default function AntHeader({ categories }: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { Search } = Input;
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
-  }, []);
+    console.log('я отрабатываю');
+  }, [dispatch]);
 
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, status } = useAppSelector((state) => state.auth);
 
-  console.log(isAuthenticated, 'isAuthenticated in Header');
+  const isLoading = status === 'idle' || status === 'pending';
 
   const handleSearch = (value: string) => {
-    if (!value) return;
-    dispatch(fetchProductsByName(value));
-    router.replace(`/?q=${encodeURIComponent(value)}`);
+    const v = value.trim();
+    if (!v) return;
+    dispatch(fetchProductsByName(v));
+    router.replace(`/?q=${encodeURIComponent(v)}`);
   };
 
   const clearSearch = () => {
     router.replace(PageConfig.HOME);
     dispatch(clearProducts());
+    dispatch(fetchProductsByName(''));
   };
 
-  const handleBackToMain = () => {
-    dispatch(clearProducts());
-    router.push(PageConfig.HOME);
+  const handleMobileSearch = (value: string) => {
+    handleSearch(value);
+    setIsMobileMenuOpen(false);
   };
 
   const searchParams = useSearchParams();
   const q = searchParams.get('q') ?? '';
 
   useEffect(() => {
-    if (q.length > 0) handleSearch(q.trim());
+    if (q.trim().length > 0) handleSearch(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Header className='header'>
-      <Flex
-        justify='space-between'
-        align='center'
-        className='header__inner'
-      >
-        <div onClick={handleBackToMain}>
-          <MainLogo />
+    <header className='header'>
+      <Container>
+        <div className='inner'>
+          <div className='burger-btn'>
+            <Button
+              type='text'
+              className='burger'
+              icon={<MenuOutlined />}
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label='Open menu'
+            />
+          </div>
+
+          <Link
+            href={PageConfig.HOME}
+            className='logo'
+            onClick={() => {
+              dispatch(clearProducts());
+            }}
+          >
+            <MainLogo />
+          </Link>
+
+          <nav className='nav'>
+            <Space size='large'>
+              {categories.map((cat) => (
+                <CustomDropdown
+                  key={cat.$id}
+                  category={cat}
+                />
+              ))}
+            </Space>
+          </nav>
+
+          <Space
+            size='small'
+            className='actions'
+          >
+            <div className='search'>
+              <Search
+                value={searchValue}
+                placeholder={labels.placeholders.search}
+                allowClear
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchValue(value);
+
+                  if (!value) {
+                    clearSearch();
+                  }
+                }}
+                onSearch={(value) => {
+                  handleSearch(value);
+                }}
+              />
+            </div>
+
+            {isAuthenticated ? (
+              <>
+                <ButtonLink
+                  href={PageConfig.FAVORITE}
+                  icon={<StarOutlined style={{ fontSize: 20 }} />}
+                />
+
+                <UserDropdown />
+
+                <ButtonLink
+                  href={PageConfig.CART}
+                  icon={<ShoppingCartOutlined style={{ fontSize: 20 }} />}
+                />
+              </>
+            ) : (
+              <ButtonLink
+                href={PageConfig.LOGIN}
+                text='Войти'
+                loading={isLoading}
+              />
+            )}
+          </Space>
         </div>
+      </Container>
 
-        <Space size='middle'>
-          <Menu
-            mode='horizontal'
-            theme='dark'
-            selectable={false}
-            items={categories.map((cat) => ({
-              key: cat.$id,
-              label: <CustomDropdown category={cat} />,
-            }))}
-          />
-        </Space>
-
-        <Space
-          size='middle'
-          className='header__actions'
-        >
-          <Search
-            defaultValue={q}
-            placeholder='Поиск товаров'
-            onSearch={handleSearch}
-            onChange={clearSearch}
-            allowClear
-            className='header__search'
-          />
-
-          {isAuthenticated && (
-            <Button
-              type='text'
-              icon={<StarOutlined />}
-              className='header__icon-button'
-              onClick={() => router.push(PageConfig.FAVORITE)}
-            />
-          )}
-
-          {isAuthenticated ? (
-            <UserDropdown />
-          ) : (
-            <Button
-              type='primary'
-              onClick={() => router.push(PageConfig.LOGIN)}
-            >
-              Login
-            </Button>
-          )}
-
-          {isAuthenticated && (
-            <Button
-              type='text'
-              icon={<ShoppingCartOutlined />}
-              className='header__icon-button'
-              onClick={() => router.push(PageConfig.CART)}
-            />
-          )}
-        </Space>
-      </Flex>
-    </Header>
+      <MobileMenuDrawer
+        open={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        q={q}
+        categories={categories}
+        onSearch={handleMobileSearch}
+        onClearSearch={clearSearch}
+        onNavigate={(path) => router.push(path)}
+      />
+    </header>
   );
 }

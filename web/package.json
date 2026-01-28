@@ -18,13 +18,15 @@
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
-    "swiper": "^11.1.15"
+    "swiper": "^11.1.15",
+    "use-media-antd-query": "^1.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "sass": "^1.97.0",
+    "sass": "^1.97.2",
+    "sass-embedded": "^1.97.2",
     "typescript": "^5"
   }
 }

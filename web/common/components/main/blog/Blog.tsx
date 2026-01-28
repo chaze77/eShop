@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Carousel, Space } from 'antd';
-import CustomButton from '../../ui/CustomButton';
 import Title from '../../ui/Title/Title';
 import CardBlog from './components/CardBlog';
 import { getBlogs } from '@/lib/apis/blogs';
 import { IBlog } from '@/common/types';
-import './Blog.scss';
+import './Blog.css';
+import { CustomCarousel } from '../../ui/CustomCarousel/CustomCarousel';
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<IBlog[] | null>([]);
@@ -27,17 +27,11 @@ export default function Blog() {
 
   return (
     <div className='blog'>
-      <div className='blog__header'>
+      <div className='blog-header'>
         <Title text='Наш блог' />
       </div>
 
-      <Carousel
-        dots
-        arrows
-        infinite
-        autoplay
-        slidesToShow={3}
-      >
+      <CustomCarousel slidesToShow={3}>
         {blogs?.map((item) => (
           <CardBlog
             key={item.$id}
@@ -47,7 +41,7 @@ export default function Blog() {
             text={item.content}
           />
         ))}
-      </Carousel>
+      </CustomCarousel>
     </div>
   );
 }

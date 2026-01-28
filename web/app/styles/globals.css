@@ -1,0 +1,68 @@
+@import './variables.css';
+
+/* =========================
+   Base
+   ========================= */
+:root {
+  --background: #ffffff;
+}
+
+/* =========================
+   RF Dewi base family
+   ========================= */
+@font-face {
+  font-family: 'RFDewi';
+  src: url('/fonts/RFDewi-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RFDewi';
+  src: url('/fonts/RFDewi-Semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RFDewi';
+  src: url('/fonts/RFDewi-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RFDewi';
+  src: url('/fonts/RFDewi-Ultrabold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RFDewi Expanded';
+  src: url('/fonts/RFDewiExpanded-Black.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RFDewi Expanded';
+  src: url('/fonts/RFDewiExpanded-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================
+   Global body
+   ========================= */
+body {
+  background: var(--background);
+  font-family: 'RFDewi', Arial, sans-serif;
+  font-weight: 400;
+}

@@ -1,13 +1,12 @@
 'use client';
 
 import React from 'react';
-import Title from '../ui/Title/Title';
-import CustomButton from '../ui/CustomButton';
-import ProductCard from './ProductCard';
-import Link from 'next/link';
 import { ICategory } from '@/common/types';
-import { CustomCarousel } from '../ui/CustomCarousel/CustomCarousel';
-import './Products.scss';
+import ProductList from './ProductList';
+import SectionHeader from '../ui/SectionHeader/SectionHeader';
+import { labels } from '@/constants/labels';
+import { PageConfig } from '@/constants/pageConfig';
+import './Products.css';
 
 export default function Products({
   items,
@@ -34,32 +33,21 @@ export default function Products({
             key={category.$id}
             className='products'
           >
-            <div className='products-container'>
-              <Title text={category.name} />
-
-              <Link href={`/category/${encodeURIComponent(category.$id)}`}>
-                <CustomButton
-                  action='second'
-                  text='Больше товаров'
-                />
-              </Link>
-            </div>
+            <SectionHeader
+              className='products-container'
+              title={category.name}
+              actionLabel={labels.common.loadMore}
+              actionHref={PageConfig.CATEGORY(encodeURIComponent(category.$id))}
+            />
 
             <div className='products-carousel'>
-              <CustomCarousel>
-                {products.map((product) => (
-                  <div
-                    key={product.$id}
-                    className='products-carousel__slide'
-                  >
-                    <ProductCard
-                      product={product}
-                      isFav={isFavorite(product.$id)}
-                      onToggleFavorite={() => onToggleFavorite(product.$id)}
-                    />
-                  </div>
-                ))}
-              </CustomCarousel>
+              <ProductList
+                items={products}
+                layout='carousel'
+                itemClassName='products-carousel__slide'
+                isFavorite={isFavorite}
+                onToggleFavorite={onToggleFavorite}
+              />
             </div>
           </div>
         );

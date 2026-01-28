@@ -1,7 +1,7 @@
 import { FilterKey, Selected } from '@/app/category/types';
-import { Collapse, Button } from 'antd';
+import { Collapse, Button, Typography } from 'antd';
 import React from 'react';
-import './FilterAccordion.scss';
+import './FilterAccordion.css';
 
 interface FilterAccordionProps {
   accordingKey: FilterKey;
@@ -11,6 +11,8 @@ interface FilterAccordionProps {
   selected: Selected;
 }
 
+const { Text } = Typography;
+
 const FilterAccordion: React.FC<FilterAccordionProps> = ({
   accordingKey,
   title,
@@ -19,32 +21,31 @@ const FilterAccordion: React.FC<FilterAccordionProps> = ({
   setFilter,
 }) => {
   return (
-    <div>
+    <div className='filter-accordion-container'>
       <Collapse
         items={[
           {
             key: accordingKey,
             label: title,
             children: (
-              <div className='filter-accordion__list'>
+              <div className='filter-accordion-list'>
                 {filterItems &&
                   filterItems.map((item) => {
                     const active = (selected[accordingKey] ?? []).includes(
-                      item.$id
+                      item.$id,
                     );
                     return (
-                      <Button
+                      <Text
                         key={item.$id}
                         className={
                           active
-                            ? 'filter-accordion__tag filter-accordion__tag--active'
-                            : 'filter-accordion__tag'
+                            ? 'filter-accordion-tag filter-accordion-tag-active'
+                            : 'filter-accordion-tag'
                         }
-                        type={active ? 'default' : 'primary'}
                         onClick={() => setFilter(accordingKey, item.$id)}
                       >
                         {item.name}
-                      </Button>
+                      </Text>
                     );
                   })}
               </div>

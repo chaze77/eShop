@@ -1,0 +1,15 @@
+.products {
+  margin-bottom: 16px;
+}
+
+.products-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ant-carousel .slick-dots li button {
+  background: var(--primary-500);
+  opacity: 0.4;
+}

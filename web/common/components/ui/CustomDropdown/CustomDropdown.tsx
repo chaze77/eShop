@@ -6,9 +6,13 @@ import type { MenuProps } from 'antd';
 
 import Chevron from '../../icons/Chevron';
 import type { ICategory } from '../../../types';
-import './CustomDropdown.scss';
+import './CustomDropdown.css';
 
-export default function CustomDropdown({ category }: { category: ICategory }) {
+type Props = {
+  category: ICategory;
+};
+
+export default function CustomDropdown({ category }: Props) {
   const router = useRouter();
 
   const items: MenuProps['items'] =
@@ -20,12 +24,8 @@ export default function CustomDropdown({ category }: { category: ICategory }) {
       },
     })) ?? [];
 
-  if (!items.length) {
-    return (
-      <div onClick={() => router.push(`/category/${category.$id}`)}>
-        <span>{category.name}</span>
-      </div>
-    );
+  if (items.length === 0) {
+    return null;
   }
 
   return (
@@ -36,7 +36,7 @@ export default function CustomDropdown({ category }: { category: ICategory }) {
     >
       <div className='header-dropdown-trigger'>
         <Space size={6}>
-          <span className='header-dropdown-title'>{category.name}</span>
+          <span className='header-dropdown-title'>{category.name.trim()}</span>
           <Chevron />
         </Space>
       </div>

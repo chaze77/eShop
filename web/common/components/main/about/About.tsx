@@ -1,6 +1,6 @@
 import { advantagesItems } from '@/constants/advantagesItems';
 import Title from '../../ui/Title/Title';
-import './About.scss';
+import './About.css';
 
 export default function About() {
   return (
@@ -50,3 +50,4 @@ export default function About() {
     </div>
   );
 }
+

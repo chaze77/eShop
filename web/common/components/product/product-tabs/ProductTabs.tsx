@@ -1,6 +1,6 @@
 import { IProduct } from '@/common/types';
 import { Tabs, Card } from 'antd';
-import './ProductTabs.scss';
+import './ProductTabs.css';
 
 type TabsProps = {
   product: IProduct;
@@ -59,3 +59,4 @@ const ProductTabs: React.FC<TabsProps> = ({ product }) => {
 };
 
 export default ProductTabs;
+
