@@ -1,5 +1,4 @@
 import { Query } from 'appwrite';
-import { databases } from '@/appwrite/config';
 import { IProduct } from '@/common/types';
 import { fetchDocuments } from './api';
 import { appwriteKeys } from '@/appwrite/environment';
@@ -12,7 +11,7 @@ export const getProductsByFilters = async (
     subCategories?: string[];
     minPrice?: number;
     maxPrice?: number;
-  } = {}
+  } = {},
 ): Promise<any[]> => {
   console.log('📥 [filters получены]:', filters);
 
@@ -46,7 +45,7 @@ export const getProductsByFilters = async (
     const attrResponse = await fetchDocuments(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.ATTRIBUTES_COLLECTION_ID,
-      attrQueries
+      attrQueries,
     );
     // console.log('📋 [raw attrResponse]:', attrResponse);
 
@@ -66,7 +65,7 @@ export const getProductsByFilters = async (
   const response = await fetchDocuments(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.PRODUCTS_COLLECTION_ID,
-    productQueries
+    productQueries,
   );
 
   return response as any[];
@@ -79,7 +78,7 @@ export const getProductsByName = async (value: string): Promise<IProduct[]> => {
     const response = await fetchDocuments(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.PRODUCTS_COLLECTION_ID,
-      query
+      query,
     );
 
     return response as IProduct[];
@@ -90,14 +89,14 @@ export const getProductsByName = async (value: string): Promise<IProduct[]> => {
 };
 
 export const getProductsBySubIds = async (
-  subIds: any[]
+  subIds: any[],
 ): Promise<IProduct[]> => {
   const queries = [Query.equal('subCategories', subIds)];
   try {
     const response = await fetchDocuments(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.PRODUCTS_COLLECTION_ID,
-      queries
+      queries,
     );
 
     return response as IProduct[];
@@ -115,7 +114,7 @@ export const getProductsByIds = async (ids: string[]): Promise<IProduct[]> => {
   const response = await fetchDocuments<IProduct>(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.PRODUCTS_COLLECTION_ID,
-    queries
+    queries,
   );
 
   return response;

@@ -2,20 +2,22 @@
 
 import { Image, Tag } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { IDirectory, IProduct } from '@/common/types';
+import { BUTTON_TYPE, IDirectory, IProduct } from '@/common/types';
 import Title from '../ui/Title/Title';
 import CustomButton from '../ui/CustomButton';
 import ProductTabs from './product-tabs/ProductTabs';
 import ProductColors from './product-colors/ProductColors';
 import ProductSizes from './product-sizes/ProductSizes';
 import { useAppSelector } from '@/global/store';
-import './ProductContent.scss';
 import { showToast } from '@/helpers/showMessage';
 import { useRouter } from 'next/navigation';
 import { PageConfig } from '@/constants/pageConfig';
 import { addToCartFn } from '@/lib/apis/cart';
-import AuthRequiredModal from '../ui/AuthRequiredModal/AuthRequiredModal';
+import AuthRequiredModal from '../modals/AuthRequiredModal/AuthRequiredModal';
 import { ToastTypes } from '@/constants/toastTypes';
+import { messages } from '@/constants/messages';
+import './ProductContent.css';
+import { labels } from '@/constants/labels';
 
 interface ProductContentProps {
   product: IProduct;
@@ -32,14 +34,14 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
 
   const availableColors = Array.from(
     new Map(
-      product.attributes.map((a) => a.colors).map((c) => [c?.$id, c])
-    ).values()
+      product.attributes.map((a) => a.colors).map((c) => [c?.$id, c]),
+    ).values(),
   );
 
   const availableSizes = Array.from(
     new Map(
-      product.attributes.map((a) => a.size).map((c) => [c?.$id, c])
-    ).values()
+      product.attributes.map((a) => a.size).map((c) => [c?.$id, c]),
+    ).values(),
   );
 
   if (!product.attributes) null;
@@ -58,7 +60,7 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
   }, [selectedColor]);
 
   const selectedAttribute = product.attributes.find(
-    (a) => a.colors?.$id === selectedColor && a.size?.$id === selectedSize
+    (a) => a.colors?.$id === selectedColor && a.size?.$id === selectedSize,
   );
 
   const attributeId = selectedAttribute?.$id ?? '';
@@ -76,10 +78,10 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
           userId: user?.$id || '',
         });
 
-        showToast(ToastTypes.SUCCESS, 'Added to cart');
+        showToast(ToastTypes.SUCCESS, messages.cart.add.success);
         router.push(PageConfig.CART);
       } catch (e) {
-        showToast(ToastTypes.ERROR, 'Failed to add item to cart');
+        showToast(ToastTypes.ERROR, messages.cart.add.error);
         console.error(e);
       }
     }
@@ -119,9 +121,10 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
             <Tag color='error'>{selectedAttribute?.quantity} items to left</Tag>
           )}
           <CustomButton
-            text='добавить'
+            variant={BUTTON_TYPE.FIRST}
+            text={labels.common.add}
             disabled={!selectedColor || !selectedSize}
-            onClick={handleSave}
+            onClick={() => handleSave()}
           />
         </div>
       </div>

@@ -1,31 +1,34 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  useParams,
-  useSearchParams,
-  usePathname,
-  useRouter,
-} from 'next/navigation';
+import { useParams } from 'next/navigation';
 
-import CategoryProducts from '@/common/components/products/CategoryProducts';
 import FilterSidebar from '@/common/components/products/FilterSidebar';
-import { ICategory, IDirectory, IProduct, ISubCategory } from '@/common/types';
+import {
+  FILTERSTYPE,
+  ICategory,
+  IDirectory,
+  IProduct,
+  ISubCategory,
+} from '@/common/types';
 import EmptyState from '@/common/components/ui/EmtyState';
 import { getProductsByFilters, getProductsBySubIds } from '@/lib/apis/products';
 import { getSubCategoriesByCategoryId } from '@/lib/apis/subCategories';
 import { getCategoryById } from '@/lib/apis/categories';
 import { collectUniqueItemToMap } from '@/helpers';
-import { FilterKey } from '../types';
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { Flex } from 'antd';
-import PageLayout from '@/common/components/layouts/PageLayout';
+import PageShell from '@/common/components/layouts/PageShell';
+import ProductList from '@/common/components/products/ProductList';
+
+import { useFilterQuery } from '@/common/hooks/useFilterQuery'; // <-- поправь путь
+import useFavorites from '../../../common/hooks/useFavorites';
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
   const { id } = useParams();
+
+  const { selected, queryString, toggleFilter } = useFilterQuery();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const [categoryName, setCategoryName] = useState('');
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -41,7 +44,6 @@ export default function Page() {
   }>({ subCategories: [], sizes: [], brands: [], colors: [] });
 
   const categoryId = decodeURIComponent(id as string);
-  const queryString = searchParams.toString();
 
   useEffect(() => {
     async function loadCategory() {
@@ -51,24 +53,24 @@ export default function Page() {
       const uniqueSubCategoriesMap = new Map<string, IDirectory>();
 
       const category: ICategory = await getCategoryById(categoryId);
-
       if (!category) return;
-      setCategoryName(category?.name);
+
+      setCategoryName(category.name);
 
       const subCategoriesInfo = (await getSubCategoriesByCategoryId(
-        categoryId
+        categoryId,
       )) as ISubCategory[];
 
-      const urlSubId = searchParams.getAll('subCategories');
+      const urlSubId = selected.subCategories;
 
       const idToUse =
-        urlSubId.length > 0 ? urlSubId : subCategoriesInfo?.map((s) => s.$id);
+        urlSubId.length > 0 ? urlSubId : subCategoriesInfo.map((s) => s.$id);
 
       const productsBySubIds = await getProductsBySubIds(idToUse);
 
       setSubCategoryIds(idToUse);
 
-      subCategoriesInfo.forEach((sub: ISubCategory) => {
+      subCategoriesInfo.forEach((sub) => {
         collectUniqueItemToMap(uniqueSubCategoriesMap, sub);
       });
 
@@ -93,73 +95,59 @@ export default function Page() {
     loadCategory()
       .catch((e) => console.error('[loadCategory] error', e))
       .finally(() => setLoadingOptions(false));
-  }, [categoryId, searchParams]);
+  }, [categoryId, selected.subCategories]);
 
   useEffect(() => {
     async function loadProducts() {
-      if (subCategoryIds.length === 0) {
-        return;
-      }
+      if (subCategoryIds.length === 0) return;
+
       const sp = new URLSearchParams(queryString);
 
       const res = await getProductsByFilters({
         subCategories: subCategoryIds,
-        sizes: sp.getAll('sizes'),
-        brands: sp.getAll('brands'),
-        colors: sp.getAll('colors'),
+        sizes: sp.getAll(FILTERSTYPE.SIZES),
+        brands: sp.getAll(FILTERSTYPE.BRANDS),
+        colors: sp.getAll(FILTERSTYPE.COLORS),
       });
 
       setProducts(res);
     }
+
     setLoadingProducts(true);
     loadProducts()
       .catch((e) => console.error('[loadProducts] error', e))
       .finally(() => setLoadingProducts(false));
   }, [queryString, subCategoryIds]);
 
-  const setFilter = (key: FilterKey, value: string) => {
-    const next = new URLSearchParams(searchParams);
-    const currentValues = next.getAll(key);
-    const set = new Set(currentValues);
-    const had = set.has(value);
-    if (had) {
-      set.delete(value);
-    } else {
-      set.add(value);
-    }
-    next.delete(key);
-    const sorted = [...set].sort();
-    sorted.forEach((v) => next.append(key, v));
-    const url = `${pathname}?${next.toString()}`;
-    router.replace(url, { scroll: false });
-  };
-
   return (
-    <PageLayout>
+    <PageShell>
       <Flex gap='large'>
         <FilterSidebar
           subCategories={filtersOptions.subCategories}
           sizes={filtersOptions.sizes}
           brands={filtersOptions.brands}
           colors={filtersOptions.colors}
-          setFilter={setFilter}
-          selected={{
-            sizes: searchParams.getAll('sizes'),
-            brands: searchParams.getAll('brands'),
-            colors: searchParams.getAll('colors'),
-            subCategories: searchParams.getAll('subCategories'),
-          }}
+          setFilter={toggleFilter}
+          selected={selected}
         />
+
         <div>
           <h1>{categoryName.toUpperCase()}</h1>
+
           {products.length > 0 ? (
-            <CategoryProducts products={products} />
+            <ProductList
+              items={products}
+              columns={3}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+            />
           ) : (
             !loadingOptions && !loadingProducts && <EmptyState />
           )}
         </div>
+
+        <LoaderOverlay show={loadingOptions || loadingProducts} />
       </Flex>
-      <LoaderOverlay show={loadingOptions || loadingProducts} />
-    </PageLayout>
+    </PageShell>
   );
 }

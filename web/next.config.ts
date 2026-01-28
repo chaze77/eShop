@@ -1,11 +1,17 @@
-const nextConfig = {
-  reactStrictMode: false, // ⬅️ ВАЖНО: отключили Strict Mode
-  experimental: {
-    turbo: { enabled: true },
-  },
-  sassOptions: {
-    additionalData: `@use "@/app/styles/variables" as *;`,
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  reactStrictMode: false,
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cloud.appwrite.io',
+        pathname: '/v1/storage/**',
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

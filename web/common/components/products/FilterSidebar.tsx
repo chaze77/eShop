@@ -3,6 +3,8 @@
 import { Flex } from 'antd';
 import FilterAccordion from '../ui/FilterAccordion';
 import { FilterKey, Selected } from '@/app/category/types';
+import { FILTERSTYPE } from '@/common/types';
+import { labels } from '@/constants/labels';
 
 interface FilterItem {
   $id: string;
@@ -27,36 +29,39 @@ const FilterSidebar = ({
   selected,
 }: FilterSidebarProps) => {
   const filters = [
-    { key: 'subCategories', title: 'группы', items: subCategories },
-    { key: 'brands', title: 'бренды', items: brands },
-    { key: 'sizes', title: 'размеры', items: sizes },
-    { key: 'colors', title: 'цвета', items: colors },
+    {
+      key: FILTERSTYPE.SUBCATEGORIES,
+      title: labels.filters.subCategories,
+      items: subCategories,
+    },
+    { key: FILTERSTYPE.BRANDS, title: labels.filters.brands, items: brands },
+    { key: FILTERSTYPE.SIZES, title: labels.filters.sizes, items: sizes },
+    { key: FILTERSTYPE.COLORS, title: labels.filters.colors, items: colors },
   ] as const;
 
   return (
-    // <aside style={{ border: '1px solid red', minWidth: '300px' }}>
-    <Flex
-      vertical
-      gap='large'
-      justify='flex-start'
-      align='flex-start'
-      style={{ minWidth: 200 }}
-    >
-      {filters.map(
-        ({ key, title, items }) =>
-          items.length > 0 && (
-            <FilterAccordion
-              key={key}
-              accordingKey={key}
-              title={title}
-              filterItems={items}
-              setFilter={setFilter}
-              selected={selected}
-            />
-          )
-      )}
-    </Flex>
-    // </aside>
+    <aside style={{ minWidth: '200px' }}>
+      <Flex
+        vertical
+        gap='large'
+        justify='flex-start'
+        align='flex-start'
+      >
+        {filters.map(
+          ({ key, title, items }) =>
+            items.length > 0 && (
+              <FilterAccordion
+                key={key}
+                accordingKey={key}
+                title={title}
+                filterItems={items}
+                setFilter={setFilter}
+                selected={selected}
+              />
+            ),
+        )}
+      </Flex>
+    </aside>
   );
 };
 

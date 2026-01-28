@@ -1,0 +1,27 @@
+.header-dropdown-trigger {
+  cursor: pointer;
+}
+
+.header-dropdown-title {
+  position: relative;
+  color: #fff;
+  font-weight: 600;
+  padding-bottom: 8px;
+  font-family: var(--font-family-main);
+  text-transform: capitalize;
+}
+
+.header-dropdown-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--primary-300);
+  transition: width 0.25s ease;
+}
+
+.header-dropdown-trigger:hover .header-dropdown-title::after {
+  width: 100%;
+}

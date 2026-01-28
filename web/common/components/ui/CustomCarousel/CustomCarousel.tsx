@@ -3,10 +3,10 @@
 import React, { ReactNode } from 'react';
 import { Carousel } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import './CustomCarousel.scss';
+import './CustomCarousel.css';
 
 interface CustomCarouselProps {
-  children: ReactNode[];
+  children: ReactNode;
   slidesToShow?: number;
   autoplay?: boolean;
 }
@@ -14,7 +14,7 @@ interface CustomCarouselProps {
 const PrevArrow = ({ onClick }: any) => (
   <button
     type='button'
-    className='carouselArrow carouselArrow--prev'
+    className='carousel-arrow carousel-arrow-prev'
     onClick={onClick}
     aria-label='Previous'
   >
@@ -25,7 +25,7 @@ const PrevArrow = ({ onClick }: any) => (
 const NextArrow = ({ onClick }: any) => (
   <button
     type='button'
-    className='carouselArrow carouselArrow--next'
+    className='carousel-arrow carousel-arrow-next'
     onClick={onClick}
     aria-label='Next'
   >
@@ -38,8 +38,10 @@ export const CustomCarousel: React.FC<CustomCarouselProps> = ({
   slidesToShow = 4,
   autoplay = false,
 }) => {
+  const slides = React.Children.toArray(children);
+
   return (
-    <div className='customCarousel'>
+    <div className='custom-carousel'>
       <Carousel
         dots
         arrows
@@ -50,11 +52,16 @@ export const CustomCarousel: React.FC<CustomCarouselProps> = ({
         slidesToScroll={1}
         prevArrow={<PrevArrow />}
         nextArrow={<NextArrow />}
+        responsive={[
+          { breakpoint: 1200, settings: { slidesToShow: 3 } },
+          { breakpoint: 900, settings: { slidesToShow: 2 } },
+          { breakpoint: 600, settings: { slidesToShow: 1 } },
+        ]}
       >
-        {children.map((child, index) => (
+        {slides.map((child, index) => (
           <div
             key={index}
-            className='customCarousel__slide'
+            className='custom-carousel-slide'
           >
             {child}
           </div>

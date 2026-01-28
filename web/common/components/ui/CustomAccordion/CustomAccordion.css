@@ -1,0 +1,35 @@
+.custom-accordion {
+  width: 100%;
+  color: black;
+}
+
+/* .custom-accordion .ant-collapse-item {
+  border-color: rgba(207, 47, 47, 0.2);
+} */
+
+.custom-accordion .ant-collapse-header {
+  color: #161515;
+  font-weight: 600;
+}
+
+/* .custom-accordion .ant-collapse-expand-icon {
+  display: flex;
+  align-items: center;
+} */
+
+.custom-accordion-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-accordion-item {
+  padding: 4px 0;
+  font-size: var(--font-size-base);
+  color: var(--primary-500);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.custom-accordion-item:hover {
+  color: #0f0303;
+}

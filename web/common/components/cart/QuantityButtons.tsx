@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Flex } from 'antd';
-import './QuantityButtons.scss';
+import './QuantityButtons.css';
 
 type QuantityButtonsProps = {
   value: number;
@@ -54,3 +54,4 @@ const QuantityButtons = ({
 };
 
 export default QuantityButtons;
+

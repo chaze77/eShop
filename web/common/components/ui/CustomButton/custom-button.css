@@ -1,0 +1,62 @@
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.custom-button__text {
+  font-size: 12px;
+}
+
+/* FIRST */
+.custom-button-first {
+  background-color: var(--black-color);
+  color: white;
+  padding: 8px 16px;
+}
+
+.custom-button-first:hover {
+  background-color: var(--primary-300);
+}
+
+.custom-button-first:active {
+  background-color: #006400;
+}
+
+/* SECOND */
+.custom-button-second {
+  background: transparent;
+  color: black;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 10px;
+  text-decoration-thickness: 2px;
+}
+
+.custom-button-second:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ICON */
+.custom-button-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* DISABLED */
+.custom-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -29,7 +29,7 @@ export const addToCartFn = async ({
       Query.equal('productId', productId),
       Query.equal('attributeId', attributeId),
       Query.limit(1),
-    ]
+    ],
   );
 
   const doc = existing?.[0];
@@ -41,18 +41,17 @@ export const addToCartFn = async ({
       appwriteKeys.DATABASE_ID,
       appwriteKeys.CART_ITEM_ID,
       doc.$id,
-      { qty: nextQty }
+      { qty: nextQty },
     );
 
     return { ...doc, qty: nextQty };
   }
 
-  // 3) если не найден — создаём qty=1
   return createDocument(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.CART_ITEM_ID,
     { productId, attributeId, qty: 1 },
-    permissions
+    permissions,
   );
 };
 
@@ -60,7 +59,7 @@ export const getMyCartItems = async (): Promise<any[]> => {
   try {
     const response = await fetchDocuments<any>(
       appwriteKeys.DATABASE_ID,
-      appwriteKeys.CART_ITEM_ID
+      appwriteKeys.CART_ITEM_ID,
     );
     return response;
   } catch (e) {
@@ -74,13 +73,13 @@ export const updateCartItemQty = async (cartItemId: string, qty: number) => {
     appwriteKeys.DATABASE_ID,
     appwriteKeys.CART_ITEM_ID,
     cartItemId,
-    { qty }
+    { qty },
   );
 };
 export const deleteCartItem = async (cartItemId: string) => {
   await deleteDocument(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.CART_ITEM_ID,
-    cartItemId
+    cartItemId,
   );
 };

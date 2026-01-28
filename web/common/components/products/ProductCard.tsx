@@ -1,11 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Card } from 'antd';
-import { IProduct } from '@/common/types';
-import StarIcon from '../icons/StarIcon';
-import './ProductCard.scss';
+import { COLORS, IProduct } from '@/common/types';
 import { PageConfig } from '@/constants/pageConfig';
+import { StarFilled } from '@ant-design/icons';
+import Link from 'next/link';
+import './ProductCard.css';
 
 interface ProductCardProps {
   product: IProduct;
@@ -18,12 +18,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isFav = false,
   onToggleFavorite,
 }) => {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push(PageConfig.PRODUCT(product.$id));
-  };
-
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     console.log('click star', {
@@ -42,26 +36,33 @@ const ProductCard: React.FC<ProductCardProps> = ({
       style={{ width: 300 }}
       size='small'
       cover={
-        <img
-          draggable={false}
-          alt={product.name}
-          src={product.image}
-          onClick={handleClick}
-          className='product-card__img'
-        />
+        <Link href={PageConfig.PRODUCT(product.$id)}>
+          <img
+            draggable={false}
+            alt={product.name}
+            src={product.image}
+            className='product-card-img'
+          />
+        </Link>
       }
       extra={
         <span
-          className={`product-card__fav ${isFav ? 'active' : ''}`}
+          // className={`product-card-fav ${isFav ? 'active' : ''}`}
           onClick={handleToggleFavorite}
         >
-          <StarIcon filled={isFav ? true : false} />
+          <StarFilled
+            style={{ color: isFav ? COLORS.YELLOW : COLORS.GRAY, fontSize: 20 }}
+          />
         </span>
       }
     >
       <Meta
         title={product.name}
-        description={<div className='product-card__desc'>{product.price}</div>}
+        description={
+          <div>
+            <p>{product.price} сом</p>
+          </div>
+        }
       />
     </Card>
   );

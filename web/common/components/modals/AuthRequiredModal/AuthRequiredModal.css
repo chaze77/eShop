@@ -1,0 +1,41 @@
+.auth-required-modal__header {
+  padding: 24px 28px 18px;
+}
+
+.auth-required-modal__title {
+  margin: 0;
+}
+
+.auth-required-modal__divider {
+  height: 1px;
+  background: #f0f0f0;
+}
+
+.auth-required-modal__body {
+  padding: 26px 28px 28px;
+}
+
+.auth-required-modal__text {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.auth-required-modal__icon {
+  color: #cf1322;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 4px;
+}
+
+.auth-required-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+.auth-required-modal__button {
+  height: 54px;
+  padding: 0 28px;
+  border-radius: 10px;
+  background: #111;
+}

@@ -1,15 +1,8 @@
 'use client';
-
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Pagination, Navigation, Autoplay, Keyboard } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/pagination';
-// import 'swiper/css/navigation'; // Добавьте этот импорт для стрелок
-// import './style.css';
 import { Carousel } from 'antd';
 import BannerSlide from './BannerSlide';
-
-import './MainBanner.scss';
+import { BANNER_DEFAULTS } from '@/constants/banner-info';
+import './MainBanner.css';
 
 const Slider = () => {
   return (
@@ -21,7 +14,11 @@ const Slider = () => {
         className='main-banner'
       >
         <div>
-          <BannerSlide />
+          <BannerSlide
+            image={BANNER_DEFAULTS.image}
+            title={BANNER_DEFAULTS.title}
+            text={BANNER_DEFAULTS.text}
+          />
         </div>
         <div>1</div>
         <div>2</div>

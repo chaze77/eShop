@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import './Container.scss';
+import './container.css';
 
 interface ContainerProps {
   children: ReactNode;
@@ -8,7 +8,9 @@ interface ContainerProps {
 }
 
 const Container: React.FC<ContainerProps> = ({ children, className }) => {
-  return <div className={'container'}>{children}</div>;
+  return (
+    <div className={`container ${className ?? ''}`.trim()}>{children}</div>
+  );
 };
 
 export default Container;

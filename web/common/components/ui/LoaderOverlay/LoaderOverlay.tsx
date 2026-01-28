@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import './LoaderOverlay.scss';
+import './LoaderOverlay.css';
 
 type SpinnerProps = { show: boolean };
 
@@ -17,3 +17,4 @@ export default function LoaderOverlay({ show }: SpinnerProps) {
     </div>
   );
 }
+

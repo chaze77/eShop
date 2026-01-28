@@ -11,12 +11,10 @@ export interface ISubCategory extends Models.Document {
 }
 
 export interface IDirectory extends Models.Document {
-  $id: string;
   name: string;
 }
 
 export interface IAttributes extends Models.Document {
-  $id: string;
   quantity: number;
   colors?: IDirectory;
   size?: IDirectory;
@@ -54,4 +52,23 @@ export interface FavoriteItem {
   $id: string;
   productId: string;
   userId: null;
+}
+
+export enum COLORS {
+  YELLOW = '#FFD700',
+  BLACK = '#121214',
+  GRAY = '#B3B3B3',
+}
+
+export enum FILTERSTYPE {
+  COLORS = 'colors',
+  BRANDS = 'brands',
+  SIZES = 'sizes',
+  SUBCATEGORIES = 'subCategories',
+}
+
+export enum BUTTON_TYPE {
+  FIRST = 'first',
+  SECOND = 'second',
+  THIRD = 'third',
 }

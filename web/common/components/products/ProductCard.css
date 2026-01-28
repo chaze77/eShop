@@ -1,0 +1,21 @@
+.product-card {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.product-card-img {
+  width: 200px;
+  height: 200px;
+}
+
+.product-card {
+  cursor: pointer;
+  color: var(--gray-color);
+  transition:
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.01);
+}

@@ -1,3 +1,5 @@
+import { labels } from '@/constants/labels';
+
 export type LoginErrors = {
   email?: string;
   password?: string;
@@ -15,15 +17,15 @@ export function validateLogin(data: {
   const password = String(data.password ?? '');
 
   if (!email) {
-    errors.email = 'Email is required';
+    errors.email = labels.validation.emailRequired;
   } else if (!EMAIL_REGEX.test(email)) {
-    errors.email = 'Invalid email address';
+    errors.email = labels.validation.emailInvalid;
   }
 
   if (!password) {
-    errors.password = 'Password is required';
+    errors.password = labels.validation.passwordRequired;
   } else if (password.length < 8) {
-    errors.password = 'Password must be at least 8 characters';
+    errors.password = labels.validation.passwordMin6;
   }
 
   return errors;

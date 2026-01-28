@@ -1,0 +1,23 @@
+.filter-accordion-container {
+  width: 100%;
+}
+
+.filter-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 100px;
+}
+
+.filter-accordion-tag {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--black-color);
+  cursor: pointer;
+}
+
+.filter-accordion-tag-active.ant-typography {
+  background: var(--primary-300);
+  color: white;
+}

@@ -42,14 +42,14 @@ const FavoriteItems: React.FC<FavoriteItemProps> = ({
             <Space orientation='vertical'>
               <Text>{item.name}</Text>
               <Text>{item?.brands?.name}</Text>
-              <Button
-                type='link'
-                onClick={() => onRemove(item.$id)}
-              >
-                Удалить
-              </Button>
             </Space>
           </Flex>
+          <Button
+            type='link'
+            onClick={() => onRemove(item.$id)}
+          >
+            Удалить
+          </Button>
         </Flex>
       ))}
     </div>

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Dropdown, Modal, MenuProps } from 'antd';
+import { Dropdown, Modal, MenuProps } from 'antd';
 import UserIcon from '@/common/components/icons/UserIcon';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import { logoutThunk } from '@/global/features/auth-slice';
 import { useRouter } from 'next/navigation';
 import { showToast } from '@/helpers/showMessage';
-import './UserDropdown.scss';
+import { PageConfig } from '@/constants/pageConfig';
+import { messages } from '@/constants/messages';
+import './UserDropdown.css';
 
 export default function UserDropdown() {
   const [open, setOpen] = useState(false);
@@ -15,7 +17,7 @@ export default function UserDropdown() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((s) => s.auth.user);
-  const displayName = user?.name || user?.email || 'D?D§D§Dø¥ŸD«¥,';
+  const displayName = user?.name || user?.email || 'не найден,';
 
   const handleLogout = async () => {
     try {
@@ -36,22 +38,22 @@ export default function UserDropdown() {
     },
     {
       key: 'profile',
-      label: 'profile',
+      label: 'Профиль',
     },
     {
       key: 'favorites',
-      label: 'favorites',
+      label: 'Избранное',
     },
     {
       key: 'cart',
-      label: 'cart',
+      label: 'Корзина',
     },
     {
       type: 'divider',
     },
     {
       key: 'logout',
-      label: 'logout',
+      label: 'Выйти',
       danger: true,
     },
   ];
@@ -61,9 +63,9 @@ export default function UserDropdown() {
       setConfirmVisible(true);
       return;
     }
-    if (key === 'profile') router.push('/account');
-    if (key === 'favorites') router.push('/favorites');
-    if (key === 'cart') router.push('/cart');
+    if (key === 'profile') router.push(PageConfig.ACCOUNT);
+    if (key === 'favorites') router.push(PageConfig.FAVORITE);
+    if (key === 'cart') router.push(PageConfig.CART);
   };
 
   return (
@@ -90,7 +92,7 @@ export default function UserDropdown() {
         cancelText='Cancel'
         title='title'
       >
-        <p>Are you sure you want to log out?</p>
+        <p>{messages.modal.logout}</p>
       </Modal>
     </>
   );

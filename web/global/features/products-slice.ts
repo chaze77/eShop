@@ -7,7 +7,7 @@ export const fetchProductsByName = createAsyncThunk<IProduct[], string>(
   async (value) => {
     const products = await getProductsByName(value);
     return products;
-  }
+  },
 );
 
 interface ProductsState {
@@ -23,7 +23,6 @@ const initialState: ProductsState = {
   error: null,
 };
 
-// Slice
 const productsSlice = createSlice({
   name: 'products',
   initialState,
@@ -46,7 +45,7 @@ const productsSlice = createSlice({
         (state, action: PayloadAction<IProduct[]>) => {
           state.status = 'succeeded';
           state.products = action.payload;
-        }
+        },
       )
       .addCase(fetchProductsByName.rejected, (state, action) => {
         state.status = 'failed';
