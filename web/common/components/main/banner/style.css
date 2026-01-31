@@ -1,0 +1,45 @@
+.smain-banner {
+  width: 100%;
+  height: auto;
+}
+
+.main-banner .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: black;
+  opacity: 0.7;
+  margin: 0 5px;
+  border-radius: 50%;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.main-banner .swiper-pagination-bullet-active {
+  background: #48d0ff;
+  opacity: 1;
+}
+
+.main-banner .swiper-button-prev,
+.main-banner .swiper-button-next {
+  top: auto; /* Убираем значение top */
+  bottom: 0px; /* Расположение снизу */
+  transform: translateY(0);
+  color: black; /* Убираем вертикальное смещение */
+}
+
+.main-banner .swiper-button-prev {
+  left: 40%; /* Левее от центра */
+}
+
+.main-banner .swiper-button-next {
+  right: 40%; /* Правее от центра */
+}
+
+.main-banner .swiper-button-prev::after,
+.main-banner .swiper-button-next::after {
+  font-size: 30px;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: black;
+}

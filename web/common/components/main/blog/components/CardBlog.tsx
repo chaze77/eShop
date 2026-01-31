@@ -13,13 +13,21 @@ interface CardBlogProps {
   img: string;
   title: string;
   text: string;
+  loading: boolean;
 }
 
-export default function CardBlog({ id, img, title, text }: CardBlogProps) {
+export default function CardBlog({
+  id,
+  img,
+  title,
+  text,
+  loading,
+}: CardBlogProps) {
   const router = useRouter();
 
   return (
     <Card
+      loading={loading}
       cover={
         <img
           alt={title}

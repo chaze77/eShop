@@ -46,6 +46,7 @@ export default function Blog() {
             lg={8}
           >
             <CardBlog
+              loading={loading}
               id={item.$id}
               img={item.image}
               title={item.title}
@@ -54,8 +55,6 @@ export default function Blog() {
           </Col>
         ))}
       </Row>
-
-      {loading && <div style={{ padding: 16 }}>Загрузка...</div>}
     </section>
   );
 }

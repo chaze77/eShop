@@ -97,8 +97,6 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
           alt={product.image}
           className='product-content__image'
           src={product.image}
-          width={664}
-          height={489}
           preview={false}
         />
 
@@ -118,14 +116,18 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
             />
           )}
           {selectedColor && selectedSize && (
-            <Tag color='error'>{selectedAttribute?.quantity} items to left</Tag>
+            <div className='product-content__tag'>
+              <Tag color='error'>{selectedAttribute?.quantity} осталось</Tag>
+            </div>
           )}
-          <CustomButton
-            variant={BUTTON_TYPE.FIRST}
-            text={labels.common.add}
-            disabled={!selectedColor || !selectedSize}
-            onClick={() => handleSave()}
-          />
+          <div className='product-content__btn'>
+            <CustomButton
+              variant={BUTTON_TYPE.FIRST}
+              text={labels.common.add}
+              disabled={!selectedColor || !selectedSize}
+              onClick={() => handleSave()}
+            />
+          </div>
         </div>
       </div>
 

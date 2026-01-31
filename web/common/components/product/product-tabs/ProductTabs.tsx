@@ -14,7 +14,7 @@ const ProductTabs: React.FC<TabsProps> = ({ product }) => {
         items={[
           {
             key: 'details',
-            label: 'details',
+            label: labels.product.details,
             children: (
               <Card>
                 <dl className='product-tabs__list'>

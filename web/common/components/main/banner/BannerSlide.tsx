@@ -1,8 +1,5 @@
 import { FC } from 'react';
-import CustomButton from '../../ui/CustomButton';
 import './BannerSlide.css';
-import { BUTTON_TYPE } from '@/common/types';
-import { labels } from '@/constants/labels';
 
 interface IBannerSlideProps {
   image: string;
@@ -27,10 +24,6 @@ const BannerSlide: FC<IBannerSlideProps> = ({ image, title, text }) => {
             {text ||
               'Одежда от известных брендов у нас в каталоге. Только качественные вещи'}
           </p>
-          <CustomButton
-            variant={BUTTON_TYPE.FIRST}
-            text={labels.common.learnMore}
-          />
         </div>
       </div>
     </div>

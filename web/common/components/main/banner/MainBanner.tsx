@@ -1,29 +1,29 @@
 'use client';
+
 import { Carousel } from 'antd';
 import BannerSlide from './BannerSlide';
-import { BANNER_DEFAULTS } from '@/constants/banner-info';
+import { BANNERS } from '@/constants/banner-info';
 import './MainBanner.css';
 
 const Slider = () => {
   return (
-    <>
-      <Carousel
-        arrows
-        infinite={true}
-        initialSlide={0}
-        className='main-banner'
-      >
-        <div>
+    <Carousel
+      arrows
+      infinite
+      initialSlide={0}
+      className='main-banner'
+      autoplay
+    >
+      {BANNERS.map((banner, index) => (
+        <div key={index}>
           <BannerSlide
-            image={BANNER_DEFAULTS.image}
-            title={BANNER_DEFAULTS.title}
-            text={BANNER_DEFAULTS.text}
+            image={banner.image}
+            title={banner.title}
+            text={banner.text}
           />
         </div>
-        <div>1</div>
-        <div>2</div>
-      </Carousel>
-    </>
+      ))}
+    </Carousel>
   );
 };
 

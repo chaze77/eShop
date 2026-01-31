@@ -12,15 +12,28 @@ export const fetchCurrentUser = createAsyncThunk<AuthUser | null>(
   async () => {
     const user = await getCurrentUser();
     return user;
-  }
+  },
 );
 
 export const loginThunk = createAsyncThunk<
   AuthUser,
-  { email: string; password: string }
->('auth/login', async ({ email, password }) => {
-  const user = await loginUser(email, password);
-  return user;
+  { email: string; password: string },
+  { rejectValue: string }
+>('auth/login', async ({ email, password }, { rejectWithValue }) => {
+  try {
+    const user = await loginUser(email, password);
+    return user;
+  } catch (err: unknown) {
+    // достаём сообщение, даже если err не Error
+    const message =
+      typeof err === 'string'
+        ? err
+        : err && typeof err === 'object' && 'message' in err
+          ? String((err as any).message)
+          : 'Неверный email или пароль';
+
+    return rejectWithValue(message);
+  }
 });
 
 export const registerThunk = createAsyncThunk<
@@ -66,7 +79,7 @@ const authSlice = createSlice({
           state.status = 'succeeded';
           state.user = action.payload;
           state.isAuthenticated = Boolean(action.payload);
-        }
+        },
       )
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.status = 'failed';
@@ -86,14 +99,15 @@ const authSlice = createSlice({
           state.status = 'succeeded';
           state.user = action.payload;
           state.isAuthenticated = true;
-        }
+        },
       )
       .addCase(loginThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'Ошибка входа';
+        state.error = action.payload ?? action.error.message ?? 'Ошибка входа';
         state.user = null;
         state.isAuthenticated = false;
       })
+
       // register
       .addCase(registerThunk.pending, (state) => {
         state.status = 'pending';
@@ -105,7 +119,7 @@ const authSlice = createSlice({
           state.status = 'succeeded';
           state.user = action.payload;
           state.isAuthenticated = true;
-        }
+        },
       )
       .addCase(registerThunk.rejected, (state, action) => {
         state.status = 'failed';

@@ -38,6 +38,7 @@ export const labels = {
     delivery: 'Доставка',
     payment: 'Оплата',
     FAQ: 'FAQ',
+    details: 'Детали',
   },
 
   cart: {
@@ -109,7 +110,7 @@ export const labels = {
       bodySuffix:
         'вам нужно войти. Если у вас нет аккаунта, нужно зарегистрироваться.',
       actionButton: 'Войти / Зарегистрироваться',
-      actionLabel: 'сохранять товары в избранное',
+      actionLabel: 'сохранять товары',
     },
   },
   footer: {
