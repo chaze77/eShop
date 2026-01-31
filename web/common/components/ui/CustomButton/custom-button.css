@@ -8,15 +8,12 @@
   cursor: pointer;
   border: none;
   outline: none;
+  font-size: var(--font-size-sm2);
 
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
     opacity 0.2s ease;
-}
-
-.custom-button__text {
-  font-size: 12px;
 }
 
 /* FIRST */
@@ -30,14 +27,10 @@
   background-color: var(--primary-300);
 }
 
-.custom-button-first:active {
-  background-color: #006400;
-}
-
 /* SECOND */
 .custom-button-second {
   background: transparent;
-  color: black;
+  color: var(--black-color);
   padding: 0;
   text-decoration: underline;
   text-underline-offset: 10px;
@@ -45,7 +38,7 @@
 }
 
 .custom-button-second:hover {
-  color: #000;
+  color: var(--gray-color);
   text-decoration: underline;
 }
 
@@ -59,4 +52,10 @@
 .custom-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .custom-button {
+    font-size: var(--font-size-sm);
+  }
 }

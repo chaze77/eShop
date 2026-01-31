@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-
 import './container.css';
 
 interface ContainerProps {

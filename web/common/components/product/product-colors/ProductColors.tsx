@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Typography } from 'antd';
 import { IDirectory } from '@/common/types';
+import { labels } from '@/constants/labels';
 
 const { Text } = Typography;
 
@@ -19,7 +20,7 @@ const ProductColors: React.FC<ProductColorsProps> = ({
 }) => {
   return (
     <div>
-      <Text strong>Цвета:</Text>
+      <Text strong>{labels.filters.colors}</Text>
 
       <div
         style={{

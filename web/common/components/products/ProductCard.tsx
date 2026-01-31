@@ -1,10 +1,9 @@
 'use client';
-
+import Link from 'next/link';
 import { Card } from 'antd';
 import { COLORS, IProduct } from '@/common/types';
 import { PageConfig } from '@/constants/pageConfig';
 import { StarFilled } from '@ant-design/icons';
-import Link from 'next/link';
 import './ProductCard.css';
 
 interface ProductCardProps {
@@ -20,10 +19,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('click star', {
-      hasHandler: typeof onToggleFavorite,
-      productId: product.$id,
-    });
 
     onToggleFavorite?.();
   };
@@ -33,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Card
       className='product-card'
-      style={{ width: 300 }}
+      style={{ width: 318 }}
       size='small'
       cover={
         <Link href={PageConfig.PRODUCT(product.$id)}>
@@ -46,10 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </Link>
       }
       extra={
-        <span
-          // className={`product-card-fav ${isFav ? 'active' : ''}`}
-          onClick={handleToggleFavorite}
-        >
+        <span onClick={handleToggleFavorite}>
           <StarFilled
             style={{ color: isFav ? COLORS.YELLOW : COLORS.GRAY, fontSize: 20 }}
           />

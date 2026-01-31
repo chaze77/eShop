@@ -1,24 +1,27 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Carousel, Space } from 'antd';
+import { Row, Col } from 'antd';
 import Title from '../../ui/Title/Title';
 import CardBlog from './components/CardBlog';
 import { getBlogs } from '@/lib/apis/blogs';
-import { IBlog } from '@/common/types';
+import type { IBlog } from '@/common/types';
 import './Blog.css';
-import { CustomCarousel } from '../../ui/CustomCarousel/CustomCarousel';
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState<IBlog[] | null>([]);
+  const [blogs, setBlogs] = useState<IBlog[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true);
       try {
         const response = await getBlogs();
-        setBlogs(response);
+        setBlogs(response ?? []);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -26,22 +29,33 @@ export default function Blog() {
   }, []);
 
   return (
-    <div className='blog'>
+    <section className='blog'>
       <div className='blog-header'>
         <Title text='Наш блог' />
       </div>
 
-      <CustomCarousel slidesToShow={3}>
-        {blogs?.map((item) => (
-          <CardBlog
+      <Row
+        gutter={[8, 8]}
+        className='blog-grid'
+      >
+        {blogs.map((item) => (
+          <Col
             key={item.$id}
-            id={item.$id}
-            img={item.image}
-            title={item.title}
-            text={item.content}
-          />
+            xs={24}
+            sm={12}
+            lg={8}
+          >
+            <CardBlog
+              id={item.$id}
+              img={item.image}
+              title={item.title}
+              text={item.content}
+            />
+          </Col>
         ))}
-      </CustomCarousel>
-    </div>
+      </Row>
+
+      {loading && <div style={{ padding: 16 }}>Загрузка...</div>}
+    </section>
   );
 }

@@ -1,5 +1,6 @@
 import { advantagesItems } from '@/constants/advantagesItems';
 import Title from '../../ui/Title/Title';
+import { labels } from '@/constants/labels';
 import './About.css';
 
 export default function About() {
@@ -8,26 +9,14 @@ export default function About() {
       {/* Description Section */}
       <div className='about__description'>
         <div className='about__title'>
-          <Title text='О интернет-магазине XWEAR' />
+          <Title text={labels.titles.aboutTitle} />
         </div>
 
-        <p className='about__text'>
-          Команда XWEAR предоставляет услугу доставки только оригинальных
-          товаров с крупнейшего китайского маркетплейса Poizon, чтобы наши
-          клиенты экономили более 40% на каждой покупке.
-        </p>
+        <p className='about__text'>{labels.descriptions.aboutTextFirst}</p>
 
-        <p className='about__text'>
-          Работаем без посредников, благодаря чему можем предоставлять лучшую
-          цену. Быстрая, бесплатная доставка.
-        </p>
+        <p className='about__text'>{labels.descriptions.aboutTextSecond}</p>
 
-        <p className='about__text'>
-          Сайт, на котором можно будет удобно оформить покупку, не скачивая
-          китайское мобильное приложение Poizon, с удобной фильтрацией огромного
-          количества товаров, а так же с возможностью сразу увидеть
-          окончательную цену товара.
-        </p>
+        <p className='about__text'>{labels.descriptions.aboutTextThird}</p>
       </div>
 
       <div className='about__advantages'>
@@ -50,4 +39,3 @@ export default function About() {
     </div>
   );
 }
-

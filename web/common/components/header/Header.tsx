@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 import { Button, Input, Space } from 'antd';
 import {
@@ -151,7 +152,7 @@ export default function AntHeader({ categories }: Props) {
             ) : (
               <ButtonLink
                 href={PageConfig.LOGIN}
-                text='Войти'
+                text={labels.common.login}
                 loading={isLoading}
               />
             )}

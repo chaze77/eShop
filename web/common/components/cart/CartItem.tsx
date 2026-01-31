@@ -3,6 +3,7 @@
 import { EnrichedCartItem } from './types';
 import QuantityButtons from './QuantityButtons';
 import { Button, Divider, Flex, Image, Typography } from 'antd';
+import { labels } from '@/constants/labels';
 
 const { Text } = Typography;
 
@@ -69,10 +70,11 @@ const CartItem = ({
 
             <Button
               type='link'
+              color='danger'
               className='cartItem__link'
               onClick={onRemove}
             >
-              Удалить
+              {labels.common.delete}
             </Button>
           </div>
         </Flex>
@@ -99,7 +101,7 @@ const CartItem = ({
 
           {!!item.availableQty && item.availableQty <= 3 && (
             <div className='cartItem__stock'>
-              <Text type='danger'>{item.availableQty} left</Text>
+              <Text type='danger'>{item.availableQty} осталось</Text>
             </div>
           )}
         </div>

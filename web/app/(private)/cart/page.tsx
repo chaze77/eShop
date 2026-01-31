@@ -25,6 +25,7 @@ import { messages } from '@/constants/messages';
 import MVPNoticeModal from '@/common/components/modals/MVPModal/MVPModal';
 import { useMVPModal } from '@/common/hooks/useShowMVPModal';
 import './cart.css';
+import { labels } from '@/constants/labels';
 
 const { Text } = Typography;
 
@@ -169,8 +170,8 @@ export default function Page() {
           justify='space-between'
           align='center'
         >
-          <Text className='cart__headText'>Элементы</Text>
-          <Text className='cart__headText'>Цена / Количество</Text>
+          <Text className='cart__headText'>{labels.cart.elements}</Text>
+          <Text className='cart__headText'>{`${labels.cart.price}/${labels.cart.qnty}`}</Text>
         </Flex>
 
         <div className='cart__body'>

@@ -1,6 +1,7 @@
-import { IProduct } from '@/common/types';
 import { Tabs, Card } from 'antd';
+import { IProduct } from '@/common/types';
 import './ProductTabs.css';
+import { labels } from '@/constants/labels';
 
 type TabsProps = {
   product: IProduct;
@@ -18,17 +19,23 @@ const ProductTabs: React.FC<TabsProps> = ({ product }) => {
               <Card>
                 <dl className='product-tabs__list'>
                   <div className='product-tabs__row'>
-                    <dt className='product-tabs__label'>product</dt>
+                    <dt className='product-tabs__label'>
+                      {labels.product.articul}
+                    </dt>
                     <dd className='product-tabs__value'>{product?.$id}</dd>
                   </div>
                   <div className='product-tabs__row'>
-                    <dt className='product-tabs__label'>Category</dt>
+                    <dt className='product-tabs__label'>
+                      {labels.product.category}
+                    </dt>
                     <dd className='product-tabs__value'>
                       {product.subCategories?.relatedCategory.name}
                     </dd>
                   </div>
                   <div className='product-tabs__row'>
-                    <dt className='product-tabs__label'>Brand</dt>
+                    <dt className='product-tabs__label'>
+                      {labels.product.brand}
+                    </dt>
                     <dd className='product-tabs__value'>
                       {product?.brands?.name}
                     </dd>
@@ -39,18 +46,18 @@ const ProductTabs: React.FC<TabsProps> = ({ product }) => {
           },
           {
             key: 'delivery',
-            label: 'delivery',
-            children: <Card>delivery</Card>,
+            label: labels.product.delivery,
+            children: <Card>{labels.hints.common.mvpText}</Card>,
           },
           {
             key: 'payment',
-            label: 'payment',
-            children: <Card>payment</Card>,
+            label: labels.product.payment,
+            children: <Card>{labels.hints.common.mvpText}</Card>,
           },
           {
             key: 'faq',
-            label: 'FAQ',
-            children: <Card>FAQ</Card>,
+            label: labels.product.FAQ,
+            children: <Card>{labels.hints.common.mvpText}</Card>,
           },
         ]}
       />
@@ -59,4 +66,3 @@ const ProductTabs: React.FC<TabsProps> = ({ product }) => {
 };
 
 export default ProductTabs;
-

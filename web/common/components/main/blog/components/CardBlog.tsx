@@ -2,11 +2,11 @@
 
 import { Card } from 'antd';
 import CustomButton from '../../../ui/CustomButton';
-import './CardBlog.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BUTTON_TYPE } from '@/common/types';
 import { labels } from '@/constants/labels';
+import './CardBlog.css';
 
 interface CardBlogProps {
   id: string;
@@ -18,16 +18,13 @@ interface CardBlogProps {
 export default function CardBlog({ id, img, title, text }: CardBlogProps) {
   const router = useRouter();
 
-  // const goToBlog = (id: string) => {
-  //   router.push(`/blog/${id}`);
-  // };
   return (
     <Card
-      className='card-blog'
       cover={
         <img
           alt={title}
           src={img}
+          className='card-blog-img'
         />
       }
     >

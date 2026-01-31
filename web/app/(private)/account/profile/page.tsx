@@ -1,12 +1,14 @@
 'use client';
+import { useEffect } from 'react';
+import { Button, Card, Divider, Form, Input, Typography } from 'antd';
+
+import { useAppSelector } from '@/global/store';
 
 import MVPNoticeModal from '@/common/components/modals/MVPModal/MVPModal';
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
 import { useMVPModal } from '@/common/hooks/useShowMVPModal';
+import { labels } from '@/constants/labels';
 import { messages } from '@/constants/messages';
-import { useAppSelector } from '@/global/store';
-import { Button, Card, Divider, Form, Input, Typography } from 'antd';
-import { useEffect } from 'react';
 
 export default function Page() {
   const user = useAppSelector((state) => state.auth.user);
@@ -40,12 +42,7 @@ export default function Page() {
 
   return (
     <Card>
-      <Title
-        level={4}
-        style={{ marginBottom: 0 }}
-      >
-        Профиль пользователя
-      </Title>
+      <Title level={4}>{labels.fields.userAccount}</Title>
       <Divider />
 
       <Form
@@ -53,38 +50,38 @@ export default function Page() {
         layout='vertical'
         onFinish={onFinish}
       >
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
           <Form.Item
             name='name'
-            label='Имя'
+            label={labels.placeholders.name}
           >
-            <Input placeholder='Ваше имя' />
+            <Input placeholder={labels.placeholders.name} />
           </Form.Item>
 
           <Form.Item
             name='email'
-            label='Email'
+            label={labels.fields.email}
           >
             <Input
-              placeholder='ivan@example.com'
+              placeholder={labels.placeholders.email}
               disabled
             />
           </Form.Item>
 
           <Form.Item
             name='phone'
-            label='Телефон'
+            label={labels.fields.phone}
           >
-            <Input placeholder='+996 550 555 555' />
+            <Input placeholder={labels.placeholders.phone} />
           </Form.Item>
         </div>
 
-        <div className='mt-6'>
+        <div>
           <Button
             type='primary'
             htmlType='submit'
           >
-            Сохранить
+            {labels.common.save}
           </Button>
         </div>
         <MVPNoticeModal

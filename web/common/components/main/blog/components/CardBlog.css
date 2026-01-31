@@ -1,9 +1,4 @@
-/* .card-blog {
-  height: 100%;
-  padding: 10px;
-} */
-
-.card-blog img {
+.card-blog-img {
   width: 100%;
   height: 220px;
   object-fit: cover;
