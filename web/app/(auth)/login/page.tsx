@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import { loginThunk } from '@/global/features/auth-slice';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { validateLogin } from '@/lib/validation/login';
 import { showToast } from '@/helpers/showMessage';
 import { ToastTypes } from '@/constants/toastTypes';
@@ -43,10 +43,10 @@ export default function Page() {
 
       router.push('/');
       showToast(ToastTypes.SUCCESS, messages.auth.login.success);
-    } catch (e) {
-      const message = String((e as any)?.message ?? e);
-      setErrors({ email: message });
-      form.setFields([{ name: 'email', errors: [message] }]);
+    } catch (e: unknown) {
+      const message = typeof e === 'string' ? e : 'Ошибка входа';
+
+      showToast(ToastTypes.ERROR, message);
     }
   };
 

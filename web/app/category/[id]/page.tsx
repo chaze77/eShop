@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
 import FilterSidebar from '@/common/components/products/FilterSidebar';
+import FilterAccordion from '@/common/components/ui/FilterAccordion/FilterAccordion';
 import {
   FILTERSTYPE,
   ICategory,
@@ -17,12 +18,14 @@ import { getSubCategoriesByCategoryId } from '@/lib/apis/subCategories';
 import { getCategoryById } from '@/lib/apis/categories';
 import { collectUniqueItemToMap } from '@/helpers';
 import LoaderOverlay from '@/common/components/ui/LoaderOverlay';
-import { Flex } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import PageShell from '@/common/components/layouts/PageShell';
 import ProductList from '@/common/components/products/ProductList';
 
 import { useFilterQuery } from '@/common/hooks/useFilterQuery'; // <-- поправь путь
 import useFavorites from '../../../common/hooks/useFavorites';
+import { labels } from '@/constants/labels';
+import './category-page.css';
 
 export default function Page() {
   const { id } = useParams();
@@ -35,6 +38,9 @@ export default function Page() {
   const [subCategoryIds, setSubCategoryIds] = useState<string[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<
+    'categories' | 'filters' | null
+  >(null);
 
   const [filtersOptions, setFiltersOptions] = useState<{
     subCategories: IDirectory[];
@@ -44,6 +50,10 @@ export default function Page() {
   }>({ subCategories: [], sizes: [], brands: [], colors: [] });
 
   const categoryId = decodeURIComponent(id as string);
+
+  const toggleMobilePanel = (panel: 'categories' | 'filters') => {
+    setMobilePanel((prev) => (prev === panel ? null : panel));
+  };
 
   useEffect(() => {
     async function loadCategory() {
@@ -121,18 +131,96 @@ export default function Page() {
 
   return (
     <PageShell>
-      <Flex gap='large'>
-        <FilterSidebar
-          subCategories={filtersOptions.subCategories}
-          sizes={filtersOptions.sizes}
-          brands={filtersOptions.brands}
-          colors={filtersOptions.colors}
-          setFilter={toggleFilter}
-          selected={selected}
-        />
+      <div className='category-page'>
+        <aside className='category-page__sidebar'>
+          <FilterSidebar
+            subCategories={filtersOptions.subCategories}
+            sizes={filtersOptions.sizes}
+            brands={filtersOptions.brands}
+            colors={filtersOptions.colors}
+            setFilter={toggleFilter}
+            selected={selected}
+          />
+        </aside>
 
-        <div>
-          <h1>{categoryName.toUpperCase()}</h1>
+        <div className='category-page__content'>
+          <div className='category-page__header'>
+            <div>
+              <h1 className='category-page__title'>
+                {categoryName.toUpperCase()}
+              </h1>
+              <div className='category-page__count'>
+                {products.length} товаров
+              </div>
+            </div>
+          </div>
+
+          <div className='category-page__mobile-controls'>
+            <button
+              type='button'
+              className='category-page__mobile-button'
+              onClick={() => toggleMobilePanel('categories')}
+              aria-expanded={mobilePanel === 'categories'}
+            >
+              Категории
+              <DownOutlined className='category-page__chevron' />
+            </button>
+            <button
+              type='button'
+              className='category-page__mobile-button'
+              onClick={() => toggleMobilePanel('filters')}
+              aria-expanded={mobilePanel === 'filters'}
+            >
+              Открыть фильтры
+              <DownOutlined className='category-page__chevron' />
+            </button>
+          </div>
+
+          {mobilePanel === 'categories' && (
+            <div className='category-page__mobile-panel'>
+              {filtersOptions.subCategories.length > 0 && (
+                <FilterAccordion
+                  accordingKey={FILTERSTYPE.SUBCATEGORIES}
+                  title={labels.filters.subCategories}
+                  filterItems={filtersOptions.subCategories}
+                  setFilter={toggleFilter}
+                  selected={selected}
+                />
+              )}
+            </div>
+          )}
+
+          {mobilePanel === 'filters' && (
+            <div className='category-page__mobile-panel'>
+              {filtersOptions.brands.length > 0 && (
+                <FilterAccordion
+                  accordingKey={FILTERSTYPE.BRANDS}
+                  title={labels.filters.brands}
+                  filterItems={filtersOptions.brands}
+                  setFilter={toggleFilter}
+                  selected={selected}
+                />
+              )}
+              {filtersOptions.sizes.length > 0 && (
+                <FilterAccordion
+                  accordingKey={FILTERSTYPE.SIZES}
+                  title={labels.filters.sizes}
+                  filterItems={filtersOptions.sizes}
+                  setFilter={toggleFilter}
+                  selected={selected}
+                />
+              )}
+              {filtersOptions.colors.length > 0 && (
+                <FilterAccordion
+                  accordingKey={FILTERSTYPE.COLORS}
+                  title={labels.filters.colors}
+                  filterItems={filtersOptions.colors}
+                  setFilter={toggleFilter}
+                  selected={selected}
+                />
+              )}
+            </div>
+          )}
 
           {products.length > 0 ? (
             <ProductList
@@ -147,7 +235,7 @@ export default function Page() {
         </div>
 
         <LoaderOverlay show={loadingOptions || loadingProducts} />
-      </Flex>
+      </div>
     </PageShell>
   );
 }

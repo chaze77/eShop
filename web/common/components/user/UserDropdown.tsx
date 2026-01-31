@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Dropdown, Modal, MenuProps } from 'antd';
 import UserIcon from '@/common/components/icons/UserIcon';
 import { useAppDispatch, useAppSelector } from '@/global/store';
 import { logoutThunk } from '@/global/features/auth-slice';
-import { useRouter } from 'next/navigation';
+
 import { showToast } from '@/helpers/showMessage';
 import { PageConfig } from '@/constants/pageConfig';
 import { messages } from '@/constants/messages';
 import './UserDropdown.css';
+import { labels } from '@/constants/labels';
 
 export default function UserDropdown() {
   const [open, setOpen] = useState(false);
@@ -17,13 +19,13 @@ export default function UserDropdown() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((s) => s.auth.user);
-  const displayName = user?.name || user?.email || 'не найден,';
+  const displayName = user?.name || user?.email || labels.common.notFound;
 
   const handleLogout = async () => {
     try {
       await dispatch(logoutThunk()).unwrap();
       setConfirmVisible(false);
-      router.push('/');
+      router.push(PageConfig.HOME);
     } catch (e) {
       showToast('error', e as string);
     }
@@ -38,22 +40,22 @@ export default function UserDropdown() {
     },
     {
       key: 'profile',
-      label: 'Профиль',
+      label: labels.fields.userAccount,
     },
     {
       key: 'favorites',
-      label: 'Избранное',
+      label: labels.fields.favorites,
     },
     {
       key: 'cart',
-      label: 'Корзина',
+      label: labels.fields.cart,
     },
     {
       type: 'divider',
     },
     {
       key: 'logout',
-      label: 'Выйти',
+      label: labels.common.logout,
       danger: true,
     },
   ];
@@ -88,9 +90,8 @@ export default function UserDropdown() {
         open={confirmVisible}
         onCancel={() => setConfirmVisible(false)}
         onOk={handleLogout}
-        okText='Ok'
-        cancelText='Cancel'
-        title='title'
+        okText={labels.common.okText}
+        cancelText={labels.common.cancel}
       >
         <p>{messages.modal.logout}</p>
       </Modal>

@@ -66,3 +66,25 @@ body {
   font-family: 'RFDewi', Arial, sans-serif;
   font-weight: 400;
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+}
+
+.app-shell > header,
+.app-shell > main,
+.app-shell > footer {
+  width: 100%;
+}

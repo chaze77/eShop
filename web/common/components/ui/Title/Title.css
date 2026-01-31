@@ -1,4 +1,17 @@
 .title {
   font-family: 'RFDewi expanded', Arial, sans-serif;
   text-transform: uppercase;
+  font-size: var(--font-size-mega);
+}
+
+@media (max-width: 900px) {
+  .title {
+    font-size: var(--font-size-mega2);
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: var(--font-size-mega3);
+  }
 }

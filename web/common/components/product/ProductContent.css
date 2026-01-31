@@ -2,14 +2,34 @@
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  padding: 32px;
 }
 
 .product-content__image {
+  width: 664px;
+  max-width: 100%;
+}
+
+.product-content__image :global(img),
+.product-content__image img {
   width: 100%;
-  height: 489px;
+  height: auto;
+  display: block;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 16px;
+}
+
+.product-content__tag {
+  max-width: 100px;
+}
+
+@media (max-width: 768px) {
+  .product-content {
+    flex-direction: column;
+  }
+
+  .product-content__image {
+    width: 100%;
+  }
 }
 
 .product-content__details {

@@ -2,6 +2,7 @@
 
 import MVPNoticeModal from '@/common/components/modals/MVPModal/MVPModal';
 import { useMVPModal } from '@/common/hooks/useShowMVPModal';
+import { labels } from '@/constants/labels';
 import { messages } from '@/constants/messages';
 import { Button, Card, Divider, Form, Input, Typography } from 'antd';
 
@@ -21,63 +22,64 @@ export default function Page() {
 
   return (
     <Card>
-      <Title
-        level={4}
-        style={{ marginBottom: 0 }}
-      >
-        Смена пароля
-      </Title>
+      <Title level={4}>{labels.fields.changePassword}</Title>
       <Divider />
       <Form
         form={form}
         layout='vertical'
         onFinish={onFinish}
       >
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
           <Form.Item
             name='currentPassword'
-            label='Текущий пароль'
-            rules={[{ required: true, message: 'Введите текущий пароль' }]}
+            label={labels.fields.currentPassword}
+            rules={[
+              { required: true, message: labels.validation.passwordRequired },
+            ]}
           >
-            <Input.Password placeholder='Введите текущий пароль' />
+            <Input.Password placeholder={labels.placeholders.password} />
           </Form.Item>
 
           <div />
 
           <Form.Item
             name='newPassword'
-            label='Новый пароль'
-            rules={[{ required: true, message: 'Введите новый пароль' }]}
+            label={labels.fields.newPassword}
+            rules={[
+              { required: true, message: labels.validation.passwordRequired },
+            ]}
           >
-            <Input.Password placeholder='Введите новый пароль' />
+            <Input.Password placeholder={labels.placeholders.password} />
           </Form.Item>
 
           <Form.Item
             name='confirmPassword'
-            label='Подтвердите новый пароль'
+            label={labels.fields.confirmPassword}
             dependencies={['newPassword']}
             rules={[
-              { required: true, message: 'Повторите новый пароль' },
+              { required: true, message: labels.validation.repeatPassword },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('Пароли не совпадают'));
+                  return Promise.reject(
+                    new Error(labels.validation.notEqualPassword),
+                  );
                 },
               }),
             ]}
           >
-            <Input.Password placeholder='Введите новый пароль повторно' />
+            <Input.Password placeholder={labels.validation.repeatPassword} />
           </Form.Item>
         </div>
 
-        <div className='mt-6'>
+        <div>
           <Button
             type='primary'
             htmlType='submit'
           >
-            Сохранить пароль
+            {labels.common.save}
           </Button>
           <MVPNoticeModal
             open={open}

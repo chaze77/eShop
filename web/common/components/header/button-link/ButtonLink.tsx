@@ -2,11 +2,11 @@ import { Button } from 'antd';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import './button-link.css';
 type ButtonLinkProps = {
   href: string;
   icon?: ReactNode;
-  className?: string;
+
   disabled?: boolean;
   text?: string;
   onClick?: () => void;
@@ -16,7 +16,7 @@ type ButtonLinkProps = {
 export function ButtonLink({
   href,
   icon,
-  className,
+
   text,
   disabled = false,
   onClick,

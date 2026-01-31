@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Typography, Tooltip } from 'antd';
 import { IDirectory } from '@/common/types';
+import { labels } from '@/constants/labels';
 
 const { Text } = Typography;
 
@@ -21,7 +22,7 @@ const ProductSizes: React.FC<ProductSizesProps> = ({
 }) => {
   return (
     <div>
-      <Text strong>Размеры:</Text>
+      <Text strong>{labels.filters.sizes}</Text>
 
       <div
         style={{
@@ -39,7 +40,9 @@ const ProductSizes: React.FC<ProductSizesProps> = ({
           return (
             <Tooltip
               key={size.$id}
-              title={!isAvailable ? 'Нет в наличии' : undefined}
+              title={
+                !isAvailable ? `${labels.hints.common.notAvailable}` : undefined
+              }
             >
               <Button
                 onClick={() => setSelectedSize(size.$id)}

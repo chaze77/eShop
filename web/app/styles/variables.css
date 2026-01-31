@@ -1,7 +1,7 @@
 :root {
   --primary-color: #48d0ff;
   --black-color: #121214;
-  --black-secondary: #1677ff;
+  --secondary-color: #e716b6;
   --main-title: 31px;
   --background-color: #ffffff;
   --text-color: #121214;
@@ -14,13 +14,18 @@
   --warning-color: #f59f00;
   --error-color: #e03131;
   --info-color: #1098ad;
-  --gray-color: #808080 --font-family-main: 'RFDewi', Arial, sans-serif;
+  --gray-color: #808080;
+  --font-family-main: 'RFDewi', Arial, sans-serif;
   --font-family-expanded: 'RFDewi expanded', Arial, sans-serif;
   --font-size-base: 16px;
   --font-size-sm: 12px;
+  --font-size-sm2: 14px;
   --font-size-md: 18px;
   --font-size-lg: 24px;
   --font-size-xl: 30px;
+  --font-size-mega: 31px;
+  --font-size-mega2: 25px;
+  --font-size-mega3: 19px;
   --font-uppercase: uppercase;
   --radius-sm: 6px;
   --radius-md: 10px;

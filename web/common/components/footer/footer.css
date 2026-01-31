@@ -1,0 +1,13 @@
+.xwear-footer {
+  background-color: var(--black-color);
+}
+
+.xwear-footer__container {
+  padding: 45px 10px;
+}
+
+.xwear-footer__policy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
