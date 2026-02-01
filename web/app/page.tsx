@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 import { appwriteKeys } from '@/appwrite/environment';
 import 'antd/dist/reset.css';
 
-export default async function Home() {
+export default async function Page() {
   const productsByCategory = await fetchDocuments(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.CATEGORIES_COLLECTION_ID,
