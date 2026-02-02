@@ -13,7 +13,6 @@ export default async function ProductPage({
   const product: IProduct | null = await getProductById(id);
 
   if (!product) return notFound();
-  // console.log(product, 'product');
 
   return (
     <PageShell>

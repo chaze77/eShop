@@ -44,7 +44,6 @@ export default function AntHeader({ categories }: Props) {
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
-    console.log('я отрабатываю');
   }, [dispatch]);
 
   const { isAuthenticated, status } = useAppSelector((state) => state.auth);
