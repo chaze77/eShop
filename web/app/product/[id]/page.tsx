@@ -10,7 +10,9 @@ export default async function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product: IProduct | null = await getProductById(id);
+  // На всякий случай декодируем (если id когда-то попадёт в URL в encoded виде)
+  const decodedId = decodeURIComponent(id);
+  const product: IProduct | null = await getProductById(decodedId);
 
   if (!product) return notFound();
 

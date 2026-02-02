@@ -63,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (c) => ({
       url: `${baseUrl}/category/${encodeURIComponent(c.$id)}`,
       lastModified: now,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 0.7,
     }),
   );
@@ -71,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const productEntries = products.map<MetadataRoute.Sitemap[number]>((p) => ({
     url: `${baseUrl}/product/${encodeURIComponent(p.$id)}`,
     lastModified: now,
-    changeFrequency: 'weekly',
+    changeFrequency: 'daily',
     priority: 0.8,
   }));
 
