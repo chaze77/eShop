@@ -16,8 +16,6 @@ interface Props {
 }
 
 export default function AppFooter({ categories }: Props) {
-  console.log('21212', categories);
-
   return (
     <footer className='xwear-footer'>
       <Container className='xwear-footer__container'>

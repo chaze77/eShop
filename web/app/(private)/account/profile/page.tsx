@@ -34,7 +34,6 @@ export default function Page() {
     phone?: string;
   }) => {
     openModal();
-    console.log('submit profile form', values);
   };
 
   const shouldShowLoader = !user || status === 'pending' || status === 'idle';

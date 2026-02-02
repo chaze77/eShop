@@ -9,8 +9,6 @@ import './CustomAccordion.css';
 export default function CustomAccordion({ category }: { category: ICategory }) {
   const router = useRouter();
 
-  console.log(category, 'cat123');
-
   const handleSubcategoryClick = (subcategoryKey: string) => {
     router.push(`/category/${category.$id}?subcategory=${subcategoryKey}`);
   };

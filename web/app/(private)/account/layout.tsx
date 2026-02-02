@@ -29,7 +29,6 @@ export default function AccountLayout({
   const handleLogout = async () => {
     try {
       await dispatch(logoutThunk()).unwrap();
-      console.log('реально вышел');
     } catch (err) {
       console.error('logout упал', err);
     }
