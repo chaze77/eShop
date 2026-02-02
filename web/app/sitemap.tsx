@@ -3,16 +3,31 @@ import type { IBlog, ICategory, IProduct } from '@/common/types';
 import { fetchDocuments } from '@/lib/apis/api';
 import { appwriteKeys } from '@/appwrite/environment';
 
+/**
+ * Определяем базовый URL сайта
+ * - localhost в dev
+ * - NEXT_PUBLIC_SITE_URL если задан
+ * - VERCEL_URL как fallback на Vercel
+ */
 export const getBaseUrl = () => {
   if (process.env.NODE_ENV === 'development') {
     return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   }
-  // VERCEL_URL does not include https://, so it must be added manually
-  return `https://${process.env.VERCEL_URL}`;
+
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return 'http://localhost:3000';
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const baseUrl = getBaseUrl();
 
   let categories: ICategory[] = [];
   let products: IProduct[] = [];
@@ -30,8 +45,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ),
       fetchDocuments<IBlog>(appwriteKeys.DATABASE_ID, appwriteKeys.BLOG_ID),
     ]);
-  } catch {
-    // If fetch fails, keep static routes only.
+  } catch (error) {
+    // Если Appwrite недоступен — sitemap будет только со статикой
+    console.error('Sitemap fetch error:', error);
   }
 
   const staticEntries: MetadataRoute.Sitemap = [
