@@ -13,10 +13,10 @@ export const useProductData = () => {
   const product = useProductStore((state) => state.product);
 
   const subCategoriesSelect = useSubCategoryStore(
-    (state) => state.subCategories
+    (state) => state.subCategories,
   );
   const fetchSubCategories = useSubCategoryStore(
-    (state) => state.fetchSubCategories
+    (state) => state.fetchSubCategories,
   );
 
   const brands = useBrandStore((state) => state.items);
@@ -36,7 +36,7 @@ export const useProductData = () => {
 
   useEffect(() => {
     if (id) {
-      getById(id).finally(() => setLoading(false));
+      getById(id, { expand: true }).finally(() => setLoading(false));
     } else {
       setLoading(false);
     }

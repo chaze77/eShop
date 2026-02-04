@@ -1,22 +1,32 @@
 import { useProductStore } from '@/store/useProductStore';
 import { useEffect } from 'react';
-import { Table, Button, Space, Tag } from 'antd';
+import { Table, Button, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { IAttributes, IDirectory, IProduct } from '@/types';
+import { IAttributes, IProduct } from '@/types';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
+import useColorStore from '@/store/useColorStore';
+import useSizeStore from '@/store/useSizeStore';
 
 const Products: React.FC = () => {
   const products = useProductStore((state) => state.products);
   const getProductList = useProductStore((state) => state.fetchProducts);
   const deleteProduct = useProductStore((state) => state.delete);
+  const colors = useColorStore((state) => state.items);
+  const fetchColors = useColorStore((state) => state.fetchItems);
+  const sizes = useSizeStore((state) => state.items);
+  const fetchSizes = useSizeStore((state) => state.fetchItems);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (products.length === 0) getProductList();
+    if (colors.length === 0) fetchColors();
+    if (sizes.length === 0) fetchSizes();
+    if (products.length === 0) {
+      getProductList(undefined, { expand: true });
+    }
   }, []);
 
   const openDeleteModal = (id: string) => {
@@ -25,6 +35,8 @@ const Products: React.FC = () => {
       onConfirm: async () => await deleteProduct(id),
     });
   };
+
+  console.log(products, 'products');
 
   const columns = [
     { title: 'Наименование', dataIndex: 'name', key: 'name' },
@@ -41,29 +53,22 @@ const Products: React.FC = () => {
       render: (desc: string) => desc,
     },
     {
+      title: 'Сабкатегория',
+      dataIndex: 'subCategories',
+      key: 'subCategories',
+      render: (subCategories: IProduct['subCategories']) =>
+        typeof subCategories === 'object' && subCategories
+          ? subCategories.name
+          : (subCategories ?? '-'),
+    },
+    {
       title: 'Бренд',
       dataIndex: 'brands',
       key: 'brands',
-      render: (brands: IDirectory) => brands?.name || '-',
+      render: (brands: IProduct['brands']) =>
+        typeof brands === 'object' && brands ? brands.name : (brands ?? '-'),
     },
-    {
-      title: 'Теги',
-      dataIndex: 'tags',
-      key: 'tags',
-      render: (tags: IDirectory[]) => (
-        <>
-          {tags?.map((tag) => (
-            <Tag
-              style={{ marginBottom: '2px' }}
-              key={tag.$id}
-              color='cyan'
-            >
-              {tag.name}
-            </Tag>
-          ))}
-        </>
-      ),
-    },
+
     {
       title: 'Фото',
       dataIndex: 'image',
@@ -137,20 +142,22 @@ const Products: React.FC = () => {
                   title: 'Цвет',
                   dataIndex: 'colors',
                   key: 'colors',
-                  render: (colors) => (colors ? colors.name : ''),
+                  render: (colorId: string) =>
+                    colors.find((c) => c.$id === colorId)?.name ?? '',
                 },
                 {
                   title: 'Размер',
                   dataIndex: 'size',
                   key: 'size',
-                  render: (sizes) => (sizes ? sizes.name : ''),
+                  render: (sizeId: string) =>
+                    sizes.find((s) => s.$id === sizeId)?.name ?? '',
                 },
               ]}
               dataSource={
                 product?.attributes &&
                 product.attributes
                   .filter(
-                    (attr): attr is IAttributes => typeof attr === 'object'
+                    (attr): attr is IAttributes => typeof attr === 'object',
                   )
                   .map((attr, index) => ({
                     ...attr,

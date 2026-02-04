@@ -4,7 +4,7 @@ import { Input, Space, Table } from 'antd';
 import EditModal from '@/components/ui/Modal/EditModal';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
-import { IBlog, IDirectory, Store } from '@/types';
+import { IDirectory, Store } from '@/types';
 import Title from '../ui/Title/Ttitle';
 
 interface ReferenceTableProps {
@@ -34,11 +34,6 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
 
     if (!items.length) load();
   }, []);
-
-  // useEffect(() => {
-  //   console.log('MOUNT ReferenceTable');
-  //   return () => console.log('UNMOUNT ReferenceTable');
-  // }, []);
 
   const dataSource = items.map((item: IDirectory) => ({
     key: item.$id,

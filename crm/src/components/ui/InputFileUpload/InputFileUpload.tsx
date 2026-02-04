@@ -13,9 +13,6 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
   image,
   setImage,
 }) => {
-  console.log('image', image);
-  console.log(setImage, 'setImage');
-
   const [fileName, setFileName] = useState<string | null>(null);
 
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);

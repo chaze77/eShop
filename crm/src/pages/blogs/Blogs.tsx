@@ -4,6 +4,8 @@ import useBlogStore from '@/store/useBlogStore';
 import { Space, Table } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { columns } from './columns';
+import { IBlog } from '@/types';
 
 const Blogs = () => {
   const blogs = useBlogStore((state) => state.blogs);
@@ -18,25 +20,7 @@ const Blogs = () => {
     navigate('/blog-detail');
   };
 
-  const columns = [
-    {
-      title: 'Блог',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: 'Контент',
-      dataIndex: 'content',
-      key: 'content',
-    },
-    {
-      title: 'Фото',
-      dataIndex: 'image',
-      key: 'image',
-    },
-  ];
-
-  const dataSource = blogs.map((blog) => ({
+  const dataSource = blogs.map((blog: IBlog) => ({
     key: blog.$id,
     title: blog.title,
     content: blog.content,

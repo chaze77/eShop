@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useCategoryStore from '@store/useCategoryStore';
 import useSubCategoryStore from '@store/useSubCategoryStore';
@@ -47,7 +47,7 @@ const SubCategoryDetails: React.FC = () => {
     if (subCategory) {
       form.setFieldsValue({
         name: subCategory.name,
-        relatedCategory: subCategory.relatedCategory.$id || '',
+        relatedCategory: subCategory.relatedCategory || '',
       });
     }
   }, [subCategory]);

@@ -12,7 +12,7 @@ import Title from '@/components/ui/Title/Ttitle';
 const SubCategories: React.FC = () => {
   const subCategories = useSubCategoryStore((state) => state.subCategories);
   const fetchSubCategories = useSubCategoryStore(
-    (state) => state.fetchSubCategories
+    (state) => state.fetchSubCategories,
   );
 
   const categories = useCategoryStore((state) => state.items);
@@ -40,7 +40,9 @@ const SubCategories: React.FC = () => {
   const dataSource = subCategories.map((subCategory) => ({
     key: subCategory.$id,
     name: subCategory.name,
-    categoryName: subCategory.relatedCategory?.name || 'No Category',
+    categoryName:
+      categories.find((cat) => cat.$id === subCategory.relatedCategory)?.name ||
+      'No Category',
   }));
 
   const columns = [
