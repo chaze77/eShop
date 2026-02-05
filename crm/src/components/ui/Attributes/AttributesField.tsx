@@ -1,17 +1,31 @@
 // AttributeField.tsx
-import { IAttributes } from '@/types';
+import { IDirectory } from '@/types';
 import { Button, Form, Input, Select, Space } from 'antd';
 import React from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
 import './attributes.less';
+import { LABELS } from '@/contstants/labels';
 
 interface AttributeFieldProps {
-  attribute: IAttributes;
+  attribute: {
+    $id?: string;
+    quantity?: number;
+    colors?: string;
+    size?: string;
+  };
   index: number;
-  colors: { name: string; $id: string }[];
-  sizes: { name: string; $id: string }[];
-  onChange: (newAttribute: IAttributes, index: number) => void;
-  onDelete: (index: number, attribute: IAttributes) => void;
+  colors: IDirectory[];
+  sizes: IDirectory[];
+  onChange: (
+    newAttribute: {
+      $id?: string;
+      quantity?: number;
+      colors?: string;
+      size?: string;
+    },
+    index: number,
+  ) => void;
+  onDelete: (index: number) => void;
 }
 
 const AttributeField: React.FC<AttributeFieldProps> = ({
@@ -31,13 +45,13 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
         borderRadius: '5px',
       }}
     >
-      <h4>Атрибут {index + 1}</h4>
+      <h4>{LABELS.fields.attributes} {index + 1}</h4>
       <Space
         align='end'
         size={[4, 8]}
         wrap
       >
-        <Form.Item label='Кол-во'>
+        <Form.Item label={LABELS.fields.quantity}>
           <Input
             style={{ width: '60px' }}
             type='number'
@@ -45,16 +59,16 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
             onChange={(e) =>
               onChange(
                 { ...attribute, quantity: Number(e.target.value) },
-                index
+                index,
               )
             }
           />
         </Form.Item>
-        <Form.Item label='Цвет'>
+        <Form.Item label={LABELS.fields.color}>
           <Select
             className='select-width '
             value={attribute.colors}
-            placeholder='Выберите цвет'
+            placeholder={LABELS.placeholders.selectColor}
             options={colors.map((c) => ({
               label: c.name,
               value: c.$id,
@@ -65,11 +79,11 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label='Размер'>
+        <Form.Item label={LABELS.fields.size}>
           <Select
             className='select-width '
             value={attribute.size}
-            placeholder='выберите размер'
+            placeholder={LABELS.placeholders.selectSize}
             options={sizes.map((s) => ({
               label: s.name,
               value: s.$id,
@@ -84,7 +98,7 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => onDelete(index, attribute)}
+            onClick={() => onDelete(index)}
           />
         </Form.Item>
       </Space>

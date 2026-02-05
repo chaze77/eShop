@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Tooltip, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { LABELS } from '@/contstants/labels';
 
 const { Text } = Typography;
 
@@ -13,9 +14,6 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
   image,
   setImage,
 }) => {
-  console.log('image', image);
-  console.log(setImage, 'setImage');
-
   const [fileName, setFileName] = useState<string | null>(null);
 
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
@@ -46,7 +44,7 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Tooltip title={fileName || 'выберите файл'}>
+      <Tooltip title={fileName || LABELS.placeholders.file}>
         <Text
           ellipsis
           style={{
@@ -57,7 +55,7 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
           }}
           type='secondary'
         >
-          {fileName || 'выберите файл'}
+          {fileName || LABELS.placeholders.file}
         </Text>
       </Tooltip>
       <Button
@@ -65,10 +63,10 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
         icon={<UploadOutlined />}
         onClick={handleButtonClick}
       >
-        Загрузите фото
+        {LABELS.fields.image}
       </Button>
 
-      {/* Скрытый инпут для выбора файла */}
+      {/* hidden input for file selection */}
       <input
         ref={hiddenFileInputRef}
         type='file'

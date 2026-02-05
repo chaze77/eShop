@@ -1,57 +1,63 @@
-import { databases } from '@/appwrite/config';
+import { tablesDB } from '@/appwrite/config';
 import { ID } from 'appwrite';
 
 export const fetchDocuments = async <T>(
   databaseId: string,
-  collectionId: string,
-  filters?: string[] // Фильтры как необязательный параметр
+  tableId: string,
+  filters?: string[],
 ): Promise<T[]> => {
-  // Передаём фильтры в запрос, если они существуют
-  const response = await databases.listDocuments(
+  const response = await tablesDB.listRows({
     databaseId,
-    collectionId,
-    filters ? filters : undefined
-  );
-  return response.documents as T[];
+    tableId,
+    queries: filters,
+  });
+
+  return response.rows as T[];
 };
 
 export const getDocumentById = async <T>(
   databaseId: string,
-  collectionId: string,
-  id: string
+  tableId: string,
+  rowId: string,
 ): Promise<T> => {
-  const response = await databases.getDocument(databaseId, collectionId, id);
+  const response = await tablesDB.getRow({ databaseId, tableId, rowId });
   return response as T;
 };
-export const createDocument = async (
+export const createDocument = async <T extends object>(
   databaseId: string,
-  collectionId: string,
-  data: Record<string, any>
-): Promise<any> => {
-  console.log('📤 Sending data to Appwrite:', JSON.stringify(data, null, 2));
-  const response = await databases.createDocument(
+  tableId: string,
+  data: T,
+) => {
+  return tablesDB.createRow({
     databaseId,
-    collectionId,
-    ID.unique(),
-    data
-  );
-  console.log('✅ Appwrite response:', response); // 🔥 Логируем ответ
-  return response;
+    tableId,
+    rowId: ID.unique(),
+    data: data as Record<string, unknown>,
+  });
 };
 
-export const updateDocument = async (
+export const updateDocument = async <T extends Record<string, unknown>>(
   databaseId: string,
-  collectionId: string,
-  id: string,
-  data: Record<string, any>
+  tableId: string,
+  rowId: string,
+  data: Partial<T>,
 ): Promise<void> => {
-  await databases.updateDocument(databaseId, collectionId, id, data);
+  await tablesDB.updateRow({
+    databaseId,
+    tableId,
+    rowId,
+    data,
+  });
 };
 
 export const deleteDocument = async (
   databaseId: string,
-  collectionId: string,
-  id: string
+  tableId: string,
+  rowId: string,
 ): Promise<void> => {
-  await databases.deleteDocument(databaseId, collectionId, id);
+  await tablesDB.deleteRow({
+    databaseId,
+    tableId,
+    rowId,
+  });
 };

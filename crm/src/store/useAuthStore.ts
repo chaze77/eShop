@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { account } from '@/appwrite/config';
 import showMessage from '@/utils/showMessage/showMessage';
+import { MESSAGES } from '@/contstants/messages';
+import { Models } from 'appwrite';
 
 type AuthState = {
-  user: any | null;
+  user: Models.User<Models.Preferences> | null;
   isAdmin: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -22,17 +24,14 @@ const useAuthStore = create<AuthState>((set) => ({
 
       await useAuthStore.getState().fetchUser();
 
-      showMessage('success', 'Success login');
+      showMessage('success', MESSAGES.toast.loginSuccess);
     } catch (error: unknown) {
-      // Преобразуем ошибку в строку для showMessage
       const errorMessage =
         error instanceof Error ? error.message : String(error);
 
-      // Логируем объект ошибки для отладки
-      console.error('Ошибка авторизации:', error);
+      console.error(MESSAGES.toast.authError, error);
 
-      // Показываем уведомление пользователю
-      showMessage('error', errorMessage);
+      showMessage('error', errorMessage || MESSAGES.toast.authError);
     }
   },
 
@@ -42,10 +41,8 @@ const useAuthStore = create<AuthState>((set) => ({
       const isAdmin = user.labels?.includes('admin') || false;
       set({ user: user, isAdmin: isAdmin, isAuthenticated: true });
     } catch (error: unknown) {
-      console.error('Пользователь не авторизован:', error);
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      showMessage('error', errorMessage as string);
+      console.error(MESSAGES.toast.notAuthorized, error);
+      showMessage('error', MESSAGES.toast.notAuthorized);
       set({ user: null, isAdmin: false, isAuthenticated: false });
     }
   },
@@ -54,7 +51,8 @@ const useAuthStore = create<AuthState>((set) => ({
       await account.deleteSession('current');
       set({ user: null, isAdmin: false, isAuthenticated: false });
     } catch (error) {
-      console.error('Ошибка при выходе:', error);
+      console.error(MESSAGES.toast.logoutError, error);
+      showMessage('error', MESSAGES.toast.logoutError);
     }
   },
 }));

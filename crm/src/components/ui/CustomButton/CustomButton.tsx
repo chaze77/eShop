@@ -1,4 +1,3 @@
-// CustomButton.tsx
 import React from 'react';
 import { Button } from 'antd';
 import {
@@ -10,6 +9,7 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 import './CustomButton.less';
+import { LABELS } from '@/contstants/labels';
 
 interface CustomButtonProps {
   action: 'create' | 'update' | 'delete' | 'filter' | 'close' | 'edit' | 'add';
@@ -28,37 +28,37 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   const actionConfig = {
     create: {
-      text: 'Создать',
+      text: LABELS.buttons.create,
       icon: <PlusOutlined />,
       className: 'button-create',
     },
     update: {
-      text: 'Обновить',
+      text: LABELS.buttons.update,
       icon: <CheckOutlined />,
       className: 'button-update',
     },
     delete: {
-      text: 'Удалить',
+      text: LABELS.buttons.delete,
       icon: <DeleteOutlined />,
       className: 'button-delete',
     },
     filter: {
-      text: 'Фильтр',
+      text: LABELS.buttons.filter,
       icon: <FilterOutlined />,
       className: 'button-filter',
     },
     close: {
-      text: 'Закрыть',
+      text: LABELS.buttons.close,
       icon: <CloseCircleOutlined />,
       className: 'button-close',
     },
     edit: {
-      text: 'Редактировать',
+      text: LABELS.buttons.edit,
       icon: <EditOutlined />,
       className: 'button-edit',
     },
     add: {
-      text: 'Добавить',
+      text: LABELS.buttons.add,
       icon: <EditOutlined />,
       className: 'button-add',
     },

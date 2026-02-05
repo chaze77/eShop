@@ -1,5 +1,6 @@
 import { storage } from '@/appwrite/config';
 import { ID } from 'appwrite';
+import { MESSAGES } from '@/contstants/messages';
 
 const bucketId = import.meta.env.VITE_STORAGE_ID;
 const endpoint = import.meta.env.VITE_ENDPOINT;
@@ -22,7 +23,7 @@ export const imageUpload = async (
 
     return response.$id;
   } catch (error) {
-    console.error('Ошибка при загрузке изображения:', error);
-    throw new Error('Failed to upload image');
+    console.error(MESSAGES.toast.imageUploadFail, error);
+    throw new Error(MESSAGES.toast.imageUploadFail);
   }
 };

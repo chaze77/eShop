@@ -11,7 +11,25 @@ import {
 const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_BLOG_COLLECTION_ID;
 
-const useBlogStore = create((set) => ({
+interface BlogStore {
+  blogs: IBlog[];
+  blog: IBlog | null;
+  fetchBlogs: () => Promise<void>;
+  getById: (id: string) => Promise<void>;
+  resetBlog: () => void;
+  create: (formState: {
+    title: string;
+    content: string;
+    image: string;
+  }) => Promise<void>;
+  update: (
+    id: string,
+    formState: { title: string; content: string; image: string }
+  ) => Promise<void>;
+  delete: (id: string) => Promise<void>;
+}
+
+const useBlogStore = create<BlogStore>((set) => ({
   blogs: [],
   blog: null,
   fetchBlogs: async () => {

@@ -19,6 +19,10 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'), // Alias для компонентов
       '@store': path.resolve(__dirname, './src/store'), // Alias для хранилищ
       '@utils': path.resolve(__dirname, './src/utils'), // Alias для утилит
+      'bignumber.js': path.resolve(
+        __dirname,
+        './node_modules/bignumber.js/bignumber.js',
+      ),
     },
   },
 });

@@ -7,12 +7,12 @@ export interface IDirectory {
 
 export interface ISubCategory extends Models.Document {
   name: string;
-  relatedCategory: IDirectory;
+  relatedCategory: string;
 }
 
 export interface IAttributes {
   $id?: string;
-  quantity: number;
+  quantity?: number;
   colors?: IDirectory | string;
   size?: IDirectory | string;
   products?: string;

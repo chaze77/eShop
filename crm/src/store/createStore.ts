@@ -8,6 +8,7 @@ import {
 } from '@/utils/apiClient/apiClient';
 import showMessage from '@/utils/showMessage/showMessage';
 import { Store } from '@/types';
+import { MESSAGES } from '@/contstants/messages';
 
 export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
   return create<Store<T>>((set) => ({
@@ -19,7 +20,7 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         const documents = await fetchDocuments<T>(DATABASE_ID, COLLECTION_ID);
         set({ items: documents });
       } catch (error) {
-        console.error(`Ошибка при загрузке данных из ${COLLECTION_ID}:`, error);
+        console.error(MESSAGES.toast.loadFail, error);
       }
     },
 
@@ -32,10 +33,7 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         );
         set({ item: document });
       } catch (error) {
-        console.error(
-          `Ошибка при получении документа ${id} из ${COLLECTION_ID}:`,
-          error
-        );
+        console.error(MESSAGES.toast.loadFail, error);
       }
     },
 
@@ -46,10 +44,10 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         await createDocument(DATABASE_ID, COLLECTION_ID, { ...formState });
         const documents = await fetchDocuments<T>(DATABASE_ID, COLLECTION_ID);
         set({ items: documents });
-        showMessage('success', 'Successfully created');
+        showMessage('success', MESSAGES.toast.createSuccess);
       } catch (error) {
-        console.error(`Ошибка при создании в ${COLLECTION_ID}:`, error);
-        showMessage('error', 'Failed to create');
+        console.error(MESSAGES.toast.createFail, error);
+        showMessage('error', MESSAGES.toast.createFail);
       }
     },
 
@@ -58,10 +56,10 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         await updateDocument(DATABASE_ID, COLLECTION_ID, id, { ...formState });
         const documents = await fetchDocuments<T>(DATABASE_ID, COLLECTION_ID);
         set({ items: documents });
-        showMessage('success', 'Successfully updated');
+        showMessage('success', MESSAGES.toast.updateSuccess);
       } catch (error) {
-        console.error(`Ошибка при обновлении в ${COLLECTION_ID}:`, error);
-        showMessage('error', 'Failed to update');
+        console.error(MESSAGES.toast.updateFail, error);
+        showMessage('error', MESSAGES.toast.updateFail);
       }
     },
 
@@ -70,10 +68,10 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         await deleteDocument(DATABASE_ID, COLLECTION_ID, id);
         const documents = await fetchDocuments<T>(DATABASE_ID, COLLECTION_ID);
         set({ items: documents });
-        showMessage('success', 'Successfully deleted');
+        showMessage('success', MESSAGES.toast.deleteSuccess);
       } catch (error) {
-        console.error(`Ошибка при удалении из ${COLLECTION_ID}:`, error);
-        showMessage('error', 'Failed to delete');
+        console.error(MESSAGES.toast.deleteFail, error);
+        showMessage('error', MESSAGES.toast.deleteFail);
       }
     },
   }));

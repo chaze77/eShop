@@ -13,10 +13,10 @@ export const useProductData = () => {
   const product = useProductStore((state) => state.product);
 
   const subCategoriesSelect = useSubCategoryStore(
-    (state) => state.subCategories
+    (state) => state.subCategories,
   );
   const fetchSubCategories = useSubCategoryStore(
-    (state) => state.fetchSubCategories
+    (state) => state.fetchSubCategories,
   );
 
   const brands = useBrandStore((state) => state.items);
@@ -31,12 +31,11 @@ export const useProductData = () => {
   const tagsColl = useTagStore((state) => state.items);
   const fetchTags = useTagStore((state) => state.fetchItems);
 
-  // Флаг загрузки или ошибки можно добавить по необходимости
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
-      getById(id).finally(() => setLoading(false));
+      getById(id, { expand: true }).finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
