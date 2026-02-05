@@ -8,8 +8,9 @@ import {
   CloseCircleOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
-import './CustomButton.less';
+
 import { LABELS } from '@/contstants/labels';
+import './customButton.less';
 
 interface CustomButtonProps {
   action: 'create' | 'update' | 'delete' | 'filter' | 'close' | 'edit' | 'add';
