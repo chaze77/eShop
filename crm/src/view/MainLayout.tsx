@@ -14,6 +14,8 @@ import { Button, Flex, Layout, Menu, Space, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import useAuthStore from '@/store/useAuthStore';
 import showModal from '@/components/ui/Modal/ShowModal';
+import { LABELS } from '@/contstants/labels';
+import { ConfigRoutes } from '@/contstants/page-routes';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -42,15 +44,15 @@ const MainLayout: React.FC = () => {
 
   // Функция для установки активного ключа в меню
   const getActiveKey = () => {
-    if (location.pathname.startsWith('/categories')) return 'categories';
-    if (location.pathname.startsWith('/sub-categories')) return 'subcategories';
-    if (location.pathname.startsWith('/products')) return 'products';
+    if (location.pathname.startsWith(ConfigRoutes.CATEGORIES)) return 'categories';
+    if (location.pathname.startsWith(ConfigRoutes.SUB_CATEGORIES)) return 'subcategories';
+    if (location.pathname.startsWith(ConfigRoutes.PRODUCTS)) return 'products';
 
     // Проверяем вложенные маршруты для справочников (References)
-    if (location.pathname.startsWith('/reference/brands')) return 'brands';
-    if (location.pathname.startsWith('/reference/sizes')) return 'sizes';
-    if (location.pathname.startsWith('/reference/colors')) return 'colors';
-    if (location.pathname.startsWith('/reference/tags')) return 'tags';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_BRANDS)) return 'brands';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_SIZES)) return 'sizes';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_COLORS)) return 'colors';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_TAGS)) return 'tags';
 
     return 'defaultKey';
   };
@@ -60,55 +62,55 @@ const MainLayout: React.FC = () => {
     {
       key: 'categories',
       icon: <ProductOutlined />,
-      label: 'Categories',
-      onClick: () => navigate('/categories'),
+      label: LABELS.menu.categories,
+      onClick: () => navigate(ConfigRoutes.CATEGORIES),
     },
     {
       key: 'subcategories',
       icon: <ShareAltOutlined />,
-      label: 'SubCategories',
-      onClick: () => navigate('/sub-categories'),
+      label: LABELS.menu.subCategories,
+      onClick: () => navigate(ConfigRoutes.SUB_CATEGORIES),
     },
     {
       key: 'products',
       icon: <OneToOneOutlined />,
-      label: 'Products',
-      onClick: () => navigate('/products'),
+      label: LABELS.menu.products,
+      onClick: () => navigate(ConfigRoutes.PRODUCTS),
     },
     {
       key: 'blogs',
       icon: <CommentOutlined />,
-      label: 'Blogs',
-      onClick: () => navigate('/blogs'),
+      label: LABELS.menu.blogs,
+      onClick: () => navigate(ConfigRoutes.BLOGS),
     },
     {
       key: 'references',
       icon: <AppstoreOutlined />,
-      label: 'References',
+      label: LABELS.menu.references,
       children: [
         {
           key: 'brands',
           icon: <FormatPainterOutlined />,
-          label: 'Brands',
-          onClick: () => navigate('/reference/brands'),
+          label: LABELS.menu.brands,
+          onClick: () => navigate(ConfigRoutes.REFERENCE_BRANDS),
         },
         {
           key: 'sizes',
           icon: <ColumnWidthOutlined />,
-          label: 'Sizes',
-          onClick: () => navigate('/reference/sizes'),
+          label: LABELS.menu.sizes,
+          onClick: () => navigate(ConfigRoutes.REFERENCE_SIZES),
         },
         {
           key: 'colors',
           icon: <BgColorsOutlined />,
-          label: 'Colors',
-          onClick: () => navigate('/reference/colors'),
+          label: LABELS.menu.colors,
+          onClick: () => navigate(ConfigRoutes.REFERENCE_COLORS),
         },
         {
           key: 'tags',
           icon: <TagsOutlined />,
-          label: 'Tags',
-          onClick: () => navigate('/reference/tags'),
+          label: LABELS.menu.tags,
+          onClick: () => navigate(ConfigRoutes.REFERENCE_TAGS),
         },
       ],
     },
@@ -122,7 +124,7 @@ const MainLayout: React.FC = () => {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div style={{ padding: '20px' }}>
-          <h1 style={{ color: 'white', textAlign: 'center' }}>CRM</h1>
+          <h1 style={{ color: 'white', textAlign: 'center' }}>{LABELS.app.title}</h1>
         </div>
 
         <Menu
@@ -137,7 +139,7 @@ const MainLayout: React.FC = () => {
           <Flex justify='end'>
             <Space>
               <span style={{ fontSize: 16 }}>{user?.name}</span>
-              {user && <Button onClick={openConfirmationModal}>Logout</Button>}
+              {user && <Button onClick={openConfirmationModal}>{LABELS.app.logout}</Button>}
             </Space>
           </Flex>
         </Header>
@@ -153,7 +155,7 @@ const MainLayout: React.FC = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>FOOTER</Footer>
+        <Footer style={{ textAlign: 'center' }}>{LABELS.app.footer}</Footer>
       </Layout>
     </Layout>
   );

@@ -12,34 +12,35 @@ import Products from './pages/products/Products';
 import ProductDetails from './pages/product-details.tsx/ProductDetails';
 import Blogs from './pages/blogs/Blogs';
 import BlogDetails from './pages/blog-details/BlogDetail';
+import { ConfigRoutes } from '@/contstants/page-routes';
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: ConfigRoutes.HOME,
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/',
+        path: ConfigRoutes.HOME,
         element: <MainLayout />,
         children: [
-          { path: 'categories', element: <Categories /> },
-          { path: 'sub-categories', element: <SubCategories /> },
+          { path: ConfigRoutes.CATEGORIES, element: <Categories /> },
+          { path: ConfigRoutes.SUB_CATEGORIES, element: <SubCategories /> },
           {
-            path: 'sub-categories-details/:id?',
+            path: ConfigRoutes.SUB_CATEGORY_DETAILS,
             element: <SubCategoryDetails />,
           },
-          { path: 'blogs', element: <Blogs /> },
+          { path: ConfigRoutes.BLOGS, element: <Blogs /> },
           {
-            path: 'blog-detail/:id?',
+            path: ConfigRoutes.BLOG_DETAILS,
             element: <BlogDetails />,
           },
-          { path: 'reference/sizes', element: <Sizes /> },
-          { path: 'reference/colors', element: <Colors /> },
-          { path: 'reference/tags', element: <Tags /> },
-          { path: 'reference/brands', element: <Brands /> },
-          { path: 'products', element: <Products /> },
+          { path: ConfigRoutes.REFERENCE_SIZES, element: <Sizes /> },
+          { path: ConfigRoutes.REFERENCE_COLORS, element: <Colors /> },
+          { path: ConfigRoutes.REFERENCE_TAGS, element: <Tags /> },
+          { path: ConfigRoutes.REFERENCE_BRANDS, element: <Brands /> },
+          { path: ConfigRoutes.PRODUCTS, element: <Products /> },
           {
-            path: 'product-details/:id?',
+            path: ConfigRoutes.PRODUCT_DETAILS,
             element: <ProductDetails />,
           },
         ],

@@ -1,16 +1,17 @@
+import { MESSAGES } from '@/contstants/messages';
+
 export const modalTexts = {
   deleteModal: {
-    title: 'Вы уверены?',
-    content:
-      'Вы действительно хотите удалить этот элемент? Это действие нельзя отменить.',
-    okText: 'Удалить',
-    cancelText: 'Отмена',
+    title: MESSAGES.modal.deleteTitle,
+    content: MESSAGES.modal.deleteContent,
+    okText: MESSAGES.modal.deleteOk,
+    cancelText: MESSAGES.modal.deleteCancel,
   },
 
   confirmationModal: {
-    title: 'Подтверждение',
-    content: 'Вы хотите продолжить это действие?',
-    okText: 'Да',
-    cancelText: 'Нет',
+    title: MESSAGES.modal.confirmTitle,
+    content: MESSAGES.modal.confirmContent,
+    okText: MESSAGES.modal.confirmOk,
+    cancelText: MESSAGES.modal.confirmCancel,
   },
 };

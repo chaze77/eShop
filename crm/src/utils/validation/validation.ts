@@ -1,11 +1,11 @@
-// validation.ts
+import { MESSAGES } from '@/contstants/messages';
 
 export const validateName = (name: string): string | null => {
   if (name.trim() === '') {
-    return 'Название  не может быть пустым';
+    return MESSAGES.validation.emptyName;
   }
   if (name.length < 3) {
-    return 'Название должно быть не менее 3 символов';
+    return MESSAGES.validation.nameMin;
   }
   return null;
 };

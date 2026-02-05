@@ -9,6 +9,7 @@ import {
 import { ISubCategory } from '@/types';
 import showMessage from '@/utils/showMessage/showMessage';
 import { Query } from 'appwrite';
+import { MESSAGES } from '@/contstants/messages';
 
 const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_SUBCATEGORIES_COLLECTION_ID;
@@ -38,8 +39,6 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
     try {
       const queryFilters: string[] = [];
       if (filters?.category) {
-        console.log(filters, 'filters');
-
         queryFilters.push(Query.equal('relatedCategory', [filters.category]));
       }
       const documents = await fetchDocuments<ISubCategory>(
@@ -49,7 +48,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       );
       set({ subCategories: documents });
     } catch (error) {
-      console.error('Ошибка при загрузке подкатегорий:', error);
+      console.error(MESSAGES.toast.loadFail, error);
     }
   },
 
@@ -62,7 +61,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       );
       set({ subCategory: document });
     } catch (error) {
-      console.error('Ошибка при получении подкатегории:', error);
+      console.error(MESSAGES.toast.loadFail, error);
     }
   },
 
@@ -76,10 +75,10 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
         COLLECTION_ID
       );
       set({ subCategories: documents });
-      showMessage('success', 'SubCategory successfully created');
+      showMessage('success', MESSAGES.toast.subCategoryCreateSuccess);
     } catch (error) {
-      console.error('Ошибка при создании подкатегории:', error);
-      showMessage('error', 'Failed to create subcategory');
+      console.error(MESSAGES.toast.createFail, error);
+      showMessage('error', MESSAGES.toast.subCategoryCreateFail);
     }
   },
 
@@ -94,10 +93,10 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
         COLLECTION_ID
       );
       set({ subCategories: documents });
-      showMessage('success', 'SubCategory successfully updated');
+      showMessage('success', MESSAGES.toast.subCategoryUpdateSuccess);
     } catch (error) {
-      console.error('Ошибка при обновлении подкатегории:', error);
-      showMessage('error', 'Failed to update subcategory');
+      console.error(MESSAGES.toast.updateFail, error);
+      showMessage('error', MESSAGES.toast.subCategoryUpdateFail);
     }
   },
 
@@ -109,10 +108,10 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
         COLLECTION_ID
       );
       set({ subCategories: documents });
-      showMessage('success', 'SubCategory successfully deleted');
+      showMessage('success', MESSAGES.toast.subCategoryDeleteSuccess);
     } catch (error) {
-      console.error('Ошибка при удалении подкатегории:', error);
-      showMessage('error', 'Failed to delete subcategory');
+      console.error(MESSAGES.toast.deleteFail, error);
+      showMessage('error', MESSAGES.toast.subCategoryDeleteFail);
     }
   },
 }));

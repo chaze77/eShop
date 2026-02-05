@@ -5,6 +5,9 @@ import useSubCategoryStore from '@store/useSubCategoryStore';
 import { Flex, Form, Input, Select, Space } from 'antd';
 import CustomButton from '@components/ui/CustomButton/CustomButton';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
+import { LABELS } from '@/contstants/labels';
+import { MESSAGES } from '@/contstants/messages';
+import { ConfigRoutes } from '@/contstants/page-routes';
 
 interface SelectOption {
   label: string;
@@ -57,7 +60,7 @@ const SubCategoryDetails: React.FC = () => {
     relatedCategory: string;
   }) => {
     await create(values);
-    navigate('/sub-categories');
+    navigate(ConfigRoutes.SUB_CATEGORIES);
   };
 
   const handleUpdate = async (values: {
@@ -68,12 +71,12 @@ const SubCategoryDetails: React.FC = () => {
       await update(id, values);
     }
 
-    navigate('/sub-categories');
+    navigate(ConfigRoutes.SUB_CATEGORIES);
   };
 
   const handleDelete = async () => {
     if (id) await deleteItem(id);
-    navigate('/sub-categories');
+    navigate(ConfigRoutes.SUB_CATEGORIES);
   };
 
   const openDeleteModal = () => {
@@ -85,12 +88,12 @@ const SubCategoryDetails: React.FC = () => {
 
   const close = () => {
     reset();
-    navigate('/sub-categories');
+    navigate(ConfigRoutes.SUB_CATEGORIES);
   };
 
   return (
     <div className='content-box'>
-      <h2>SubCategory Details</h2>
+      <h2>{LABELS.pages.subCategories}</h2>
       <Form
         form={form}
         layout='vertical'
@@ -127,26 +130,26 @@ const SubCategoryDetails: React.FC = () => {
           )}
         </Flex>
         <Form.Item
-          label='SubCategory'
+          label={LABELS.fields.subCategory}
           name='name'
           rules={[
-            { required: true, message: 'Please input the subcategory name!' },
+            { required: true, message: MESSAGES.validation.subCategoryRequired },
             {
               min: 3,
-              message: 'Subcategory name must be at least 3 characters!',
+              message: MESSAGES.validation.nameMin,
             },
           ]}
         >
-          <Input placeholder='Enter subcategory name' />
+          <Input placeholder={LABELS.placeholders.name} />
         </Form.Item>
 
         <Form.Item
-          label='Category'
+          label={LABELS.fields.category}
           name='relatedCategory'
-          rules={[{ required: true, message: 'Please select a category!' }]}
+          rules={[{ required: true, message: MESSAGES.validation.categorySelect }]}
         >
           <Select
-            placeholder='Select a category'
+            placeholder={LABELS.placeholders.selectCategory}
             options={categories.map<SelectOption>((category: ICategory) => ({
               label: category.name,
               value: category.$id,

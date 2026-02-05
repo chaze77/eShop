@@ -14,6 +14,7 @@ import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
 import { SCHEMA } from './productSchema';
 import { IDirectory } from '@/types';
+import { LABELS } from '@/contstants/labels';
 
 interface SelectOption {
   label: string;
@@ -54,17 +55,17 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   return (
     <Flex vertical>
-      <Title text='Продукт' />
+      <Title text={LABELS.pages.product} />
       <Form
         layout='vertical'
-        onFinish={handleSubmit(onSubmit, (formErrors: FieldErrors) => {
+        onFinish={handleSubmit(onSubmit, (formErrors: unknown) => {
           console.error('Validation errors:', formErrors);
         })}
       >
         <Space direction='vertical'>
           <Space align='end'>
             <Form.Item
-              label='Наименование'
+              label={LABELS.fields.name}
               validateStatus={errors.name ? 'error' : ''}
               help={errors.name?.message}
             >
@@ -74,14 +75,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder='наименование'
+                    placeholder={LABELS.placeholders.name}
                   />
                 )}
               />
             </Form.Item>
 
             <Form.Item
-              label='Цена'
+              label={LABELS.fields.price}
               validateStatus={errors.price ? 'error' : ''}
               help={errors.price?.message}
             >
@@ -91,13 +92,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder='цена'
+                    placeholder={LABELS.placeholders.price}
                   />
                 )}
               />
             </Form.Item>
             <Form.Item
-              label='Описание'
+              label={LABELS.fields.desc}
               validateStatus={errors.desc ? 'error' : ''}
               help={errors.desc?.message}
             >
@@ -108,7 +109,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <TextArea
                     className='input-textarea'
                     {...field}
-                    placeholder='описание'
+                    placeholder={LABELS.placeholders.desc}
                   />
                 )}
               />
@@ -116,7 +117,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           </Space>
           <Space align='start'>
             <Form.Item
-              label='Группа'
+              label={LABELS.fields.group}
               validateStatus={errors.subCategories ? 'error' : ''}
               help={errors.subCategories?.message}
             >
@@ -127,14 +128,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <Select
                     {...field}
                     className='select-width'
-                    placeholder='группа'
+                    placeholder={LABELS.placeholders.group}
                     options={categoryOptions}
                   />
                 )}
               />
             </Form.Item>
             <Form.Item
-              label='Бренд'
+              label={LABELS.fields.brand}
               validateStatus={errors.brands ? 'error' : ''}
               help={errors.brands?.message}
             >
@@ -145,7 +146,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <Select
                     {...field}
                     className='select-width'
-                    placeholder='бренд'
+                    placeholder={LABELS.placeholders.brand}
                     options={brandOptions}
                   />
                 )}
@@ -169,12 +170,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
               onClick={addAttribute}
               variant='outlined'
             >
-              Добавить атрибут
+              {LABELS.buttons.add}
             </Button>
           </Space>
         </Space>
 
-        <h4>Атрибуты</h4>
+        <h4>{LABELS.fields.attributes}</h4>
 
         <Row
           gutter={[16, 16]}

@@ -138,7 +138,7 @@ const ProductDetails: React.FC = () => {
         })) ?? [],
     });
   };
-  // Remove attribute from form state (attributes are embedded in product)
+
   const handleDeleteAttribute = (index: number) => {
     const currentAttributes = getValues('attributes') || [];
     const newAttributes = currentAttributes.filter((_, idx) => idx !== index);

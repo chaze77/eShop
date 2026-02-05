@@ -36,7 +36,7 @@ const SubCategories: React.FC = () => {
   const onClear = async () => {
     await fetchSubCategories();
   };
-  // Преобразуем данные, добавляя `categoryName`
+
   const dataSource = subCategories.map((subCategory) => ({
     key: subCategory.$id,
     name: subCategory.name,

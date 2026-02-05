@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
+import { LABELS } from '@/contstants/labels';
+import { MESSAGES } from '@/contstants/messages';
 
 interface EditModalProps {
   visible: boolean;
@@ -34,11 +36,11 @@ const EditModal: React.FC<EditModalProps> = ({
         onFinish={onSave}
       >
         <Form.Item
-          label='Наименование'
+          label={LABELS.fields.name}
           name='name'
-          rules={[{ required: true, message: 'Введите наименование' }]}
+          rules={[{ required: true, message: MESSAGES.validation.emptyName }]}
         >
-          <Input placeholder='Введите наименование' />
+          <Input placeholder={LABELS.placeholders.name} />
         </Form.Item>
         <Space>
           {' '}
@@ -46,14 +48,14 @@ const EditModal: React.FC<EditModalProps> = ({
             type='primary'
             htmlType='submit'
           >
-            Сохранить
+            {LABELS.buttons.save}
           </Button>
           <Button
             color='default'
             variant='filled'
             onClick={onCancel}
           >
-            Закрыть
+            {LABELS.buttons.close}
           </Button>
         </Space>
       </Form>

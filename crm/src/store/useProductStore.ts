@@ -8,6 +8,7 @@ import {
 
 import { create } from 'zustand';
 import { Models, Query } from 'appwrite';
+import { MESSAGES } from '@/contstants/messages';
 
 export type AppwriteRow<T> = Models.Row & T;
 
@@ -69,12 +70,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
       if (options?.expand) {
         queries.push(
-          Query.select([
-            '*',
-            'brands.*',
-            'subCategories.*',
-            'attributes.*',
-          ]),
+          Query.select(['*', 'brands.*', 'subCategories.*', 'attributes.*']),
         );
       }
 
@@ -102,7 +98,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
       set({ products: documents });
     } catch (error) {
-      console.error('❌ Ошибка при загрузке товаров:', error);
+      console.error(MESSAGES.errors.loadProducts, error);
     }
   },
   fetchProductById: async (
@@ -114,12 +110,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
       if (options?.expand) {
         queries.push(
-          Query.select([
-            '*',
-            'brands.*',
-            'subCategories.*',
-            'attributes.*',
-          ]),
+          Query.select(['*', 'brands.*', 'subCategories.*', 'attributes.*']),
         );
       }
 
@@ -131,7 +122,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
       set({ product: documents?.[0] ?? null });
     } catch (error) {
-      console.error('❌ Ошибка при загрузке товара:', error);
+      console.error(MESSAGES.errors.loadProduct, error);
       set({ product: null });
     }
   },
@@ -148,7 +139,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 
       return createdProduct;
     } catch (error) {
-      console.error('❌ Ошибка при создании товара:', error);
+      console.error(MESSAGES.errors.createProduct, error);
       throw error;
     }
   },
@@ -165,7 +156,7 @@ export const useProductStore = create<ProductStore>((set) => ({
         ),
       }));
     } catch (error) {
-      console.error('❌ Ошибка при обновлении товара:', error);
+      console.error(MESSAGES.errors.updateProduct, error);
       throw error;
     }
   },

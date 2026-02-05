@@ -31,7 +31,6 @@ export const useProductData = () => {
   const tagsColl = useTagStore((state) => state.items);
   const fetchTags = useTagStore((state) => state.fetchItems);
 
-  // Флаг загрузки или ошибки можно добавить по необходимости
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

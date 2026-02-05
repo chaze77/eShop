@@ -1,3 +1,4 @@
-export const REQUIRED_FIELD = 'Обязательное поле';
+import { MESSAGES } from '@/contstants/messages';
 
-export const INVALID_EMAIL = 'Неверный формат почты';
+export const REQUIRED_FIELD = MESSAGES.validation.requiredField;
+export const INVALID_EMAIL = MESSAGES.validation.invalidEmail;
