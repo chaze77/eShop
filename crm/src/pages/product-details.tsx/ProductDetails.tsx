@@ -107,7 +107,6 @@ const ProductDetails: React.FC = () => {
   };
 
   const handleProductCreationOrUpdate = async (data: FormData) => {
-    console.log('DATA', data);
     let imageToSave = data.image;
 
     if (data.image instanceof File) {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
-import { LABELS } from '@/contstants/labels';
-import { MESSAGES } from '@/contstants/messages';
+import { LABELS } from '@/constants/labels';
+import { MESSAGES } from '@/constants/messages';
 
 interface EditModalProps {
   visible: boolean;

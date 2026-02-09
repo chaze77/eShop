@@ -11,7 +11,7 @@ import {
 const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_BLOG_COLLECTION_ID;
 
-interface BlogStore {
+export interface BlogStore {
   blogs: IBlog[];
   blog: IBlog | null;
   fetchBlogs: () => Promise<void>;
@@ -24,7 +24,7 @@ interface BlogStore {
   }) => Promise<void>;
   update: (
     id: string,
-    formState: { title: string; content: string; image: string }
+    formState: { title: string; content: string; image: string },
   ) => Promise<void>;
   delete: (id: string) => Promise<void>;
 }
@@ -45,7 +45,7 @@ const useBlogStore = create<BlogStore>((set) => ({
       const document = await getDocumentById<IBlog>(
         DATABASE_ID,
         COLLECTION_ID,
-        id
+        id,
       );
       set({ blog: document });
     } catch (error) {
@@ -70,7 +70,7 @@ const useBlogStore = create<BlogStore>((set) => ({
 
   update: async (
     id: string,
-    formState: { title: string; content: string; image: string }
+    formState: { title: string; content: string; image: string },
   ) => {
     try {
       await updateDocument(DATABASE_ID, COLLECTION_ID, id, { ...formState });

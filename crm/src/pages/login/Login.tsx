@@ -4,6 +4,8 @@ import { Button, Flex, Form, Input } from 'antd';
 import useAuthStore from '@/store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
 import './login.less';
+import { LABELS } from '@/constants/labels';
+import { MESSAGES } from '@/constants/messages';
 
 type FieldType = {
   email: string;
@@ -19,7 +21,7 @@ const Login: React.FC = () => {
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
-    errorInfo
+    errorInfo,
   ) => {
     console.log('Failed:', errorInfo);
   };
@@ -30,7 +32,7 @@ const Login: React.FC = () => {
         justify='center'
         className='mb24'
       >
-        <h2>Authorization</h2>
+        <h2>{LABELS.fields.login}</h2>
       </Flex>
 
       <Form
@@ -45,7 +47,9 @@ const Login: React.FC = () => {
         <Form.Item<FieldType>
           label='Email'
           name='email'
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[
+            { required: true, message: MESSAGES.validation.requiredField },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -53,7 +57,9 @@ const Login: React.FC = () => {
         <Form.Item<FieldType>
           label='Password'
           name='password'
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[
+            { required: true, message: MESSAGES.validation.requiredField },
+          ]}
         >
           <Input.Password />
         </Form.Item>
@@ -64,7 +70,7 @@ const Login: React.FC = () => {
             htmlType='submit'
             block
           >
-            Submit
+            {LABELS.fields.login}
           </Button>
         </Form.Item>
       </Form>

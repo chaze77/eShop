@@ -1,5 +1,5 @@
 import ReferenceTable from '@/components/Reference/ReferenceTable';
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 import useColorStore from '@/store/useColorStore';
 
 const Colors = () => {

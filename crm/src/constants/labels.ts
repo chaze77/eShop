@@ -42,6 +42,7 @@ export const LABELS = {
     tags: 'Теги',
     title: 'Заголовок',
     content: 'Контент',
+    login: 'Логин',
   },
   placeholders: {
     name: 'наименование',
@@ -65,5 +66,6 @@ export const LABELS = {
     tags: 'Теги',
     blogs: 'Блоги',
     references: 'Справочники',
+    blogDetail: 'Блог',
   },
 };

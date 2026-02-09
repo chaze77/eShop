@@ -14,8 +14,8 @@ import { Button, Flex, Layout, Menu, Space, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import useAuthStore from '@/store/useAuthStore';
 import showModal from '@/components/ui/Modal/ShowModal';
-import { LABELS } from '@/contstants/labels';
-import { ConfigRoutes } from '@/contstants/page-routes';
+import { LABELS } from '@/constants/labels';
+import { ConfigRoutes } from '@/constants/page-routes';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -44,15 +44,21 @@ const MainLayout: React.FC = () => {
 
   // Функция для установки активного ключа в меню
   const getActiveKey = () => {
-    if (location.pathname.startsWith(ConfigRoutes.CATEGORIES)) return 'categories';
-    if (location.pathname.startsWith(ConfigRoutes.SUB_CATEGORIES)) return 'subcategories';
+    if (location.pathname.startsWith(ConfigRoutes.CATEGORIES))
+      return 'categories';
+    if (location.pathname.startsWith(ConfigRoutes.SUB_CATEGORIES))
+      return 'subcategories';
     if (location.pathname.startsWith(ConfigRoutes.PRODUCTS)) return 'products';
 
     // Проверяем вложенные маршруты для справочников (References)
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_BRANDS)) return 'brands';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_SIZES)) return 'sizes';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_COLORS)) return 'colors';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_TAGS)) return 'tags';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_BRANDS))
+      return 'brands';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_SIZES))
+      return 'sizes';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_COLORS))
+      return 'colors';
+    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_TAGS))
+      return 'tags';
 
     return 'defaultKey';
   };
@@ -124,7 +130,9 @@ const MainLayout: React.FC = () => {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div style={{ padding: '20px' }}>
-          <h1 style={{ color: 'white', textAlign: 'center' }}>{LABELS.app.title}</h1>
+          <h1 style={{ color: 'white', textAlign: 'center' }}>
+            {LABELS.app.title}
+          </h1>
         </div>
 
         <Menu
@@ -139,7 +147,11 @@ const MainLayout: React.FC = () => {
           <Flex justify='end'>
             <Space>
               <span style={{ fontSize: 16 }}>{user?.name}</span>
-              {user && <Button onClick={openConfirmationModal}>{LABELS.app.logout}</Button>}
+              {user && (
+                <Button onClick={openConfirmationModal}>
+                  {LABELS.app.logout}
+                </Button>
+              )}
             </Space>
           </Flex>
         </Header>

@@ -4,7 +4,7 @@ import { Button, Form, Input, Select, Space } from 'antd';
 import React from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
 import './attributes.less';
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 
 interface AttributeFieldProps {
   attribute: {
@@ -45,7 +45,9 @@ const AttributeField: React.FC<AttributeFieldProps> = ({
         borderRadius: '5px',
       }}
     >
-      <h4>{LABELS.fields.attributes} {index + 1}</h4>
+      <h4>
+        {LABELS.fields.attributes} {index + 1}
+      </h4>
       <Space
         align='end'
         size={[4, 8]}

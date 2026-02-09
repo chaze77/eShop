@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Tooltip, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 
 const { Text } = Typography;
 

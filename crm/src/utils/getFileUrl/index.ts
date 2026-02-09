@@ -1,6 +1,6 @@
 import { storage } from '@/appwrite/config';
 import { ID } from 'appwrite';
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 
 const bucketId = import.meta.env.VITE_STORAGE_ID;
 const endpoint = import.meta.env.VITE_ENDPOINT;
@@ -11,7 +11,7 @@ export const getFileUrl = (fileId: string): string => {
 };
 
 export const imageUpload = async (
-  file: File
+  file: File,
   // oldFileId?: string
 ): Promise<string> => {
   try {

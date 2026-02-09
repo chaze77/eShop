@@ -8,7 +8,7 @@ import {
 } from '@/utils/apiClient/apiClient';
 import showMessage from '@/utils/showMessage/showMessage';
 import { Store } from '@/types';
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 
 export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
   return create<Store<T>>((set) => ({
@@ -29,7 +29,7 @@ export function createStore<T>(DATABASE_ID: string, COLLECTION_ID: string) {
         const document = await getDocumentById<T>(
           DATABASE_ID,
           COLLECTION_ID,
-          id
+          id,
         );
         set({ item: document });
       } catch (error) {

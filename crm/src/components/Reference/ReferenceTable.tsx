@@ -6,8 +6,8 @@ import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import { IDirectory, Store } from '@/types';
 import Title from '../ui/Title/Ttitle';
-import { LABELS } from '@/contstants/labels';
-import { MESSAGES } from '@/contstants/messages';
+import { LABELS } from '@/constants/labels';
+import { MESSAGES } from '@/constants/messages';
 
 interface ReferenceTableProps {
   store: () => Store<IDirectory>;
@@ -47,7 +47,6 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
     if (id) {
       setLoading(true);
       await deleteItem(id);
-      await fetchItems();
       setLoading(false);
     }
   };
@@ -76,7 +75,6 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
     try {
       setLoading(true);
       await update(editingId, values);
-      await fetchItems();
       closeEditModal();
     } catch (error) {
       console.error(MESSAGES.errors.updateFailed, error);
@@ -92,7 +90,6 @@ const ReferenceTable: React.FC<ReferenceTableProps> = ({ store, title }) => {
     }
     setLoading(true);
     await create({ name: formState.name });
-    await fetchItems();
     setFormState({ name: '' });
     setLoading(false);
   };

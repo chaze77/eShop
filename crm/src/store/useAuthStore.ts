@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { account } from '@/appwrite/config';
 import showMessage from '@/utils/showMessage/showMessage';
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 import { Models } from 'appwrite';
 
 type AuthState = {

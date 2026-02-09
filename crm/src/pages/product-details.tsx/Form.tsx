@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select, Input, Button, Space, Row, Col, Flex } from 'antd';
+import { Form, Select, Input, Space, Row, Col, Flex } from 'antd';
 import type {
   Control,
   FieldErrors,
@@ -14,7 +14,7 @@ import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
 import { SCHEMA } from './productSchema';
 import { IDirectory } from '@/types';
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 
 interface SelectOption {
   label: string;
@@ -166,12 +166,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
             />
           </Space>
           <Space style={{ marginBottom: '8px' }}>
-            <Button
+            <CustomButton
               onClick={addAttribute}
-              variant='outlined'
-            >
-              {LABELS.buttons.add}
-            </Button>
+              action='add'
+            />
           </Space>
         </Space>
 

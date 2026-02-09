@@ -8,7 +8,7 @@ import {
 
 import { create } from 'zustand';
 import { Models, Query } from 'appwrite';
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 
 export type AppwriteRow<T> = Models.Row & T;
 
@@ -51,7 +51,7 @@ interface ProductStore {
     productId: string,
     opntion?: { expand: boolean },
   ) => Promise<void>;
-  create: (formState: Omit<IProduct, '$id'>) => Promise<Models.DefaultRow>;
+  create: (formState: Omit<IProduct, '$id'>) => Promise<IProduct>;
   update: (
     id: string,
     formState: Partial<Omit<IProduct, '$id'>>,
@@ -127,9 +127,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     }
   },
 
-  create: async (
-    formState: Omit<IProduct, '$id'>,
-  ): Promise<Models.DefaultRow> => {
+  create: async (formState: Omit<IProduct, '$id'>): Promise<IProduct> => {
     try {
       const createdProduct = await createDocument<IProduct>(
         DATABASE_ID,
@@ -204,6 +202,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     let productId = input.id;
     if (productId) {
       await updateDocument(DATABASE_ID, COLLECTION_ID, productId, productData);
+      await fetchDocuments(DATABASE_ID, COLLECTION_ID);
     } else {
       const createdProduct = await createDocument<IProduct>(
         DATABASE_ID,
@@ -211,6 +210,7 @@ export const useProductStore = create<ProductStore>((set) => ({
         productData as IProduct,
       );
       productId = createdProduct.$id;
+      await fetchDocuments(DATABASE_ID, COLLECTION_ID);
     }
 
     if (!productId) {

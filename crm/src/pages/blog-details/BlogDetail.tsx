@@ -8,25 +8,26 @@ import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
 import { getFileUrl, imageUpload } from '@/utils/getFileUrl';
 
-import useBlogStore from '@/store/useBlogStore';
+import useBlogStore, { BlogStore } from '@/store/useBlogStore';
+import { ConfigRoutes } from '@/constants/page-routes';
+import { LABELS } from '@/constants/labels';
+import { MESSAGES } from '@/constants/messages';
 
 type BlogFormValues = {
   title: string;
   content: string;
-  image: string | File; // url
+  image: string | File;
 };
 
 const BlogDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
-  const blog = useBlogStore((state: any) => state.blog);
-  const getById = useBlogStore((state: any) => state.getById);
-  const reset = useBlogStore((state: any) => state.resetBlogs); // D,D¯D, resetBlog / resetBlogsy D§DøD§ ¥Ÿ ¥,DæDñ¥? D«DøDú¥<DýDøDæ¥,¥?¥?
-  const create = useBlogStore((state: any) => state.create);
-  const update = useBlogStore((state: any) => state.update);
-  const deleteItem = useBlogStore(
-    (state: any) => state.deleteBlog || state.delete
-  );
+  const blog = useBlogStore((state: BlogStore) => state.blog);
+  const getById = useBlogStore((state: BlogStore) => state.getById);
+  const reset = useBlogStore((state: BlogStore) => state.resetBlog);
+  const create = useBlogStore((state: BlogStore) => state.create);
+  const update = useBlogStore((state: BlogStore) => state.update);
+  const deleteItem = useBlogStore((state: BlogStore) => state.delete);
 
   const navigate = useNavigate();
 
@@ -69,7 +70,7 @@ const BlogDetails: React.FC = () => {
   const handleCreate = async (values: BlogFormValues) => {
     const payload = await buildPayload(values);
     await create(payload);
-    navigate('/blogs');
+    navigate(ConfigRoutes.BLOGS);
   };
 
   const handleUpdate = async (values: BlogFormValues) => {
@@ -77,12 +78,12 @@ const BlogDetails: React.FC = () => {
       const payload = await buildPayload(values);
       await update(id, payload);
     }
-    navigate('/blogs');
+    navigate(ConfigRoutes.BLOGS);
   };
 
   const handleDelete = async () => {
     if (id) await deleteItem(id);
-    navigate('/blogs');
+    navigate(ConfigRoutes.BLOGS);
   };
 
   const openDeleteModal = () => {
@@ -100,7 +101,7 @@ const BlogDetails: React.FC = () => {
 
   return (
     <div className='content-box'>
-      <h2>Blog Details</h2>
+      <h2>{LABELS.pages.blogDetail}</h2>
 
       <Form<BlogFormValues>
         form={form}
@@ -144,8 +145,8 @@ const BlogDetails: React.FC = () => {
           label='Title'
           name='title'
           rules={[
-            { required: true, message: 'Please input blog title!' },
-            { min: 3, message: 'Title must be at least 3 characters!' },
+            { required: true, message: MESSAGES.validation.emptyName },
+            { min: 3, message: MESSAGES.validation.nameMin },
           ]}
         >
           <Input placeholder='Blog Title' />
@@ -155,8 +156,8 @@ const BlogDetails: React.FC = () => {
           label='Content'
           name='content'
           rules={[
-            { required: true, message: 'Please input blog content!' },
-            { min: 10, message: 'Content must be at least 10 characters!' },
+            { required: true, message: MESSAGES.validation.contentRequired },
+            { min: 10, message: MESSAGES.validation.contentMin },
           ]}
         >
           <TextArea

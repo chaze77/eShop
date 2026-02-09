@@ -36,8 +36,6 @@ const Products: React.FC = () => {
     });
   };
 
-  console.log(products, 'products');
-
   const columns = [
     { title: 'Наименование', dataIndex: 'name', key: 'name' },
     {

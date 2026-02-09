@@ -5,9 +5,9 @@ import useSubCategoryStore from '@store/useSubCategoryStore';
 import { Flex, Form, Input, Select, Space } from 'antd';
 import CustomButton from '@components/ui/CustomButton/CustomButton';
 import showDeleteModal from '@/components/ui/Modal/ShowModal';
-import { LABELS } from '@/contstants/labels';
-import { MESSAGES } from '@/contstants/messages';
-import { ConfigRoutes } from '@/contstants/page-routes';
+import { LABELS } from '@/constants/labels';
+import { MESSAGES } from '@/constants/messages';
+import { ConfigRoutes } from '@/constants/page-routes';
 
 interface SelectOption {
   label: string;
@@ -133,7 +133,10 @@ const SubCategoryDetails: React.FC = () => {
           label={LABELS.fields.subCategory}
           name='name'
           rules={[
-            { required: true, message: MESSAGES.validation.subCategoryRequired },
+            {
+              required: true,
+              message: MESSAGES.validation.subCategoryRequired,
+            },
             {
               min: 3,
               message: MESSAGES.validation.nameMin,
@@ -146,7 +149,9 @@ const SubCategoryDetails: React.FC = () => {
         <Form.Item
           label={LABELS.fields.category}
           name='relatedCategory'
-          rules={[{ required: true, message: MESSAGES.validation.categorySelect }]}
+          rules={[
+            { required: true, message: MESSAGES.validation.categorySelect },
+          ]}
         >
           <Select
             placeholder={LABELS.placeholders.selectCategory}
