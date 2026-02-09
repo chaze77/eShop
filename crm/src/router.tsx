@@ -12,7 +12,7 @@ import Products from './pages/products/Products';
 import ProductDetails from './pages/product-details.tsx/ProductDetails';
 import Blogs from './pages/blogs/Blogs';
 import BlogDetails from './pages/blog-details/BlogDetail';
-import { ConfigRoutes } from '@/contstants/page-routes';
+import { ConfigRoutes } from '@/constants/page-routes';
 
 const routes: RouteObject[] = [
   {

@@ -9,7 +9,7 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 import './customButton.less';
 
 interface CustomButtonProps {

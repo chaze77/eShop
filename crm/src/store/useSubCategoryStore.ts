@@ -9,7 +9,7 @@ import {
 import { ISubCategory } from '@/types';
 import showMessage from '@/utils/showMessage/showMessage';
 import { Query } from 'appwrite';
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 
 const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_SUBCATEGORIES_COLLECTION_ID;
@@ -26,7 +26,7 @@ interface SubCategoryStore {
   }) => Promise<void>;
   update: (
     id: string,
-    formState: { name: string; relatedCategory: string }
+    formState: { name: string; relatedCategory: string },
   ) => Promise<void>;
   delete: (id: string) => Promise<void>;
 }
@@ -44,7 +44,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       const documents = await fetchDocuments<ISubCategory>(
         DATABASE_ID,
         COLLECTION_ID,
-        queryFilters
+        queryFilters,
       );
       set({ subCategories: documents });
     } catch (error) {
@@ -57,7 +57,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       const document = await getDocumentById<ISubCategory>(
         DATABASE_ID,
         COLLECTION_ID,
-        id
+        id,
       );
       set({ subCategory: document });
     } catch (error) {
@@ -72,7 +72,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       await createDocument(DATABASE_ID, COLLECTION_ID, { ...formState });
       const documents = await fetchDocuments<ISubCategory>(
         DATABASE_ID,
-        COLLECTION_ID
+        COLLECTION_ID,
       );
       set({ subCategories: documents });
       showMessage('success', MESSAGES.toast.subCategoryCreateSuccess);
@@ -84,13 +84,13 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
 
   update: async (
     id: string,
-    formState: { name: string; relatedCategory: string }
+    formState: { name: string; relatedCategory: string },
   ) => {
     try {
       await updateDocument(DATABASE_ID, COLLECTION_ID, id, { ...formState });
       const documents = await fetchDocuments<ISubCategory>(
         DATABASE_ID,
-        COLLECTION_ID
+        COLLECTION_ID,
       );
       set({ subCategories: documents });
       showMessage('success', MESSAGES.toast.subCategoryUpdateSuccess);
@@ -105,7 +105,7 @@ const useSubCategoryStore = create<SubCategoryStore>((set) => ({
       await deleteDocument(DATABASE_ID, COLLECTION_ID, id);
       const documents = await fetchDocuments<ISubCategory>(
         DATABASE_ID,
-        COLLECTION_ID
+        COLLECTION_ID,
       );
       set({ subCategories: documents });
       showMessage('success', MESSAGES.toast.subCategoryDeleteSuccess);

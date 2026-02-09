@@ -1,5 +1,5 @@
 import ReferenceTable from '@/components/Reference/ReferenceTable';
-import { LABELS } from '@/contstants/labels';
+import { LABELS } from '@/constants/labels';
 import useSizeStore from '@/store/useSizeStore';
 
 const Sizes = () => {

@@ -7,6 +7,8 @@ export const MESSAGES = {
     subCategoryRequired: 'Введите название подкатегории',
     categorySelect: 'Выберите категорию',
     emptyName: 'Название не может быть пустым',
+    contentMin: 'Контент должен быть не менее 10 символов',
+    contentRequired: 'Введите контент',
   },
   modal: {
     deleteTitle: 'Вы уверены?',

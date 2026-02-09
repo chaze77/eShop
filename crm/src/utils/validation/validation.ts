@@ -1,4 +1,4 @@
-import { MESSAGES } from '@/contstants/messages';
+import { MESSAGES } from '@/constants/messages';
 
 export const validateName = (name: string): string | null => {
   if (name.trim() === '') {

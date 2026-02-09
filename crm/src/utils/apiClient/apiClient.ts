@@ -23,17 +23,18 @@ export const getDocumentById = async <T>(
   const response = await tablesDB.getRow({ databaseId, tableId, rowId });
   return response as T;
 };
-export const createDocument = async <T extends object>(
+export const createDocument = async <T>(
   databaseId: string,
   tableId: string,
   data: T,
 ) => {
-  return tablesDB.createRow({
+  const response = await tablesDB.createRow({
     databaseId,
     tableId,
     rowId: ID.unique(),
     data: data as Record<string, unknown>,
   });
+  return response as T;
 };
 
 export const updateDocument = async <T extends Record<string, unknown>>(
