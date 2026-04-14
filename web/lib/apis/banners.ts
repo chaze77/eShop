@@ -1,6 +1,7 @@
 import { cacheLife } from 'next/cache';
 import { fetchDocuments } from '@/lib/apis/api';
 import { appwriteKeys } from '@/appwrite/environment';
+import { Query } from 'appwrite';
 
 export interface Banner {
   $id: string;
@@ -10,14 +11,18 @@ export interface Banner {
   subTitle: string;
   textColor: string;
   colorOverlay: string;
+  active: boolean;
 }
 
 export async function getBanners(): Promise<Banner[]> {
   'use cache';
   cacheLife('days');
 
+  const query = [Query.equal('active', true)];
+
   return await fetchDocuments<Banner>(
     appwriteKeys.DATABASE_ID,
     appwriteKeys.BANNERS_ID,
+    query,
   );
 }

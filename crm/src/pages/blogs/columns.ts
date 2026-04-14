@@ -14,4 +14,9 @@ export const columns = [
     dataIndex: 'image',
     key: 'image',
   },
+  {
+    title: 'Активный',
+    dataIndex: 'active',
+    key: 'active',
+  },
 ];

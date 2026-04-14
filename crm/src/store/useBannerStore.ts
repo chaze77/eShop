@@ -56,7 +56,7 @@ const useBannerStore = create<BannerStore>((set) => ({
 
   create: async (payload: BannerCreateDto) => {
     try {
-      await createDocument<BannerCreateDto>(
+      await createDocument<BannerCreateDto, void>(
         DATABASE_ID,
         COLLECTION_ID,
         payload,

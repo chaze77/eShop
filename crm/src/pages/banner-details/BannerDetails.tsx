@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Col, Form, Input, Row, Typography } from 'antd';
+import { Col, Form, Input, Row, Switch, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
 import TopButtons from './components/TopButtons';
@@ -24,6 +24,7 @@ type BannerFormValues = {
   imageMobile: string | File;
   textColor: string;
   colorOverlay: string;
+  active?: boolean;
 };
 
 const BannerDetails: React.FC = () => {
@@ -39,8 +40,7 @@ const BannerDetails: React.FC = () => {
   const update = useBannerStore((state) => state.update);
   const getById = useBannerStore((state) => state.getById);
   const banner = useBannerStore((state) => state.banner);
-
-  console.log('Banner from store:', banner);
+  const [isHexValid, setIsHexValid] = useState(true);
 
   useEffect(() => {
     if (id) {
@@ -61,6 +61,7 @@ const BannerDetails: React.FC = () => {
         imageMobile: banner.imageMobile || '',
         textColor: banner.textColor || '#000000',
         colorOverlay: banner.colorOverlay || '#000000',
+        active: banner?.active ?? true,
       });
     }
   }, [banner, id, form]);
@@ -101,6 +102,7 @@ const BannerDetails: React.FC = () => {
     imageMobile: '',
     textColor: '#000000',
     colorOverlay: '#000000',
+    active: true,
   };
 
   return (
@@ -125,6 +127,7 @@ const BannerDetails: React.FC = () => {
             createMode={createMode}
             close={() => navigate(-1)}
             openDeleteModal={openDeleteModal}
+            isHexValid={isHexValid}
           />
 
           <Row gutter={[16, 16]}>
@@ -165,7 +168,7 @@ const BannerDetails: React.FC = () => {
                 label='Text Color'
                 name='textColor'
               >
-                <NativeColorPicker />
+                <NativeColorPicker checkIsValidHex={setIsHexValid} />
               </Form.Item>
             </Col>
 
@@ -177,7 +180,7 @@ const BannerDetails: React.FC = () => {
                 label='Overlay Color'
                 name='colorOverlay'
               >
-                <NativeColorPicker />
+                <NativeColorPicker checkIsValidHex={setIsHexValid} />
               </Form.Item>
             </Col>
 
@@ -204,6 +207,13 @@ const BannerDetails: React.FC = () => {
                 <InputFileUpload />
               </Form.Item>
             </Col>
+            <Form.Item
+              label='oFF/oN'
+              name='active'
+              valuePropName='checked'
+            >
+              <Switch />
+            </Form.Item>
           </Row>
         </Form>
       )}

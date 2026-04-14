@@ -45,6 +45,7 @@ export interface IBlog extends Models.Document {
   image: string;
   title: string;
   content: string;
+  active?: boolean;
 }
 
 export interface IBanner extends Models.Document {
@@ -54,4 +55,5 @@ export interface IBanner extends Models.Document {
   imageMobile?: string;
   textColor: string;
   colorOverlay: string;
+  active?: boolean;
 }

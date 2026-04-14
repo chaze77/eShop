@@ -5,12 +5,14 @@ type TopButtonsProps = {
   createMode: boolean;
   close: () => void;
   openDeleteModal: () => void;
+  isHexValid: boolean;
 };
 
 const TopButtons = ({
   createMode,
   close,
   openDeleteModal,
+  isHexValid,
 }: TopButtonsProps) => {
   console.log(createMode, 'createMode');
   return (
@@ -20,11 +22,13 @@ const TopButtons = ({
           <CustomButton
             action='create'
             htmlType='submit'
+            disabled={!isHexValid}
           />
         ) : (
           <CustomButton
             action='update'
             htmlType='submit'
+            disabled={!isHexValid}
           />
         )}
 

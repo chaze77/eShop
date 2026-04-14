@@ -2,7 +2,7 @@ import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
 import useBannerStore from '@/store/useBannerStore';
 import { IBanner } from '@/types';
-import { Space, Table } from 'antd';
+import { Space, Switch, Table } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { columns } from './columns';
@@ -40,6 +40,12 @@ const Banners = () => {
         src={banner.imageMobile}
         alt={banner.title}
         style={{ width: '150px', height: 'auto' }}
+      />
+    ),
+    active: (
+      <Switch
+        checked={banner.active ?? true}
+        disabled
       />
     ),
   }));

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Flex, Form, Input, Space } from 'antd';
+import { Flex, Form, Input, Space, Switch } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
 import InputFileUpload from '@/components/ui/InputFileUpload/InputFileUpload';
@@ -17,6 +17,7 @@ type BlogFormValues = {
   title: string;
   content: string;
   image: string | File;
+  active?: boolean;
 };
 
 const BlogDetails: React.FC = () => {
@@ -51,6 +52,7 @@ const BlogDetails: React.FC = () => {
         title: blog.title || '',
         content: blog.content || '',
         image: blog.image || '',
+        active: blog?.active ?? true,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,6 +113,7 @@ const BlogDetails: React.FC = () => {
           title: '',
           content: '',
           image: '',
+          active: true,
         }}
       >
         <Flex justify='space-between'>
@@ -172,6 +175,13 @@ const BlogDetails: React.FC = () => {
           noStyle
         >
           <InputFileUpload />
+        </Form.Item>
+        <Form.Item
+          label='oFF/oN'
+          name='active'
+          valuePropName='checked'
+        >
+          <Switch />
         </Form.Item>
       </Form>
     </div>
