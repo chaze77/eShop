@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-
+import { cacheLife } from 'next/cache';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 import { UIProvider } from '@/provider/AntProvider';
@@ -12,7 +12,6 @@ import { ICategory } from '@/common/types';
 import { fetchDocuments } from '@/lib/apis/api';
 import { appwriteKeys } from '@/appwrite/environment';
 import SearchWatcher from '@/common/components/header/search-watcher/SearchWatcher';
-import { labels } from '@/constants/labels';
 import AppFooter from '@/common/components/footer/Footer';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/reset.css';
@@ -22,21 +21,27 @@ export const metadata: Metadata = {
   title: 'iShop',
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  let categories: ICategory[] = [];
+async function getCategories(): Promise<ICategory[]> {
+  'use cache';
+  cacheLife('days');
 
   try {
-    categories = await fetchDocuments<ICategory>(
+    return await fetchDocuments<ICategory>(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.CATEGORIES_COLLECTION_ID,
     );
   } catch (error) {
     console.error('Ошибка загрузки категорий:', error);
+    return [];
   }
+}
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const categories = await getCategories();
 
   return (
     <html lang='ru'>
@@ -45,15 +50,12 @@ export default async function RootLayout({
           <ReduxProvider>
             <UIProvider>
               <ToastContainer />
-
               <div className='app-shell'>
                 <Suspense fallback={null}>
                   <SearchWatcher />
                 </Suspense>
                 <AntHeader categories={categories} />
-
                 <main className='app-main'>{children}</main>
-
                 <AppFooter categories={categories} />
               </div>
             </UIProvider>
