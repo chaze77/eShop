@@ -1,0 +1,17 @@
+.image-box {
+  position: relative;
+  width: 100%;
+}
+
+.image-box .ant-image,
+.image-box .ant-image-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.image-box-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

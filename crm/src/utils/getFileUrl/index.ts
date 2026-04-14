@@ -27,3 +27,12 @@ export const imageUpload = async (
     throw new Error(MESSAGES.toast.imageUploadFail);
   }
 };
+
+export const deleteFile = async (fileId: string): Promise<void> => {
+  try {
+    await storage.deleteFile(bucketId, fileId);
+  } catch (error) {
+    console.error(MESSAGES.toast.deleteFail, error);
+    throw new Error(MESSAGES.toast.deleteFail);
+  }
+};

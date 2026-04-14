@@ -9,6 +9,7 @@ import {
   FormatPainterOutlined,
   ColumnWidthOutlined,
   CommentOutlined,
+  PictureOutlined,
 } from '@ant-design/icons';
 import { Button, Flex, Layout, Menu, Space, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -42,29 +43,34 @@ const MainLayout: React.FC = () => {
     });
   };
 
-  // Функция для установки активного ключа в меню
+  const routeMap = [
+    { path: ConfigRoutes.CATEGORIES, key: 'categories' },
+    { path: ConfigRoutes.SUB_CATEGORIES, key: 'subcategories' },
+    { path: ConfigRoutes.PRODUCTS, key: 'products' },
+    { path: ConfigRoutes.REFERENCE_BRANDS, key: 'brands' },
+    { path: ConfigRoutes.REFERENCE_SIZES, key: 'sizes' },
+    { path: ConfigRoutes.REFERENCE_COLORS, key: 'colors' },
+    { path: ConfigRoutes.REFERENCE_TAGS, key: 'tags' },
+    { path: ConfigRoutes.BLOGS, key: 'blogs' },
+    { path: ConfigRoutes.BANNERS, key: 'banners' },
+  ];
+
   const getActiveKey = () => {
-    if (location.pathname.startsWith(ConfigRoutes.CATEGORIES))
-      return 'categories';
-    if (location.pathname.startsWith(ConfigRoutes.SUB_CATEGORIES))
-      return 'subcategories';
-    if (location.pathname.startsWith(ConfigRoutes.PRODUCTS)) return 'products';
+    const found = routeMap.find(({ path }) =>
+      location.pathname.startsWith(path),
+    );
 
-    // Проверяем вложенные маршруты для справочников (References)
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_BRANDS))
-      return 'brands';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_SIZES))
-      return 'sizes';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_COLORS))
-      return 'colors';
-    if (location.pathname.startsWith(ConfigRoutes.REFERENCE_TAGS))
-      return 'tags';
-
-    return 'defaultKey';
+    return found?.key ?? 'defaultKey';
   };
 
-  // Конфигурация меню
   const items = [
+    {
+      key: 'banners',
+      icon: <PictureOutlined />,
+      label: LABELS.menu.banners,
+      onClick: () => navigate(ConfigRoutes.BANNERS),
+    },
+
     {
       key: 'categories',
       icon: <ProductOutlined />,
@@ -129,8 +135,8 @@ const MainLayout: React.FC = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div style={{ padding: '20px' }}>
-          <h1 style={{ color: 'white', textAlign: 'center' }}>
+        <div style={{ padding: '24px' }}>
+          <h1 style={{ color: 'white', textAlign: 'left' }}>
             {LABELS.app.title}
           </h1>
         </div>
@@ -155,7 +161,7 @@ const MainLayout: React.FC = () => {
             </Space>
           </Flex>
         </Header>
-        <Content style={{ margin: '16px' }}>
+        <Content>
           <div
             style={{
               padding: 24,

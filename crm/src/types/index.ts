@@ -46,3 +46,12 @@ export interface IBlog extends Models.Document {
   title: string;
   content: string;
 }
+
+export interface IBanner extends Models.Document {
+  title: string;
+  subTitle?: string;
+  imageDesktop: string;
+  imageMobile?: string;
+  textColor: string;
+  colorOverlay: string;
+}

@@ -95,7 +95,7 @@ const BlogDetails: React.FC = () => {
 
   const close = () => {
     reset?.();
-    navigate('/blogs');
+    navigate(ConfigRoutes.BLOGS);
   };
   console.log('form', form);
 
@@ -171,12 +171,7 @@ const BlogDetails: React.FC = () => {
           name='image'
           noStyle
         >
-          <InputFileUpload
-            image={
-              form.getFieldValue('image') ? form.getFieldValue('image') : ''
-            }
-            setImage={(val) => form.setFieldValue('image', val)}
-          />
+          <InputFileUpload />
         </Form.Item>
       </Form>
     </div>

@@ -13,6 +13,9 @@ import ProductDetails from './pages/product-details.tsx/ProductDetails';
 import Blogs from './pages/blogs/Blogs';
 import BlogDetails from './pages/blog-details/BlogDetail';
 import { ConfigRoutes } from '@/constants/page-routes';
+import Banners from './pages/banners/Banners';
+import BannerDetails from './pages/banner-details/BannerDetails';
+import { TestPage } from './pages/examples/test';
 
 const routes: RouteObject[] = [
   {
@@ -31,16 +34,26 @@ const routes: RouteObject[] = [
           },
           { path: ConfigRoutes.BLOGS, element: <Blogs /> },
           {
-            path: ConfigRoutes.BLOG_DETAILS,
+            path: ConfigRoutes.BLOG_DETAILS_PATH,
             element: <BlogDetails />,
           },
+          {
+            path: ConfigRoutes.BANNERS,
+            element: <Banners />,
+          },
+          {
+            path: ConfigRoutes.BANNER_DETAILS_PATH,
+            element: <BannerDetails />,
+          },
+
           { path: ConfigRoutes.REFERENCE_SIZES, element: <Sizes /> },
           { path: ConfigRoutes.REFERENCE_COLORS, element: <Colors /> },
           { path: ConfigRoutes.REFERENCE_TAGS, element: <Tags /> },
           { path: ConfigRoutes.REFERENCE_BRANDS, element: <Brands /> },
           { path: ConfigRoutes.PRODUCTS, element: <Products /> },
+          { path: '/test', element: <TestPage /> },
           {
-            path: ConfigRoutes.PRODUCT_DETAILS,
+            path: ConfigRoutes.PRODUCT_DETAILS_PATH,
             element: <ProductDetails />,
           },
         ],

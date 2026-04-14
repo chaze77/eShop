@@ -159,8 +159,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
               defaultValue={''}
               render={({ field }) => (
                 <InputFileUpload
-                  image={field.value ? field.value : ''}
-                  setImage={field.onChange}
+                  value={field.value ? field.value : ''}
+                  onChange={field.onChange}
                 />
               )}
             />

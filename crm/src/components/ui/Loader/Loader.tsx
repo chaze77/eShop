@@ -1,13 +1,14 @@
 // Loader.jsx
 
 import { Spin } from 'antd';
-import useLoaderStore from '@/store/useLoaderStore';
 import './loader.less';
 
-const Loader = () => {
-  const loading = useLoaderStore((state) => state.loading);
+type Props = {
+  show: boolean;
+};
 
-  if (!loading) return null;
+const Loader = ({ show }: Props) => {
+  if (!show) return null;
 
   return (
     <div className='loader-position'>
