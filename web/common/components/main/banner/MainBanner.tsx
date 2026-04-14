@@ -1,30 +1,14 @@
-'use client';
+// components/MainBanner/index.tsx  ← серверный компонент (без 'use client')
 
-import { Carousel } from 'antd';
-import BannerSlide from './BannerSlide';
-import { BANNERS } from '@/constants/banner-info';
-import './MainBanner.css';
+import { getBanners } from '@/lib/apis/banners';
+import BannerCarousel from './BannerCarousel';
 
-const Slider = () => {
-  return (
-    <Carousel
-      arrows
-      infinite
-      initialSlide={0}
-      className='main-banner'
-      autoplay
-    >
-      {BANNERS.map((banner, index) => (
-        <div key={index}>
-          <BannerSlide
-            image={banner.image}
-            title={banner.title}
-            text={banner.text}
-          />
-        </div>
-      ))}
-    </Carousel>
-  );
+const MainBanner = async () => {
+  const banners = await getBanners();
+
+  if (!banners.length) return null;
+
+  return <BannerCarousel banners={banners} />;
 };
 
-export default Slider;
+export default MainBanner;

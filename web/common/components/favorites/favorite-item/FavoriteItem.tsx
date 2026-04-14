@@ -5,6 +5,7 @@ import type { IProduct } from '@/common/types';
 import { Button, Flex, Image, Space, Typography } from 'antd';
 import { useRouter } from 'next/navigation';
 import { PageConfig } from '@/constants/pageConfig';
+import { labels } from '@/constants/labels';
 
 type FavoriteItemProps = {
   favorites: IProduct[];
@@ -45,10 +46,11 @@ const FavoriteItems: React.FC<FavoriteItemProps> = ({
             </Space>
           </Flex>
           <Button
-            type='link'
+            type='primary'
+            danger
             onClick={() => onRemove(item.$id)}
           >
-            Удалить
+            {labels.common.delete}
           </Button>
         </Flex>
       ))}

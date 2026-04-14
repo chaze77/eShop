@@ -1,6 +1,5 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import Products from '@/common/components/products/Products';
 import ProductList from '@/common/components/products/ProductList';
 import { ICategory } from '@/common/types';
@@ -14,11 +13,10 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ categories }: HomeClientProps) {
-  const { products, status } = useAppSelector((state) => state.products);
-
-  const searchParams = useSearchParams();
-  const q = searchParams.get('q') ?? '';
-  const hasSearch = q.length > 0;
+  const { products, status, searchQuery } = useAppSelector(
+    (state) => state.products,
+  );
+  const hasSearch = searchQuery.length > 0; // ← вместо q из URL
 
   const { isFavorite, toggleFavorite, openAuthModal, closeAuthModal } =
     useFavorites();
@@ -41,6 +39,7 @@ export default function HomeClient({ categories }: HomeClientProps) {
           onToggleFavorite={toggleFavorite}
         />
       )}
+
       <AuthRequiredModal
         open={openAuthModal}
         onClose={() => closeAuthModal()}

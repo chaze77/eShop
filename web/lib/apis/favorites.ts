@@ -1,6 +1,6 @@
 import { appwriteKeys } from '@/appwrite/environment';
 import { createDocument, deleteDocument, fetchDocuments } from './api';
-import { Permission, Role } from 'appwrite';
+import { Permission, Query, Role } from 'appwrite';
 import { FavoriteItem } from '@/common/types';
 
 export const deleteFavoriteItem = async (id: string) => {
@@ -22,7 +22,7 @@ export const addToFavorites = async ({
     appwriteKeys.DATABASE_ID,
     appwriteKeys.FAVORITES_ID,
     { productId },
-    permissions
+    permissions,
   );
   return response;
 };
@@ -30,7 +30,7 @@ export const addToFavorites = async ({
 export const getFavoritesList = async (): Promise<FavoriteItem[]> => {
   const response = await fetchDocuments(
     appwriteKeys.DATABASE_ID,
-    appwriteKeys.FAVORITES_ID
+    appwriteKeys.FAVORITES_ID,
   );
 
   return response as FavoriteItem[];

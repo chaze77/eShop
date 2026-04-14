@@ -1,28 +1,51 @@
-import { FC } from 'react';
+import { FC, use } from 'react';
+
+import useMedia from 'use-media-antd-query';
 import './BannerSlide.css';
 
-interface IBannerSlideProps {
-  image: string;
+type BannerSlideProps = {
+  imageDesktop: string;
+  imageMobile?: string;
   title: string;
-  text: string;
-}
+  subTitle: string;
+  textColor: string;
+  colorOverlay: string;
+};
 
-const BannerSlide: FC<IBannerSlideProps> = ({ image, title, text }) => {
+const BannerSlide: FC<BannerSlideProps> = ({
+  imageDesktop,
+  imageMobile,
+  title,
+  subTitle,
+  textColor,
+  colorOverlay,
+}) => {
+  console.log('imageMobile:', imageMobile);
+
+  const screen = useMedia();
+
+  const isMobile = screen === 'xs' || screen === 'sm';
   return (
     <div className='banner-slide'>
       <div
         className='banner-slide__bg'
         style={{
-          backgroundImage: `url('${image || '/assets/banner.png'}')`,
+          backgroundImage: `url(${isMobile ? imageMobile || 'https://via.placeholder.com/1920x600' : imageDesktop || 'https://via.placeholder.com/1920x600'})`,
+          // backgroundColor: colorOverlay,
         }}
       >
         <div className='banner-slide__content'>
-          <h1 className='banner-slide__title'>
-            {title || 'Широкий ассортимент Одежды'}
+          <h1
+            className='banner-slide__title'
+            style={{ color: textColor }}
+          >
+            {title || 'title'}
           </h1>
-          <p className='banner-slide__text'>
-            {text ||
-              'Одежда от известных брендов у нас в каталоге. Только качественные вещи'}
+          <p
+            className='banner-slide__text'
+            style={{ color: textColor }}
+          >
+            {subTitle || 'subtitle'}
           </p>
         </div>
       </div>

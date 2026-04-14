@@ -29,6 +29,7 @@ export default function ProductList({
 
   const renderProduct = (product: IProduct) => (
     <ProductCard
+      key={product.$id}
       product={product}
       isFav={isFavorite?.(product.$id)}
       onToggleFavorite={
@@ -40,14 +41,7 @@ export default function ProductList({
   if (layout === 'carousel') {
     return (
       <CustomCarousel slidesToShow={slidesToShow}>
-        {items.map((product) => (
-          <div
-            key={product.$id}
-            className={itemClassName}
-          >
-            {renderProduct(product)}
-          </div>
-        ))}
+        {items.map((product) => renderProduct(product))}
       </CustomCarousel>
     );
   }

@@ -2,6 +2,7 @@
 
 import React, { ReactNode } from 'react';
 import { Carousel } from 'antd';
+import './CustomCarousel.css';
 
 interface CustomCarouselProps {
   children: ReactNode;
@@ -22,17 +23,21 @@ export const CustomCarousel: React.FC<CustomCarouselProps> = ({
         dots
         arrows
         infinite
-        draggable
-        centerMode={true}
-        centerPadding='2'
         autoplay={autoplay}
         slidesToShow={slidesToShow}
+        // centerMode
+        // centerPadding='30px'
         adaptiveHeight
         slidesToScroll={1}
         responsive={[
           { breakpoint: 1200, settings: { slidesToShow: 3 } },
           { breakpoint: 900, settings: { slidesToShow: 2 } },
-          { breakpoint: 600, settings: { slidesToShow: 1 } },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 1,
+            },
+          },
         ]}
       >
         {slides.map((child, index) => (

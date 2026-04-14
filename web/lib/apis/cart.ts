@@ -6,6 +6,7 @@ import {
   updateDocument,
 } from './api';
 import { Permission, Query, Role } from 'appwrite';
+import { ICartItem } from '@/common/types';
 
 export const addToCartFn = async ({
   productId,
@@ -55,9 +56,9 @@ export const addToCartFn = async ({
   );
 };
 
-export const getMyCartItems = async (): Promise<any[]> => {
+export const getMyCartItems = async (): Promise<ICartItem[]> => {
   try {
-    const response = await fetchDocuments<any>(
+    const response = await fetchDocuments<ICartItem>(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.CART_ITEM_ID,
     );

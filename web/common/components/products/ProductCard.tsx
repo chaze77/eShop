@@ -26,37 +26,42 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const { Meta } = Card;
 
   return (
-    <Card
-      className='product-card'
-      style={{ width: 318 }}
-      size='small'
-      cover={
-        <Link href={PageConfig.PRODUCT(product.$id)}>
-          <img
-            draggable={false}
-            alt={product.name}
-            src={product.image}
-            className='product-card-img'
-          />
-        </Link>
-      }
-      extra={
-        <span onClick={handleToggleFavorite}>
-          <StarFilled
-            style={{ color: isFav ? COLORS.YELLOW : COLORS.GRAY, fontSize: 20 }}
-          />
-        </span>
-      }
-    >
-      <Meta
-        title={product.name}
-        description={
-          <div>
-            <p>{product.price} сом</p>
-          </div>
+    <div className='product-card-wrapper'>
+      <Card
+        className='product-card'
+        size='small'
+        cover={
+          <Link href={PageConfig.PRODUCT(product.$id)}>
+            <img
+              draggable={false}
+              alt={product.name}
+              src={product.image}
+              className='product-card-img'
+            />
+          </Link>
         }
-      />
-    </Card>
+        extra={
+          <span onClick={handleToggleFavorite}>
+            <StarFilled
+              style={{
+                color: isFav ? COLORS.YELLOW : COLORS.GRAY,
+                fontSize: 20,
+              }}
+            />
+          </span>
+        }
+      >
+        <Meta
+          title={product.name}
+          className='product-meta'
+          description={
+            <div>
+              <p>{product.price} сом</p>
+            </div>
+          }
+        />
+      </Card>
+    </div>
   );
 };
 

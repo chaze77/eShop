@@ -44,7 +44,7 @@ export default function Products({
               <ProductList
                 items={products}
                 layout='carousel'
-                itemClassName='products-carousel__slide'
+                // itemClassName='products-carousel__slide'
                 isFavorite={isFavorite}
                 onToggleFavorite={onToggleFavorite}
               />

@@ -14,6 +14,7 @@ interface ProductsState {
   products: IProduct[];
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
+  searchQuery: string;
 }
 
 // Начальное состояние
@@ -21,6 +22,7 @@ const initialState: ProductsState = {
   products: [],
   status: 'idle',
   error: null,
+  searchQuery: '',
 };
 
 const productsSlice = createSlice({
@@ -31,14 +33,16 @@ const productsSlice = createSlice({
       state.products = [];
       state.status = 'idle';
       state.error = null;
+      state.searchQuery = '';
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProductsByName.pending, (state) => {
+      .addCase(fetchProductsByName.pending, (state, action) => {
         state.status = 'pending';
         state.error = null;
+        state.searchQuery = action.meta.arg; // ← добавить
       })
       .addCase(
         fetchProductsByName.fulfilled,

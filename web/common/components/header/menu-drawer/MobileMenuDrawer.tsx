@@ -9,7 +9,6 @@ type Props = {
   open: boolean;
   onClose: () => void;
 
-  q: string;
   categories: ICategory[];
 
   onSearch: (value: string) => void;
@@ -21,7 +20,7 @@ type Props = {
 export default function MobileMenuDrawer({
   open,
   onClose,
-  q,
+
   categories,
   onSearch,
   onClearSearch,
@@ -37,7 +36,6 @@ export default function MobileMenuDrawer({
       className='mobile-drawer'
     >
       <Search
-        defaultValue={q}
         placeholder={labels.placeholders.search}
         onSearch={(value) => {
           onSearch(value);
