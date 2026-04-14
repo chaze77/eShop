@@ -30,4 +30,9 @@ export const columns = [
     dataIndex: 'imageMobile',
     key: 'imageMobile',
   },
+  {
+    title: 'Активный',
+    dataIndex: 'active',
+    key: 'active',
+  },
 ];

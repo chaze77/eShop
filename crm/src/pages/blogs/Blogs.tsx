@@ -1,7 +1,7 @@
 import CustomButton from '@/components/ui/CustomButton/CustomButton';
 import Title from '@/components/ui/Title/Ttitle';
 import useBlogStore from '@/store/useBlogStore';
-import { Space, Table } from 'antd';
+import { Space, Switch, Table } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { columns } from './columns';
@@ -30,6 +30,12 @@ const Blogs = () => {
         src={blog.image}
         alt={blog.title}
         style={{ width: '200px' }}
+      />
+    ),
+    active: (
+      <Switch
+        checked={blog.active ?? true}
+        disabled
       />
     ),
   }));
