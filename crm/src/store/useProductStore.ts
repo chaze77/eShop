@@ -51,7 +51,7 @@ interface ProductStore {
     productId: string,
     opntion?: { expand: boolean },
   ) => Promise<void>;
-  create: (formState: Omit<IProduct, '$id'>) => Promise<IProduct>;
+  create: (formState: Omit<IProduct, '$id'>) => Promise<void>;
   update: (
     id: string,
     formState: Partial<Omit<IProduct, '$id'>>,
@@ -127,15 +127,13 @@ export const useProductStore = create<ProductStore>((set) => ({
     }
   },
 
-  create: async (formState: Omit<IProduct, '$id'>): Promise<IProduct> => {
+  create: async (formState: Omit<IProduct, '$id'>): Promise<void> => {
     try {
-      const createdProduct = await createDocument<IProduct>(
+      await createDocument<IProduct, void>(
         DATABASE_ID,
         COLLECTION_ID,
         formState as unknown as IProduct,
       );
-
-      return createdProduct;
     } catch (error) {
       console.error(MESSAGES.errors.createProduct, error);
       throw error;
@@ -204,7 +202,7 @@ export const useProductStore = create<ProductStore>((set) => ({
       await updateDocument(DATABASE_ID, COLLECTION_ID, productId, productData);
       await fetchDocuments(DATABASE_ID, COLLECTION_ID);
     } else {
-      const createdProduct = await createDocument<IProduct>(
+      const createdProduct = await createDocument<IProduct, IProduct>(
         DATABASE_ID,
         COLLECTION_ID,
         productData as IProduct,

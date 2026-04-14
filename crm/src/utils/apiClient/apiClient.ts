@@ -23,17 +23,18 @@ export const getDocumentById = async <TOutput>(
   const response = await tablesDB.getRow({ databaseId, tableId, rowId });
   return response as TOutput;
 };
-export const createDocument = async <TInput>(
+export const createDocument = async <TInput, TOutput>(
   databaseId: string,
   tableId: string,
   data: TInput,
-): Promise<void> => {
-  await tablesDB.createRow({
+): Promise<TOutput> => {
+  const response = await tablesDB.createRow({
     databaseId,
     tableId,
     rowId: ID.unique(),
     data: data as Record<string, unknown>,
   });
+  return response as TOutput;
 };
 
 export const updateDocument = async <TInput>(
