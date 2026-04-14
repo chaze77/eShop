@@ -11,13 +11,12 @@ import AntHeader from '@/common/components/header/Header';
 import { ICategory } from '@/common/types';
 import { fetchDocuments } from '@/lib/apis/api';
 import { appwriteKeys } from '@/appwrite/environment';
-
+import SearchWatcher from '@/common/components/header/search-watcher/SearchWatcher';
 import { labels } from '@/constants/labels';
-
+import AppFooter from '@/common/components/footer/Footer';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/reset.css';
 import './styles/globals.css';
-import AppFooter from '@/common/components/footer/Footer';
 
 export const metadata: Metadata = {
   title: 'iShop',
@@ -48,15 +47,14 @@ export default async function RootLayout({
               <ToastContainer />
 
               <div className='app-shell'>
-                <Suspense fallback={<div>{labels.common.loading}</div>}>
-                  <AntHeader categories={categories} />
+                <Suspense fallback={null}>
+                  <SearchWatcher />
                 </Suspense>
+                <AntHeader categories={categories} />
 
                 <main className='app-main'>{children}</main>
 
-                <Suspense fallback={<div>{labels.common.loading}</div>}>
-                  <AppFooter categories={categories} />
-                </Suspense>
+                <AppFooter categories={categories} />
               </div>
             </UIProvider>
           </ReduxProvider>

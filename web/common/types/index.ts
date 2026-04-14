@@ -35,6 +35,7 @@ export interface IProduct extends Models.Document {
 export interface ICartItem extends Models.Document {
   productId: string;
   attributeId: string;
+  qty: number;
 }
 
 export interface IFavorite extends Models.Document {

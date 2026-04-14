@@ -7,7 +7,7 @@
   width: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center top;
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -31,7 +31,24 @@
 }
 
 .banner-slide__text {
-  color: #374151;
   margin-bottom: 16px;
   font-size: 16px;
+}
+
+@media (max-width: 900px) {
+  .banner-slide__title {
+    font-size: 31px;
+  }
+  .banner-slide__text {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 400px) {
+  .banner-slide__title {
+    font-size: 18px;
+  }
+  .banner-slide__text {
+    font-size: 12px;
+  }
 }

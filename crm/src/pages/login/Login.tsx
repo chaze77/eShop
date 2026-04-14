@@ -6,32 +6,34 @@ import { useNavigate } from 'react-router-dom';
 import './login.less';
 import { LABELS } from '@/constants/labels';
 import { MESSAGES } from '@/constants/messages';
+import { ConfigRoutes } from '@/constants/page-routes';
 
 type FieldType = {
   email: string;
   password: string;
 };
 
-const Login: React.FC = () => {
+type LoginProps = {
+  isLoading: boolean;
+};
+
+const Login: React.FC<LoginProps> = ({ isLoading }) => {
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     await login(values.email, values.password);
-    navigate('/');
+    navigate(ConfigRoutes.HOME);
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
     errorInfo,
   ) => {
-    console.log('Failed:', errorInfo);
+    console.error('Failed:', errorInfo);
   };
 
   return (
     <div className='container'>
-      <Flex
-        justify='center'
-        className='mb24'
-      >
+      <Flex justify='center'>
         <h2>{LABELS.fields.login}</h2>
       </Flex>
 
@@ -42,10 +44,10 @@ const Login: React.FC = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
+        autoComplete='on'
       >
         <Form.Item<FieldType>
-          label='Email'
+          label={LABELS.fields.email}
           name='email'
           rules={[
             { required: true, message: MESSAGES.validation.requiredField },
@@ -55,7 +57,7 @@ const Login: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label='Password'
+          label={LABELS.fields.password}
           name='password'
           rules={[
             { required: true, message: MESSAGES.validation.requiredField },
@@ -69,6 +71,7 @@ const Login: React.FC = () => {
             type='primary'
             htmlType='submit'
             block
+            disabled={isLoading}
           >
             {LABELS.fields.login}
           </Button>

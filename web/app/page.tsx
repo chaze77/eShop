@@ -7,7 +7,7 @@ import { ICategory } from '@/common/types';
 import HomeClient from './HomeClient';
 import { Suspense } from 'react';
 import { appwriteKeys } from '@/appwrite/environment';
-import 'antd/dist/reset.css';
+import { SkeletonProducts } from '@/common/components/ui/SkeletonProducts/SkeletonProducts';
 
 export default async function Page() {
   const productsByCategory = await fetchDocuments(
@@ -19,7 +19,7 @@ export default async function Page() {
     <main className='main'>
       <Container>
         <MainBanner />
-        <Suspense fallback={null}>
+        <Suspense fallback={<SkeletonProducts />}>
           <HomeClient categories={productsByCategory as ICategory[]} />
         </Suspense>
         <About />

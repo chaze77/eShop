@@ -6,32 +6,34 @@ import Login from '@/pages/login/Login';
 const ProtectedRoutes: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   const fetchUser = useAuthStore((state) => state.fetchUser);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        await fetchUser(); // Загружаем пользователя
+        setLoading(true);
+        await fetchUser();
       } catch (error) {
         console.error('Error fetching user session:', error);
       } finally {
-        setLoading(false); // Сбрасываем состояние загрузки
+        setLoading(false);
       }
     };
 
     if (!user) {
+      setLoading(true);
       fetchSession();
     } else {
-      setLoading(false); // Если пользователь уже есть, завершить загрузку
+      setLoading(false);
     }
   }, [user, fetchUser]);
 
   if (loading) {
-    return <p>Loading...</p>; // Индикатор загрузки
+    return <p>Loading...</p>;
   }
 
   if (!user) {
-    return <Login />; // Показываем компонент Login вместо Navigate
+    return <Login isLoading={loading} />;
   }
 
   return <Outlet />; // Если пользователь авторизован, отображаем вложенные маршруты

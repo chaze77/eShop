@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { Button, Input, Space } from 'antd';
@@ -67,14 +67,6 @@ export default function AntHeader({ categories }: Props) {
     handleSearch(value);
     setIsMobileMenuOpen(false);
   };
-
-  const searchParams = useSearchParams();
-  const q = searchParams.get('q') ?? '';
-
-  useEffect(() => {
-    if (q.trim().length > 0) handleSearch(q);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <header className='header'>
@@ -162,7 +154,6 @@ export default function AntHeader({ categories }: Props) {
       <MobileMenuDrawer
         open={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        q={q}
         categories={categories}
         onSearch={handleMobileSearch}
         onClearSearch={clearSearch}

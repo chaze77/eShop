@@ -42,7 +42,7 @@ const useAuthStore = create<AuthState>((set) => ({
       set({ user: user, isAdmin: isAdmin, isAuthenticated: true });
     } catch (error: unknown) {
       console.error(MESSAGES.toast.notAuthorized, error);
-      showMessage('error', MESSAGES.toast.notAuthorized);
+      // showMessage('error', MESSAGES.toast.notAuthorized);
       set({ user: null, isAdmin: false, isAuthenticated: false });
     }
   },

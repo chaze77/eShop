@@ -2,7 +2,7 @@
 
 import Container from '@/common/components/ui/Container/Container';
 import EmptyState from '@/common/components/ui/EmtyState';
-import { Flex, Modal, Typography } from 'antd';
+import { Flex, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import {
@@ -34,16 +34,12 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const { open, openModal, closeModal } = useMVPModal();
 
-  /* ---------------- helpers ---------------- */
-
   const getPrice = (product?: IProduct) => {
     const p = Number(product?.price);
     return Number.isFinite(p) ? p : 0;
   };
 
   const formatMoney = (n: number) => new Intl.NumberFormat('ru-RU').format(n);
-
-  /* ---------------- load cart ---------------- */
 
   useEffect(() => {
     const loadCart = async () => {
@@ -93,8 +89,6 @@ export default function Page() {
     loadCart();
   }, []);
 
-  /* ---------------- qty change ---------------- */
-
   const handleQtyChange = async (cartItemId: string, nextQty: number) => {
     const prev = items;
 
@@ -115,8 +109,6 @@ export default function Page() {
     }
   };
 
-  /* ---------------- remove item ---------------- */
-
   const handleRemoveItem = async (cartItemId: string) => {
     const prev = items;
 
@@ -134,15 +126,11 @@ export default function Page() {
     }
   };
 
-  /* ---------------- total ---------------- */
-
   const total = useMemo(() => {
     return items.reduce((sum, item) => {
       return sum + getPrice(item.product) * item.qty;
     }, 0);
   }, [items]);
-
-  /* ---------------- empty / loading ---------------- */
 
   if (!loading && items.length === 0) {
     return (
@@ -159,8 +147,6 @@ export default function Page() {
       </Container>
     );
   }
-
-  /* ---------------- render ---------------- */
 
   return (
     <PageShell>
@@ -187,7 +173,6 @@ export default function Page() {
         </div>
       </div>
 
-      {/* footer */}
       <CartFooter
         total={total}
         formatMoney={formatMoney}

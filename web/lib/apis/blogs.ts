@@ -1,12 +1,16 @@
 import { IBlog } from '@/common/types';
 import { fetchDocuments, getDocumentById } from './api';
 import { appwriteKeys } from '@/appwrite/environment';
+import { cacheLife } from 'next/cache';
 
 export const getBlogs = async (): Promise<IBlog[] | null> => {
+  'use cache';
+  cacheLife('days');
+
   try {
     const response = await fetchDocuments(
       appwriteKeys.DATABASE_ID,
-      appwriteKeys.BLOG_ID
+      appwriteKeys.BLOG_ID,
     );
     return response as IBlog[];
   } catch (error) {
@@ -16,11 +20,13 @@ export const getBlogs = async (): Promise<IBlog[] | null> => {
 };
 
 export const getBlogById = async (id: string): Promise<IBlog | null> => {
+  'use cache';
+  cacheLife('days');
   try {
     const response = await getDocumentById(
       appwriteKeys.DATABASE_ID,
       appwriteKeys.BLOG_ID,
-      id
+      id,
     );
     return response as IBlog;
   } catch (error) {

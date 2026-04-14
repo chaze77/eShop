@@ -117,7 +117,7 @@ const ProductContent: React.FC<ProductContentProps> = ({ product }) => {
           )}
           {selectedColor && selectedSize && (
             <div className='product-content__tag'>
-              <Tag color='error'>{selectedAttribute?.quantity} осталось</Tag>
+              <Tag color='error'>{selectedAttribute?.quantity} Ð¾ÑÑ‚Ð°Ð»Ð¾ÑÑŒ</Tag>
             </div>
           )}
           <div className='product-content__btn'>

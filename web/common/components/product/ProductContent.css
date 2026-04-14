@@ -9,7 +9,6 @@
   max-width: 100%;
 }
 
-.product-content__image :global(img),
 .product-content__image img {
   width: 100%;
   height: auto;

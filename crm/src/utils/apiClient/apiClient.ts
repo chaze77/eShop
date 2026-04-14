@@ -1,47 +1,46 @@
 import { tablesDB } from '@/appwrite/config';
 import { ID } from 'appwrite';
 
-export const fetchDocuments = async <T>(
+export const fetchDocuments = async <TOutput>(
   databaseId: string,
   tableId: string,
   filters?: string[],
-): Promise<T[]> => {
+): Promise<TOutput[]> => {
   const response = await tablesDB.listRows({
     databaseId,
     tableId,
     queries: filters,
   });
 
-  return response.rows as T[];
+  return response.rows as TOutput[];
 };
 
-export const getDocumentById = async <T>(
+export const getDocumentById = async <TOutput>(
   databaseId: string,
   tableId: string,
   rowId: string,
-): Promise<T> => {
+): Promise<TOutput> => {
   const response = await tablesDB.getRow({ databaseId, tableId, rowId });
-  return response as T;
+  return response as TOutput;
 };
-export const createDocument = async <T>(
+export const createDocument = async <TInput>(
   databaseId: string,
   tableId: string,
-  data: T,
-) => {
-  const response = await tablesDB.createRow({
+  data: TInput,
+): Promise<void> => {
+  await tablesDB.createRow({
     databaseId,
     tableId,
     rowId: ID.unique(),
     data: data as Record<string, unknown>,
   });
-  return response as T;
 };
 
-export const updateDocument = async <T extends Record<string, unknown>>(
+export const updateDocument = async <TInput>(
   databaseId: string,
   tableId: string,
   rowId: string,
-  data: Partial<T>,
+  data: Partial<TInput>,
 ): Promise<void> => {
   await tablesDB.updateRow({
     databaseId,

@@ -8,8 +8,6 @@ import { notFound } from 'next/navigation';
 import { Flex, Image } from 'antd';
 import './blog.css';
 
-export const revalidate = 3600;
-
 /* ----------------------------------
    SSG: какие /blog/[id] сгенерировать
 ----------------------------------- */

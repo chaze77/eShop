@@ -14,6 +14,7 @@ export const LABELS = {
     sizes: 'Размеры',
     colors: 'Цвета',
     tags: 'Теги',
+    banners: 'Баннеры',
   },
   buttons: {
     create: 'Создать',
@@ -42,7 +43,9 @@ export const LABELS = {
     tags: 'Теги',
     title: 'Заголовок',
     content: 'Контент',
-    login: 'Логин',
+    login: 'Войти',
+    email: 'Email',
+    password: 'Пароль',
   },
   placeholders: {
     name: 'наименование',

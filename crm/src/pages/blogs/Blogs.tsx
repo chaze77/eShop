@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { columns } from './columns';
 import { IBlog } from '@/types';
+import { ConfigRoutes } from '@/constants/page-routes';
 
 const Blogs = () => {
   const blogs = useBlogStore((state) => state.blogs);
@@ -17,7 +18,7 @@ const Blogs = () => {
   }, []);
 
   const handleNavigate = () => {
-    navigate('/blog-detail');
+    navigate(ConfigRoutes.BLOG_CREATE);
   };
 
   const dataSource = blogs.map((blog: IBlog) => ({
@@ -47,7 +48,7 @@ const Blogs = () => {
         columns={columns}
         rowClassName='sub-item'
         onRow={(record) => ({
-          onClick: () => navigate(`/blog-detail/${record.key}`),
+          onClick: () => navigate(ConfigRoutes.BLOG_DETAILS_GET(record.key)),
         })}
         pagination={{
           defaultPageSize: 10,

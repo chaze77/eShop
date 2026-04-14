@@ -1,32 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Tooltip, Typography } from 'antd';
+import { Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { LABELS } from '@/constants/labels';
-
-const { Text } = Typography;
+import { EmptyImage } from './components/EmptyImage/EmptyImage';
+import { ImageLook } from './components/ImageLook/ImageLook';
+import './input-file-upload.css';
 
 interface InputFileUploadProps {
-  image: string | File | null;
-  setImage: (file: File | string | null) => void;
+  value?: string | File | null;
+  onChange?: (file: File | string | null) => void;
 }
 
 const InputFileUpload: React.FC<InputFileUploadProps> = ({
-  image,
-  setImage,
+  value,
+  onChange,
 }) => {
   const [fileName, setFileName] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (typeof image === 'string') {
-      setFileName(image);
-    } else if (image instanceof File) {
-      setFileName(image.name);
+    if (typeof value === 'string') {
+      setFileName(value);
+    } else if (value instanceof File) {
+      setFileName(value.name);
     } else {
       setFileName(null);
     }
-  }, [image]);
+  }, [value]);
 
   const handleButtonClick = () => {
     if (hiddenFileInputRef.current) {
@@ -36,28 +38,33 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       setFileName(file.name);
-      setImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      onChange?.(file);
     }
   };
 
+  const deleteFileLocal = () => {
+    setFileName('');
+    setPreviewUrl('');
+    onChange?.(null);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Tooltip title={fileName || LABELS.placeholders.file}>
-        <Text
-          ellipsis
-          style={{
-            maxWidth: 300,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: 'block',
-          }}
-          type='secondary'
-        >
-          {fileName || LABELS.placeholders.file}
-        </Text>
-      </Tooltip>
+    <div className='file-upload-container'>
+      <div className='file-upload-preview'>
+        {previewUrl || fileName ? (
+          <ImageLook
+            previewUrl={previewUrl}
+            fileName={fileName}
+            deleteFileLocal={deleteFileLocal}
+          />
+        ) : (
+          <EmptyImage />
+        )}
+      </div>
       <Button
         type='primary'
         icon={<UploadOutlined />}
@@ -66,7 +73,6 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({
         {LABELS.fields.image}
       </Button>
 
-      {/* hidden input for file selection */}
       <input
         ref={hiddenFileInputRef}
         type='file'
