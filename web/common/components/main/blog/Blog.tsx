@@ -1,9 +1,7 @@
-import Title from '../../ui/Title/Title';
-
 import { getBlogs } from '@/lib/apis/blogs';
-
-import BlogCarousel from './components/BlogCarousel';
+import BlogGrid from './components/BlogCarousel';
 import './Blog.css';
+import Title from '@components/ui/Title/Title';
 
 export default async function Blog() {
   const blogs = await getBlogs();
@@ -16,7 +14,7 @@ export default async function Blog() {
         <Title text='Наш блог' />
       </div>
 
-      <BlogCarousel blogs={blogs} />
+      <BlogGrid blogs={blogs} />
     </section>
   );
 }
