@@ -42,7 +42,9 @@ export const getProductsByFilters = async (
       attrQueries,
     );
 
-    attributeProductIds = attrResponse.map((doc: any) => doc.products.$id);
+    attributeProductIds = attrResponse
+      .map((doc: any) => doc.products?.$id)
+      .filter(Boolean);
 
     if (attributeProductIds.length === 0) {
       return [];

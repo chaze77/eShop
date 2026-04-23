@@ -1,33 +1,25 @@
-import { IBlog } from '@/common/types';
-import { Carousel } from 'antd';
+'use client';
+
+import { Row, Col } from 'antd';
 import CardBlog from './CardBlog';
+import { IBlog } from '@/common/types';
 
 interface Props {
   blogs: IBlog[];
 }
 
-const BlogCarousel = ({ blogs }: Props) => {
+const BlogGrid = ({ blogs }: Props) => {
   return (
-    <Carousel
-      arrows
-      infinite
-      initialSlide={0}
-      className='main-banner'
-      autoplay
-      slidesToShow={3}
-      responsive={[
-        { breakpoint: 1200, settings: { slidesToShow: 3 } },
-        { breakpoint: 900, settings: { slidesToShow: 2 } },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 1,
-          },
-        },
-      ]}
-    >
+    <Row gutter={[24, 24]}>
       {blogs.map((blog) => (
-        <div key={blog.id}>
+        <Col
+          key={blog.$id}
+          xs={24}
+          sm={24}
+          md={12}
+          lg={8}
+          xl={8}
+        >
           <CardBlog
             loading={false}
             id={blog.$id}
@@ -35,10 +27,10 @@ const BlogCarousel = ({ blogs }: Props) => {
             title={blog.title}
             text={blog.content}
           />
-        </div>
+        </Col>
       ))}
-    </Carousel>
+    </Row>
   );
 };
 
-export default BlogCarousel;
+export default BlogGrid;
