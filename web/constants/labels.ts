@@ -22,6 +22,7 @@ export const labels = {
     notFound: 'Не найден',
     okText: 'Подтверждаю',
     loading: 'Загрузка',
+    openFilters: 'Открыть фильтры',
   },
 
   account: {

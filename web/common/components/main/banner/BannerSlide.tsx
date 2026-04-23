@@ -20,8 +20,6 @@ const BannerSlide: FC<BannerSlideProps> = ({
   textColor,
   colorOverlay,
 }) => {
-  console.log('imageMobile:', imageMobile);
-
   const screen = useMedia();
 
   const isMobile = screen === 'xs' || screen === 'sm';

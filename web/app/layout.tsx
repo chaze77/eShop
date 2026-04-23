@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { cacheLife } from 'next/cache';
+
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 import { UIProvider } from '@/provider/AntProvider';
@@ -22,9 +22,6 @@ export const metadata: Metadata = {
 };
 
 async function getCategories(): Promise<ICategory[]> {
-  'use cache';
-  cacheLife('days');
-
   try {
     return await fetchDocuments<ICategory>(
       appwriteKeys.DATABASE_ID,

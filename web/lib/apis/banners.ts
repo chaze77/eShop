@@ -1,4 +1,3 @@
-import { cacheLife } from 'next/cache';
 import { fetchDocuments } from '@/lib/apis/api';
 import { appwriteKeys } from '@/appwrite/environment';
 import { Query } from 'appwrite';
@@ -15,9 +14,6 @@ export interface Banner {
 }
 
 export async function getBanners(): Promise<Banner[]> {
-  'use cache';
-  cacheLife('days');
-
   const query = [Query.equal('active', true)];
 
   return await fetchDocuments<Banner>(
