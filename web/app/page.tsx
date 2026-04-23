@@ -1,4 +1,3 @@
-import { cacheLife } from 'next/cache';
 import { appwriteKeys } from '@/appwrite/environment';
 import { fetchDocuments } from '@/lib/apis/api';
 import { ICategory } from '@/common/types';
@@ -11,9 +10,6 @@ import Blog from '@/common/components/main/blog/Blog';
 import { SkeletonProducts } from '@/common/components/ui/SkeletonProducts/SkeletonProducts';
 
 async function getCategories(): Promise<ICategory[]> {
-  'use cache';
-  cacheLife('days');
-
   try {
     const response = await fetchDocuments(
       appwriteKeys.DATABASE_ID,

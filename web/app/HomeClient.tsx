@@ -16,7 +16,7 @@ export default function HomeClient({ categories }: HomeClientProps) {
   const { products, status, searchQuery } = useAppSelector(
     (state) => state.products,
   );
-  const hasSearch = searchQuery.length > 0; // ← вместо q из URL
+  const hasSearch = searchQuery.length > 0;
 
   const { isFavorite, toggleFavorite, openAuthModal, closeAuthModal } =
     useFavorites();
