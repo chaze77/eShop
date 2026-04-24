@@ -2,7 +2,7 @@
 
 import { useMemo, useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import type { FilterKey } from '@/app/category/types'; // <-- поправь путь под себя
+import type { FilterKey } from '@/app/category/types';
 
 type SelectedFilters = Record<FilterKey, string[]>;
 

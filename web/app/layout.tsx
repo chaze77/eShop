@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   title: 'iShop',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getCategories(): Promise<ICategory[]> {
   try {
     return await fetchDocuments<ICategory>(
